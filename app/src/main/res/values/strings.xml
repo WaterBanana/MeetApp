@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">MeetApp</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_create_entry">CreateEntry</string>
+    <string name="title_activity_remove_entry">RemoveEntry</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_create_group">CreateGroup</string>
+    <string name="title_activity_remove_group">RemoveGroup</string>
+</resources>
