@@ -14,6 +14,7 @@ import com.waterbanana.common.SlidingTabLayout;
 public class MainActivity extends ActionBarActivity {
     private Toolbar toolbar;
     //private SlidingTabLayout mSTL;
+    //GAA 05JUL2015 - Testing GitHub Version Control
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
