@@ -42,8 +42,15 @@ public class MainActivity extends ActionBarActivity {
         public CharSequence getPageTitle(int position) {
             if( position == 0 )
                 return "All Users";
-            else
+            else if(position == 1){
                 return "All Groups";
+            }
+            else if(position == 2) {
+                return "Test";
+            }
+            else{
+                return "Calendar";
+            }
         }
 
         @Override
@@ -51,14 +58,20 @@ public class MainActivity extends ActionBarActivity {
             if( position == 0 ){
                 return new ViewUsers();
             }
-            else{
+            else if (position == 1){
                 return new ViewGroups();
+            }
+            else if (position == 2){
+                return new TestFragment();
+            }
+            else{
+                return new Calendar();
             }
         }
 
         @Override
         public int getCount() {
-            return 2;
+            return 4;
         }
     }
 }

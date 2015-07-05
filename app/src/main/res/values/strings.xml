@@ -10,4 +10,26 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_create_group">CreateGroup</string>
     <string name="title_activity_remove_group">RemoveGroup</string>
+
+    <string name="Jan">January</string>
+    <string name="Feb">February</string>
+    <string name="Mar">March</string>
+    <string name="Apr">April</string>
+    <string name="May">May</string>
+    <string name="Jun">June</string>
+    <string name="Jul">July</string>
+    <string name="Aug">August</string>
+    <string name="Sep">September</string>
+    <string name="Oct">October</string>
+    <string name="Nov">November</string>
+    <string name="Dec">December</string>
+
+    <string name="Sun">Sunday</string>
+    <string name="Mon">Monday</string>
+    <string name="Tue">Tuesday</string>
+    <string name="Wed">Wednesday</string>
+    <string name="Thu">Thursday</string>
+    <string name="Fri">Friday</string>
+    <string name="Sat">Saturday</string>
+    <string name="title_activity_m_day_view">mDayView</string>
 </resources>

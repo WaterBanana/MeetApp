@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <Button
+        style="?android:attr/borderlessButtonStyle"
+        android:id="@+id/calendarCell"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="DAY_OF_MONTH"
+        android:gravity="top|start"
+        android:focusableInTouchMode="true"
+        android:paddingLeft="5dp"
+        android:background="?attr/day_selector" />
+
+    <TextView
+        android:id="@+id/num_events_per_day"
+        android:layout_width="10dip"
+        android:layout_height="10dip"
+        android:layout_gravity="end" >
+    </TextView>
+
+</RelativeLayout>

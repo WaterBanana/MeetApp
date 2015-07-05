@@ -3,4 +3,5 @@
     <color name="ColorPrimary">#E62117</color>
     <color name="ColorPrimaryDark">#C31C13</color>
     <color name="tabsScrollColor">#8A140E</color>
+    <color name="DaySelected">#43BDF9</color>
 </resources>
