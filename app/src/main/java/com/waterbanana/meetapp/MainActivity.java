@@ -10,7 +10,7 @@ import android.support.v7.widget.Toolbar;
 
 import com.waterbanana.common.SlidingTabLayout;
 
-
+//Comment
 public class MainActivity extends ActionBarActivity {
     private Toolbar toolbar;
     //private SlidingTabLayout mSTL;
