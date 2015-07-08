@@ -10,7 +10,7 @@ import android.support.v7.widget.Toolbar;
 
 import com.waterbanana.common.SlidingTabLayout;
 
-
+//Comment
 public class MainActivity extends ActionBarActivity {
     private Toolbar toolbar;
     //private SlidingTabLayout mSTL;
@@ -49,8 +49,11 @@ public class MainActivity extends ActionBarActivity {
             else if(position == 2) {
                 return "Test";
             }
-            else{
+            else if(position == 3){
                 return "Calendar";
+            }
+            else{
+                return "Social";
             }
         }
 
@@ -65,14 +68,17 @@ public class MainActivity extends ActionBarActivity {
             else if (position == 2){
                 return new TestFragment();
             }
-            else{
+            else if (position == 3){
                 return new Calendar();
+            }
+            else{
+                return new SocialScreen();
             }
         }
 
         @Override
         public int getCount() {
-            return 4;
+            return 5;
         }
     }
 }
