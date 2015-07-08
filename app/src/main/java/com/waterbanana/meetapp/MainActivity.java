@@ -48,8 +48,11 @@ public class MainActivity extends ActionBarActivity {
             else if(position == 2) {
                 return "Test";
             }
-            else{
+            else if(position == 3){
                 return "Calendar";
+            }
+            else{
+                return "Social";
             }
         }
 
@@ -64,14 +67,17 @@ public class MainActivity extends ActionBarActivity {
             else if (position == 2){
                 return new TestFragment();
             }
-            else{
+            else if (position == 3){
                 return new Calendar();
+            }
+            else{
+                return new SocialScreen();
             }
         }
 
         @Override
         public int getCount() {
-            return 4;
+            return 5;
         }
     }
 }
