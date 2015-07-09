@@ -34,6 +34,10 @@
             android:name=".RemoveGroup"
             android:label="@string/title_activity_remove_group" >
         </activity>
+        <activity
+            android:name=".DrawAppMainActivity"
+            android:label="@string/title_activity_draw_app_main" >
+        </activity>
     </application>
 
 </manifest>
