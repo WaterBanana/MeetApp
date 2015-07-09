@@ -33,4 +33,5 @@
     <string name="Sat">Saturday</string>
     <string name="title_activity_m_day_view">mDayView</string>
     <string name="title_activity_draw_app_main">DrawAppMainActivity</string>
+    <string name="title_activity_availability">Availability</string>
 </resources>

@@ -38,6 +38,10 @@
             android:name=".DrawAppMainActivity"
             android:label="@string/title_activity_draw_app_main" >
         </activity>
+        <activity
+            android:name=".Availability"
+            android:label="@string/title_activity_availability" >
+        </activity>
     </application>
 
 </manifest>
