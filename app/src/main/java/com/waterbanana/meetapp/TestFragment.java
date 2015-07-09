@@ -1,22 +1,49 @@
 package com.waterbanana.meetapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 /**
  * Demonstration purposes only.
  */
-public class TestFragment extends Fragment implements View.OnClickListener{
+public class TestFragment extends Fragment{
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate( R.layout.fragment_view_calendar, container, false );
+        View view = inflater.inflate( R.layout.fragment_test, container, false );
+
+
+        Button openActivity = (Button) view.findViewById( R.id.buttonOpenDrawApp );
+        openActivity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent( getActivity(), DrawAppMainActivity.class );
+                startActivity( intent );
+            }
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //        allGroupsListView = (ListView) view.findViewById( R.id.listview_all_groups );
 //        btnAdd = (Button) view.findViewById( R.id.buttonAddGroup );
 //        btnRemove = (Button) view.findViewById( R.id.buttonRemoveGroup );
@@ -37,21 +64,6 @@ public class TestFragment extends Fragment implements View.OnClickListener{
         return view;
     }
 
-    @Override
-    public void onClick(View v) {
-//        Intent intent;
-//
-//        switch( v.getId() ){
-//            case R.id.buttonAddGroup:
-//                intent = new Intent( getActivity(), CreateGroup.class );
-//                startActivity( intent );
-//                break;
-//            case R.id.buttonRemoveGroup:
-//                intent = new Intent( getActivity(), RemoveGroup.class );
-//                startActivity( intent );
-//                break;
-//        }
-    }
 
     @Override
     public void onResume() {
