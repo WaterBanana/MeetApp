@@ -5,6 +5,7 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_create_entry">CreateEntry</string>
     <string name="title_activity_remove_entry">RemoveEntry</string>
+    <string name="title_activity_availability">Availability</string>
 
 <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
