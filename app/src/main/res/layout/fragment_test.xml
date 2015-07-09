@@ -12,4 +12,12 @@
         android:id="@+id/buttonOpenDrawApp"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Another New Button"
+        android:id="@+id/buttonOpenTestActivity"
+        android:layout_below="@+id/buttonOpenDrawApp"
+        android:layout_centerHorizontal="true" />
 </RelativeLayout>

@@ -172,11 +172,11 @@ public class Calendar extends Fragment implements View.OnClickListener{
 //        new LoadAllGroups().execute();
     }
 
-    @Override
-    public void onDestroy() {
-        Log.d(tag, "Destroying View ...");
-        super.onDestroy();
-    }
+//    @Override
+//    public void onDestroy() {
+//        Log.d(tag, "Destroying View ...");
+//        super.onDestroy();
+//    }
 
     // Inner Class
     public class GridCellAdapter extends BaseAdapter implements View.OnClickListener {
