@@ -30,7 +30,14 @@ public class TestFragment extends Fragment{
             }
         });
 
-
+        Button openActivity2 = (Button) view.findViewById( R.id.buttonOpenTestActivity );
+        openActivity2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent( getActivity(), TestActivity2.class );
+                startActivity( intent );
+            }
+        });
 
 
 
