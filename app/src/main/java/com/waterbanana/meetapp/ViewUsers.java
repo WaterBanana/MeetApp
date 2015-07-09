@@ -115,6 +115,8 @@ public class ViewUsers extends Fragment implements View.OnClickListener {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
+            if( getActivity() == null )
+                return;
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
