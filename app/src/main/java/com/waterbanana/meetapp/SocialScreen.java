@@ -3,37 +3,57 @@ package com.waterbanana.meetapp;
 /**
  * Created by Master N on 7/6/2015.
  */
-import android.content.Intent;
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ListAdapter;
-import android.widget.ListView;
-import android.widget.SimpleAdapter;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
 /**
  * Demonstration purposes only.
  */
-public class SocialScreen extends Fragment implements View.OnClickListener{
+public class SocialScreen extends ActionBarActivity implements View.OnClickListener{
     //private ListView allGroupsListView;
     private Button btnNew, btnDelete;
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.fragment_view_social);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar( toolbar );
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate( R.layout.fragment_view_social, container, false );
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate( R.menu.menu_create_entry, menu );
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if( id == android.R.id.home ){
+            finish();
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    //    @Override
+//    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+//        View view = inflater.inflate( R.layout.fragment_view_social, container, false );
 //        allGroupsListView = (ListView) view.findViewById( R.id.listview_all_groups );
 //        btnNew = (Button) view.findViewById( R.id.buttonNew );
 //        btnDelete = (Button) view.findViewById( R.id.buttonRemove );
@@ -50,9 +70,9 @@ public class SocialScreen extends Fragment implements View.OnClickListener{
 //                new LoadAllGroups().execute();
 //            }
 //        });
-
-        return view;
-    }
+//
+//        return view;
+//    }
 
     @Override
     public void onClick(View v) {

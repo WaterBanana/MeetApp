@@ -35,12 +35,20 @@
             android:label="@string/title_activity_remove_group" >
         </activity>
         <activity
+            android:name=".mDayView"
+            android:label="@string/title_activity_m_day_view" >
+        </activity>
+        <activity
             android:name=".DrawAppMainActivity"
             android:label="@string/title_activity_draw_app_main" >
         </activity>
         <activity
             android:name=".TestActivity2"
             android:label="@string/title_activity_test_activity2" >
+        </activity>
+        <activity
+            android:name=".SocialScreen"
+            android:label="@string/social" >
         </activity>
         <activity
             android:name=".Availability"

@@ -36,4 +36,5 @@
     <string name="title_activity_draw_app_main">DrawAppMainActivity</string>
     <string name="title_activity_test_activity2">TestActivity2</string>
     <string name="hi_universe">Hi Universe!</string>
+    <string name="social">Social Page</string>
 </resources>
