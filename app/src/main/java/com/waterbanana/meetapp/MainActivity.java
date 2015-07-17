@@ -5,12 +5,13 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.waterbanana.common.MAViewPager;
 import com.waterbanana.common.SlidingTabLayout;
 
 //Comment
@@ -30,8 +31,9 @@ public class MainActivity extends ActionBarActivity {
 
         SlidingTabLayout mSTL = (SlidingTabLayout) findViewById( R.id.main_sliding_tabs_layout );
 
-        ViewPager viewPager = (ViewPager) findViewById( R.id.pager );
+        MAViewPager viewPager = (MAViewPager) findViewById( R.id.pager );
         viewPager.setAdapter(new TabsViewPager(getSupportFragmentManager()));
+        viewPager.setPagingEnabled(false);
         //mSTL.setDistributeEvenly(true);
         mSTL.setViewPager( viewPager );
     }
@@ -58,7 +60,9 @@ public class MainActivity extends ActionBarActivity {
     }
 
     class TabsViewPager extends FragmentStatePagerAdapter{
+        private int CNT = 6;
 
+        private String TAG = "TabsViewPager";
         public TabsViewPager(FragmentManager fm) {
             super(fm);
         }
@@ -76,6 +80,9 @@ public class MainActivity extends ActionBarActivity {
             else if(position == 3){
                 return "Group 4";
             }
+            else if( position == 4){
+                return "Group 5";
+            }
             else{
                 return "Test";
             }
@@ -83,26 +90,16 @@ public class MainActivity extends ActionBarActivity {
 
         @Override
         public Fragment getItem(int position) {
-            if( position == 0 ){
-                return new Calendar();
-            }
-            else if (position == 1){
-                return new Calendar();
-            }
-            else if (position == 2){
-                return new Calendar();
-            }
-            else if (position == 3){
-                return new Calendar();
-            }
-            else{
+            Log.d(TAG, "Tab Position: " + position );
+            if( position != CNT - 1 )
+                return new CalendarFrag();
+            else
                 return new TestFragment();
-            }
         }
 
         @Override
         public int getCount() {
-            return 5;
+            return CNT;
         }
     }
 }
