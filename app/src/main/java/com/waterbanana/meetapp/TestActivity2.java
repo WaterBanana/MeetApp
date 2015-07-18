@@ -4,13 +4,18 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 
 
 public class TestActivity2 extends ActionBarActivity {
+    private DrawingView drawView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        drawView = (DrawingView)findViewById(R.id.drawing);
         setContentView(R.layout.activity_test_activity2);
     }
 
