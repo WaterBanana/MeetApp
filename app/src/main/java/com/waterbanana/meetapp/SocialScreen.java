@@ -1,59 +1,121 @@
 package com.waterbanana.meetapp;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 
+import com.waterbanana.common.SlidingTabLayout;
+
+//Comment
+public class SocialScreen extends ActionBarActivity {
+    private Toolbar toolbar;
+    //private SlidingTabLayout mSTL;
+    //GAA 05JUL2015 - Testing GitHub Version Control
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        toolbar = (Toolbar) findViewById( R.id.toolbar );
+        setSupportActionBar(toolbar);
+
+        SlidingTabLayout mSTL = (SlidingTabLayout) findViewById( R.id.main_sliding_tabs_layout );
+
+        ViewPager viewPager = (ViewPager) findViewById( R.id.pager );
+        viewPager.setAdapter( new TabsViewPager( getSupportFragmentManager() ) );
+        mSTL.setDistributeEvenly(true);
+        mSTL.setViewPager( viewPager );
+    }
+
+    class TabsViewPager extends FragmentStatePagerAdapter{
+
+        public TabsViewPager(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            if( position == 0 )
+                return "G1";
+            else if(position == 1){
+                return "G2";
+            }
+            else if(position == 2) {
+                return "G3";
+            }
+            else if(position == 3){
+                return "G4";
+            }
+            else{
+                return "G5";
+            }
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            if( position == 0 ){
+                return new ViewUsers();
+            }
+            else if (position == 1){
+                return new ViewGroups();
+            }
+            else if (position == 2){
+                return new TestFragment();
+            }
+            else if (position == 3){
+                return new Calendar();
+            }
+            else{
+                return new SocialFrag();
+            }
+        }
+
+        @Override
+        public int getCount() {
+            return 5;
+        }
+    }
+}
 /**
  * Created by Master N on 7/6/2015.
  */
-
+/*import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
+
+import java.util.ArrayList;
+import java.util.HashMap;*/
 
 /**
  * Demonstration purposes only.
  */
-public class SocialScreen extends ActionBarActivity implements View.OnClickListener{
+/*
+public class SocialScreen extends Fragment implements View.OnClickListener{
     //private ListView allGroupsListView;
     private Button btnNew, btnDelete;
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_view_social);
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar( toolbar );
-        getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-    }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate( R.menu.menu_create_entry, menu );
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate( R.layout.fragment_view_social, container, false );
 
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if( id == android.R.id.home ){
-            finish();
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    //    @Override
-//    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-//        View view = inflater.inflate( R.layout.fragment_view_social, container, false );
 //        allGroupsListView = (ListView) view.findViewById( R.id.listview_all_groups );
 //        btnNew = (Button) view.findViewById( R.id.buttonNew );
 //        btnDelete = (Button) view.findViewById( R.id.buttonRemove );
@@ -70,9 +132,9 @@ public class SocialScreen extends ActionBarActivity implements View.OnClickListe
 //                new LoadAllGroups().execute();
 //            }
 //        });
-//
-//        return view;
-//    }
+
+        return view;
+    }
 
     @Override
     public void onClick(View v) {
@@ -134,3 +196,4 @@ public class SocialScreen extends ActionBarActivity implements View.OnClickListe
 //        }
 //    }
 }
+*/
