@@ -2,281 +2,43 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <!-- Left to Right Layout-->
+
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
         android:orientation="horizontal"
-        android:weightSum = "12"
-        android:id="@+id/testActivity2View">
-
-        <!-- Urgent/Not Urgent Label-->
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Urgent/Not Urgent"
-            android:layout_gravity="center_vertical"
-            android:gravity="center_vertical|center_horizontal"
-            />
-
-        <!-- Center Chunk-->
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="10"
-            android:orientation="vertical"
-            android:weightSum="12"
-
-
-            >
-            <!-- Important/Not Important Label Layout-->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:orientation="horizontal"
-                android:layout_weight="1"
-                android:layout_gravity="center_horizontal|top"
-                android:weightSum="10">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="5"
-                    android:text="Important"
-                    android:id="@+id/textView"
-                    android:gravity="center_vertical|center_horizontal"
-                    android:layout_gravity="center" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="5"
-                    android:text="Not Important"
-                    android:id="@+id/textView2"
-                    android:gravity="center_vertical|center_horizontal"
-                    android:layout_gravity="center" />
-            </LinearLayout>
-            <!-- Top Two Windows-->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_weight="5"
-                android:weightSum="2" >
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:background="@drawable/border_test"
-                    android:id="@+id/important_urgent_window" >
-
-                    <!--<fragment-->
-                        <!--android:id="@+id/fragment_one"-->
-                        <!--android:name="com.waterbanana.meetapp.TestActivity2Frag"-->
-                        <!--android:layout_width="match_parent"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--tools:layout="@layout/fragment_test_activity2" />-->
-
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:background="@drawable/border_test"
-                    android:id="@+id/notimportant_urgent_window" />
-
-            </LinearLayout>
-            <!-- Bottom Two Windows-->
-            <LinearLayout
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"
-                android:orientation="horizontal"
-                android:layout_weight="5"
-                android:weightSum="2">
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:background="@drawable/border_test"
-                    android:id="@+id/important_noturgent_window" />
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:background="@drawable/border_test"
-                    android:id="@+id/notimportant_noturgent_window" />
-
-            </LinearLayout>
-            <!--&lt;!&ndash; Botttom Stres Bar&ndash;&gt;-->
-            <!--<TextView-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="0dp"-->
-                <!--android:layout_weight="1"-->
-                <!--android:text="Stress Bar"-->
-                <!--android:gravity="center_vertical|center_horizontal"-->
-                <!--android:layout_gravity="center" />-->
-
-
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text=" "
-                android:id="@+id/textView3"
-                android:gravity="center_vertical|center_horizontal"
-                android:layout_gravity="center" />
-
-        </LinearLayout>
-        <!-- Rightmost Options Button-->
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Options"
-            android:layout_gravity="center_vertical"
-            android:gravity="center_vertical|center_horizontal" />
-
-
-    </LinearLayout>
-
-
-
-    <!--Layout for new list entry and buttons -->
-    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="center_vertical|center_horizontal"
-        android:orientation="vertical"
-        android:weightSum="10"
-        android:gravity="center"
-        >
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_gravity="center|center_horizontal"
-            android:layout_weight="2.5"
-            android:orientation="vertical"
-            android:weightSum="10"
-            android:gravity="center"
-            >
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="4"
-                android:orientation="horizontal"
-                android:weightSum="10"
-                android:gravity="bottom|center_horizontal"
-                >
-                <Button
-                    android:layout_width="0dp"
-                    android:layout_height="fill_parent"
-                    android:layout_weight="2"
-                    android:text="IU"
-                    />
+        android:weightSum="4">
 
-                <Button
-                    android:layout_width="0dp"
-                    android:layout_height="fill_parent"
-                    android:layout_weight="2"
-                    android:text="NU"
-                    />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:orientation="horizontal"
-                android:weightSum="10"
-                android:gravity="top|center_horizontal"
-                >
-                <EditText
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="3.8"
-                    android:id="@+id/editText"
-                    android:background="#FFFFFF" />
-            </LinearLayout>
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="4"
-                android:orientation="horizontal"
-                android:weightSum="10"
-                android:gravity="top|center_horizontal"
-                >
-                <Button
-                    android:layout_width="0dp"
-                    android:layout_height="fill_parent"
-                    android:layout_weight="2"
-                    android:text="IN"
-                    />
-
-                <Button
-                    android:layout_width="0dp"
-                    android:layout_height="fill_parent"
-                    android:layout_weight="2"
-                    android:text="NN"
-                    />
-            </LinearLayout>
-        </LinearLayout>
-    </LinearLayout>
-
-    <!--Add Button-->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center|center_horizontal"
-        android:weightSum="10"
-        android:orientation="vertical"
-        android:gravity="center"
-        >
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="2.5"
-            android:weightSum="10"
-            android:orientation="horizontal"
-            android:gravity="center">
-            <Button
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="4"
-                android:text="+"
-                android:visibility="visible"
-                />
-
-
-        </LinearLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        <TextView
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:background ="#FFFFFFFF"
+            android:layout_height="match_parent" />
 
         <com.waterbanana.meetapp.DrawingView
             android:id="@+id/drawing"
-            android:layout_width="fill_parent"
-            android:layout_height="0dp"
-            android:layout_marginBottom="00dp"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="0dp"
             android:layout_marginLeft="0dp"
             android:layout_marginRight="0dp"
             android:layout_marginTop="0dp"
-            android:layout_weight="1"
+
             android:background="#00000000" />
+
+        <TextView
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:background ="#FFFFFFFF"
+            android:layout_height="match_parent" />
+
+        <TextView
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:background ="#FFFFFFFF"
+            android:layout_height="match_parent" />
+
 
     </LinearLayout>
 
