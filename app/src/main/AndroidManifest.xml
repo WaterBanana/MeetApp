@@ -50,6 +50,10 @@
             android:name=".Availability"
             android:label="@string/title_activity_availability" >
         </activity>
+        <activity
+            android:name=".TestActivity2"
+            android:label="@string/title_activity_test_activity2" >
+        </activity>
     </application>
 
 </manifest>
