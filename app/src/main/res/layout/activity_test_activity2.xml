@@ -1,13 +1,21 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:id="@+id/canvas_main">
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:weightSum="4">
+        android:weightSum="4"
+        android:id="@+id/CanvasSwitchLayout">
+
+        <TextView
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:background ="#FFFFFFFF"
+            android:layout_height="match_parent" />
 
         <TextView
             android:layout_weight="1"
@@ -27,17 +35,27 @@
 
             android:background="#00000000" />
 
-        <TextView
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:background ="#FFFFFFFF"
-            android:layout_height="match_parent" />
 
-        <TextView
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:background ="#FFFFFFFF"
-            android:layout_height="match_parent" />
+
+        <!--<LinearLayout-->
+            <!--android:layout_weight="1"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:orientation="vertical"-->
+            <!--android:weightSum="4"-->
+            <!--android:background="#FFFFFF"-->
+            <!--android:id = "@+id/SwitchLayout">-->
+
+            <Switch
+                android:id="@+id/drawEraseSwitch"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:textOn="Erase"
+                android:textOff="Draw"
+                android:showText="true" />
+
+        <!--</LinearLayout>-->
 
 
     </LinearLayout>

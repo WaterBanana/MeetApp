@@ -19,7 +19,13 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.view.MotionEvent;
+import android.widget.CompoundButton;
+import android.widget.LinearLayout;
+import android.widget.Switch;
 import android.widget.ToggleButton;
+
+import static com.waterbanana.meetapp.R.id.CanvasSwitchLayout;
+import static com.waterbanana.meetapp.R.id.drawEraseSwitch;
 
 public class DrawingView extends View
 {
@@ -37,6 +43,10 @@ public class DrawingView extends View
     //Height is divided into integers.
     //When corresponding y-coordinate is pressed, then the group it belongs to out of 100, will be colored
     private int[] touchCoordinates = new int[20];
+
+    private Switch drawEraseButton;
+
+    private int drawOrErase = 1;
 
     public DrawingView(Context context, AttributeSet attrs){
         super(context, attrs);
@@ -73,6 +83,24 @@ public class DrawingView extends View
         for(int i=0; i<touchCoordinates.length; i++){
             touchCoordinates[i] = -1;
         }
+        //host layout
+        //start
+        //GAA 25 JUL 2015 - 3:26am
+        //I want to:
+        //1. Grab the switch drawEraseSwitch from activity_test_activity2.xml for it's erase or draw info
+        //
+        //Issues:
+        //1. OnCreateView is from fragments (tutorials point to using that method to change setContentView to the xml file with the drawEraseSwitch
+        //2. OnCreate is from activities
+        //3. This file is a view.
+
+        LinearLayout canvasLayout = (LinearLayout)findViewById(R.id.canvas_main);//keeps on being null
+//        View view = getLayoutInflater().inflate(R.layout.canvas_main)
+//        drawEraseButton = (Switch)canvasLayout.getChildAt(4);
+        //end
+
+
+
     }
 
     @Override
@@ -96,429 +124,214 @@ public class DrawingView extends View
         //detect user touch
 //        float touchX = event.getX();
 //        float touchY = event.getY();
+
         float touchX = 75;
         int touchY = (int)event.getY();
         int upperBound = 0;
         int lowerBound = 0;
         //drawing down, move, and up
+
+
+        //GAA 25 JUL 2015 - Another null object reference here.
+        //start
+/*        drawEraseButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    drawOrErase = -1;
+                }else{
+                    drawOrErase = 1;
+                }
+
+            }
+        });*/
+        //end
+
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                //this should be our create ribbon event
-//                if(touchY<100){
-//                    touchCoordinates[0] = touchCoordinates[0]*-1;//flag
-//                }
-//                else if(touchY<200){
-//                    touchCoordinates[1] = touchCoordinates[1]*-1;
-//                }
-//                else if(touchY<300){
-//                    touchCoordinates[2] = touchCoordinates[2]*-1;
-//                }
-//                else if(touchY<400){
-//                    touchCoordinates[3] = touchCoordinates[3]*-1;
-//                }
-//                else if(touchY<500){
-//                    touchCoordinates[4] = touchCoordinates[4]*-1;
-//                }
-//                else if(touchY<600){
-//                    touchCoordinates[5] = touchCoordinates[5]*-1;
-//                }
-//                else if(touchY<700){
-//                    touchCoordinates[6] = touchCoordinates[6]*-1;
-//                }
-//                else if(touchY<800){
-//                    touchCoordinates[7] = touchCoordinates[7]*-1;
-//                }
-//                else if(touchY<900){
-//                    touchCoordinates[8] = touchCoordinates[8]*-1;
-//                }
-//                else if(touchY<1000){
-//                    touchCoordinates[9] = touchCoordinates[9]*-1;
-//                }
-//                else if(touchY<1100){
-//                    touchCoordinates[10] = touchCoordinates[10]*-1;
-//                }
-//                else if(touchY<1200){
-//                    touchCoordinates[11] = touchCoordinates[11]*-1;
-//                }
-//                else if(touchY<1300){
-//                    touchCoordinates[12] = touchCoordinates[12]*-1;
-//                }
-//                else if(touchY<1400){
-//                    touchCoordinates[13] = touchCoordinates[13]*-1;
-//                }
-//                else if(touchY<1500){
-//                    touchCoordinates[14] = touchCoordinates[14]*-1;
-//                }
-//                else if(touchY<1600){
-//                    touchCoordinates[15] = touchCoordinates[15]*-1;
-//                }
-//                else if(touchY<1700){
-//                    touchCoordinates[16] = touchCoordinates[16]*-1;
-//                }
-//                else if(touchY<1800){
-//                    touchCoordinates[17] = touchCoordinates[17]*-1;
-//                }
-//                else if(touchY<1900){
-//                    touchCoordinates[18] = touchCoordinates[18]*-1;
-//                }
-//                else if(touchY<2000){
-//                    touchCoordinates[19] = touchCoordinates[19]*-1;
-//
-//                }
-//                drawPath.moveTo(touchX, startTouchY);
-
-//                for(int i=0; i<touchCoordinates.length; i++){
-//                    upperBound = (i+1)*100;
-//                    lowerBound = (i-1)*100;
-//
-//                    if(touchY<upperBound && touchY>lowerBound){
-//                        touchCoordinates[i]=1;
-//                    }
-//                }
-//                if(touchY<100){
-//                    touchCoordinates[0] = 1;//flag
-//                }
-//                else if(touchY<200){
-//                    touchCoordinates[1] = 1;
-//                }
-//                else if(touchY<300){
-//                    touchCoordinates[2] = 1;
-//                }
-//                else if(touchY<400){
-//                    touchCoordinates[3] = 1;
-//                }
-//                else if(touchY<500){
-//                    touchCoordinates[4] = 1;
-//                }
-//                else if(touchY<600){
-//                    touchCoordinates[5] = 1;
-//                }
-//                else if(touchY<700){
-//                    touchCoordinates[6] = 1;
-//                }
-//                else if(touchY<800){
-//                    touchCoordinates[7] = 1;
-//                }
-//                else if(touchY<900){
-//                    touchCoordinates[8] = 1;
-//                }
-//                else if(touchY<1000){
-//                    touchCoordinates[9] = 1;
-//                }
-//                else if(touchY<1100){
-//                    touchCoordinates[10] = 1;
-//                }
-//                else if(touchY<1200){
-//                    touchCoordinates[11] = 1;
-//                }
-//                else if(touchY<1300){
-//                    touchCoordinates[12] = 1;
-//                }
-//                else if(touchY<1400){
-//                    touchCoordinates[13] = 1;
-//                }
-//                else if(touchY<1500){
-//                    touchCoordinates[14] = 1;
-//                }
-//                else if(touchY<1600){
-//                    touchCoordinates[15] = 1;
-//                }
-//                else if(touchY<1700){
-//                    touchCoordinates[16] = 1;
-//                }
-//                else if(touchY<1800){
-//                    touchCoordinates[17] = 1;
-//                }
-//                else if(touchY<1900){
-//                    touchCoordinates[18] = 1;
-//                }
-//                else if(touchY<2000){
-//                    touchCoordinates[19] = 1;
-//                }
+                if(touchY<100){
+                    touchCoordinates[0] = drawOrErase;//flag
+                }
+                else if(touchY<200){
+                    touchCoordinates[1] = drawOrErase;
+                }
+                else if(touchY<300){
+                    touchCoordinates[2] = drawOrErase;
+                }
+                else if(touchY<400){
+                    touchCoordinates[3] = drawOrErase;
+                }
+                else if(touchY<500){
+                    touchCoordinates[4] = drawOrErase;
+                }
+                else if(touchY<600){
+                    touchCoordinates[5] = drawOrErase;
+                }
+                else if(touchY<700){
+                    touchCoordinates[6] = drawOrErase;
+                }
+                else if(touchY<800){
+                    touchCoordinates[7] = drawOrErase;
+                }
+                else if(touchY<900){
+                    touchCoordinates[8] = drawOrErase;
+                }
+                else if(touchY<1000){
+                    touchCoordinates[9] = drawOrErase;
+                }
+                else if(touchY<1100){
+                    touchCoordinates[10] = drawOrErase;
+                }
+                else if(touchY<1200){
+                    touchCoordinates[11] = drawOrErase;
+                }
+                else if(touchY<1300){
+                    touchCoordinates[12] = drawOrErase;
+                }
+                else if(touchY<1400){
+                    touchCoordinates[13] = drawOrErase;
+                }
+                else if(touchY<1500){
+                    touchCoordinates[14] = drawOrErase;
+                }
+                else if(touchY<1600){
+                    touchCoordinates[15] = drawOrErase;
+                }
+                else if(touchY<1700){
+                    touchCoordinates[16] = drawOrErase;
+                }
+                else if(touchY<1800){
+                    touchCoordinates[17] = drawOrErase;
+                }
+                else if(touchY<1900){
+                    touchCoordinates[18] = drawOrErase;
+                }
+                else if(touchY<2000){
+                    touchCoordinates[19] = drawOrErase;
+                }
                 break;
             case MotionEvent.ACTION_MOVE:
-                //this should be our adjust ribbon event
-//                drawPath.lineTo(touchX, event.getY());
-//                touchCoordinates[touchY] = touchCoordinates[touchY]+1;//flag as touched
-//                if(touchY<100){
-//                    touchCoordinates[0] = touchCoordinates[0]*-1;//flag
-//                }
-//                else if(touchY<200){
-//                    touchCoordinates[1] = touchCoordinates[1]*-1;
-//                }
-//                else if(touchY<300){
-//                    touchCoordinates[2] = touchCoordinates[2]*-1;
-//                }
-//                else if(touchY<400){
-//                    touchCoordinates[3] = touchCoordinates[3]*-1;
-//                }
-//                else if(touchY<500){
-//                    touchCoordinates[4] = touchCoordinates[4]*-1;
-//                }
-//                else if(touchY<600){
-//                    touchCoordinates[5] = touchCoordinates[5]*-1;
-//                }
-//                else if(touchY<700){
-//                    touchCoordinates[6] = touchCoordinates[6]*-1;
-//                }
-//                else if(touchY<800){
-//                    touchCoordinates[7] = touchCoordinates[7]*-1;
-//                }
-//                else if(touchY<900){
-//                    touchCoordinates[8] = touchCoordinates[8]*-1;
-//                }
-//                else if(touchY<1000){
-//                    touchCoordinates[9] = touchCoordinates[9]*-1;
-//                }
-//                else if(touchY<1100){
-//                    touchCoordinates[10] = touchCoordinates[10]*-1;
-//                }
-//                else if(touchY<1200){
-//                    touchCoordinates[11] = touchCoordinates[11]*-1;
-//                }
-//                else if(touchY<1300){
-//                    touchCoordinates[12] = touchCoordinates[12]*-1;
-//                }
-//                else if(touchY<1400){
-//                    touchCoordinates[13] = touchCoordinates[13]*-1;
-//                }
-//                else if(touchY<1500){
-//                    touchCoordinates[14] = touchCoordinates[14]*-1;
-//                }
-//                else if(touchY<1600){
-//                    touchCoordinates[15] = touchCoordinates[15]*-1;
-//                }
-//                else if(touchY<1700){
-//                    touchCoordinates[16] = touchCoordinates[16]*-1;
-//                }
-//                else if(touchY<1800){
-//                    touchCoordinates[17] = touchCoordinates[17]*-1;
-//                }
-//                else if(touchY<1900){
-//                    touchCoordinates[18] = touchCoordinates[18]*-1;
-//                }
-//                else if(touchY<2000){
-//                    touchCoordinates[19] = touchCoordinates[19]*-1;
-//
-//                }
-
-//                for(int i=0; i<touchCoordinates.length; i++){
-//                    upperBound = (i+1)*100;
-//                    lowerBound = (i-1)*100;
-//
-//                    if(touchY<upperBound && touchY>lowerBound){
-//                        touchCoordinates[i]=1;
-//                    }
-//                }
-
                 if(touchY<100){
-                    touchCoordinates[0] = 1;//flag
+                    touchCoordinates[0] = drawOrErase;//flag
                 }
                 else if(touchY<200){
-                    touchCoordinates[1] = 1;
+                    touchCoordinates[1] = drawOrErase;
                 }
                 else if(touchY<300){
-                    touchCoordinates[2] = 1;
+                    touchCoordinates[2] = drawOrErase;
                 }
                 else if(touchY<400){
-                    touchCoordinates[3] = 1;
+                    touchCoordinates[3] = drawOrErase;
                 }
                 else if(touchY<500){
-                    touchCoordinates[4] = 1;
+                    touchCoordinates[4] = drawOrErase;
                 }
                 else if(touchY<600){
-                    touchCoordinates[5] = 1;
+                    touchCoordinates[5] = drawOrErase;
                 }
                 else if(touchY<700){
-                    touchCoordinates[6] = 1;
+                    touchCoordinates[6] = drawOrErase;
                 }
                 else if(touchY<800){
-                    touchCoordinates[7] = 1;
+                    touchCoordinates[7] = drawOrErase;
                 }
                 else if(touchY<900){
-                    touchCoordinates[8] = 1;
+                    touchCoordinates[8] = drawOrErase;
                 }
                 else if(touchY<1000){
-                    touchCoordinates[9] = 1;
+                    touchCoordinates[9] = drawOrErase;
                 }
                 else if(touchY<1100){
-                    touchCoordinates[10] = 1;
+                    touchCoordinates[10] = drawOrErase;
                 }
                 else if(touchY<1200){
-                    touchCoordinates[11] = 1;
+                    touchCoordinates[11] = drawOrErase;
                 }
                 else if(touchY<1300){
-                    touchCoordinates[12] = 1;
+                    touchCoordinates[12] = drawOrErase;
                 }
                 else if(touchY<1400){
-                    touchCoordinates[13] = 1;
+                    touchCoordinates[13] = drawOrErase;
                 }
                 else if(touchY<1500){
-                    touchCoordinates[14] = 1;
+                    touchCoordinates[14] = drawOrErase;
                 }
                 else if(touchY<1600){
-                    touchCoordinates[15] = 1;
+                    touchCoordinates[15] = drawOrErase;
                 }
                 else if(touchY<1700){
-                    touchCoordinates[16] = 1;
+                    touchCoordinates[16] = drawOrErase;
                 }
                 else if(touchY<1800){
-                    touchCoordinates[17] = 1;
+                    touchCoordinates[17] = drawOrErase;
                 }
                 else if(touchY<1900){
-                    touchCoordinates[18] = 1;
+                    touchCoordinates[18] = drawOrErase;
                 }
                 else if(touchY<2000){
-                    touchCoordinates[19] = 1;
+                    touchCoordinates[19] = drawOrErase;
                 }
-
-                /*ERASE PROCEDURE - swipe right*/
-
-
-//                drawPath.moveTo(touchX, startTouchY);
                 break;
             case MotionEvent.ACTION_UP:
-                //this should be our finalize ribbon event
-//                drawCanvas.drawPath(drawPath, drawPaint);
-//                drawPath.reset();
-//                drawCanvas.drawColor(Color.TRANSPARENT);
-//                for(int i=0; i<touchCoordinates.length; i++){
-//                    if(touchCoordinates[i]>0){
-//                        touchCoordinates[i]=touchCoordinates[i]*-1;
-//                    }
-//                }
                 if(touchY<100){
-                    touchCoordinates[0] = touchCoordinates[0]*-1;//flag
+                    touchCoordinates[0] = drawOrErase;//flag
                 }
                 else if(touchY<200){
-                    touchCoordinates[1] = touchCoordinates[1]*-1;
+                    touchCoordinates[1] = drawOrErase;
                 }
                 else if(touchY<300){
-                    touchCoordinates[2] = touchCoordinates[2]*-1;
+                    touchCoordinates[2] = drawOrErase;
                 }
                 else if(touchY<400){
-                    touchCoordinates[3] = touchCoordinates[3]*-1;
+                    touchCoordinates[3] = drawOrErase;
                 }
                 else if(touchY<500){
-                    touchCoordinates[4] = touchCoordinates[4]*-1;
+                    touchCoordinates[4] = drawOrErase;
                 }
                 else if(touchY<600){
-                    touchCoordinates[5] = touchCoordinates[5]*-1;
+                    touchCoordinates[5] = drawOrErase;
                 }
                 else if(touchY<700){
-                    touchCoordinates[6] = touchCoordinates[6]*-1;
+                    touchCoordinates[6] = drawOrErase;
                 }
                 else if(touchY<800){
-                    touchCoordinates[7] = touchCoordinates[7]*-1;
+                    touchCoordinates[7] = drawOrErase;
                 }
                 else if(touchY<900){
-                    touchCoordinates[8] = touchCoordinates[8]*-1;
+                    touchCoordinates[8] = drawOrErase;
                 }
                 else if(touchY<1000){
-                    touchCoordinates[9] = touchCoordinates[9]*-1;
+                    touchCoordinates[9] = drawOrErase;
                 }
                 else if(touchY<1100){
-                    touchCoordinates[10] = touchCoordinates[10]*-1;
+                    touchCoordinates[10] = drawOrErase;
                 }
                 else if(touchY<1200){
-                    touchCoordinates[11] = touchCoordinates[11]*-1;
+                    touchCoordinates[11] = drawOrErase;
                 }
                 else if(touchY<1300){
-                    touchCoordinates[12] = touchCoordinates[12]*-1;
+                    touchCoordinates[12] = drawOrErase;
                 }
                 else if(touchY<1400){
-                    touchCoordinates[13] = touchCoordinates[13]*-1;
+                    touchCoordinates[13] = drawOrErase;
                 }
                 else if(touchY<1500){
-                    touchCoordinates[14] = touchCoordinates[14]*-1;
+                    touchCoordinates[14] = drawOrErase;
                 }
                 else if(touchY<1600){
-                    touchCoordinates[15] = touchCoordinates[15]*-1;
+                    touchCoordinates[15] = drawOrErase;
                 }
                 else if(touchY<1700){
-                    touchCoordinates[16] = touchCoordinates[16]*-1;
+                    touchCoordinates[16] = drawOrErase;
                 }
                 else if(touchY<1800){
-                    touchCoordinates[17] = touchCoordinates[17]*-1;
+                    touchCoordinates[17] = drawOrErase;
                 }
                 else if(touchY<1900){
-                    touchCoordinates[18] = touchCoordinates[18]*-1;
+                    touchCoordinates[18] = drawOrErase;
                 }
                 else if(touchY<2000){
-                    touchCoordinates[19] = touchCoordinates[19]*-1;
-
+                    touchCoordinates[19] = drawOrErase;
                 }
-
-//                if(touchY<100){
-//                    touchCoordinates[0] = 1;//flag
-//                }
-//                else if(touchY<200){
-//                    touchCoordinates[1] = 1;
-//                }
-//                else if(touchY<300){
-//                    touchCoordinates[2] = 1;
-//                }
-//                else if(touchY<400){
-//                    touchCoordinates[3] = 1;
-//                }
-//                else if(touchY<500){
-//                    touchCoordinates[4] = 1;
-//                }
-//                else if(touchY<600){
-//                    touchCoordinates[5] = 1;
-//                }
-//                else if(touchY<700){
-//                    touchCoordinates[6] = 1;
-//                }
-//                else if(touchY<800){
-//                    touchCoordinates[7] = 1;
-//                }
-//                else if(touchY<900){
-//                    touchCoordinates[8] = 1;
-//                }
-//                else if(touchY<1000){
-//                    touchCoordinates[9] = 1;
-//                }
-//                else if(touchY<1100){
-//                    touchCoordinates[10] = 1;
-//                }
-//                else if(touchY<1200){
-//                    touchCoordinates[11] = 1;
-//                }
-//                else if(touchY<1300){
-//                    touchCoordinates[12] = 1;
-//                }
-//                else if(touchY<1400){
-//                    touchCoordinates[13] = 1;
-//                }
-//                else if(touchY<1500){
-//                    touchCoordinates[14] = 1;
-//                }
-//                else if(touchY<1600){
-//                    touchCoordinates[15] = 1;
-//                }
-//                else if(touchY<1700){
-//                    touchCoordinates[16] = 1;
-//                }
-//                else if(touchY<1800){
-//                    touchCoordinates[17] = 1;
-//                }
-//                else if(touchY<1900){
-//                    touchCoordinates[18] = 1;
-//                }
-//                else if(touchY<2000){
-//                    touchCoordinates[19] = 1;
-//                }
-
-//                for(int i=0; i<touchCoordinates.length; i++){
-//                    upperBound = (i+1)*100;
-//                    lowerBound = (i-1)*100;
-//
-//                    if(touchY<upperBound && touchY>lowerBound){
-//                        touchCoordinates[i]=1;
-//                    }
-//                }
-
                 break;
 
             default:
