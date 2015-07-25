@@ -81,7 +81,7 @@ public class DrawingView extends View
 
         //initialize touchCoordinates as untouched (-1)
         for(int i=0; i<touchCoordinates.length; i++){
-            touchCoordinates[i] = -1;
+            touchCoordinates[i] = 0;
         }
         //host layout
         //start
@@ -148,190 +148,15 @@ public class DrawingView extends View
 
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                if(touchY<100){
-                    touchCoordinates[0] = drawOrErase;//flag
-                }
-                else if(touchY<200){
-                    touchCoordinates[1] = drawOrErase;
-                }
-                else if(touchY<300){
-                    touchCoordinates[2] = drawOrErase;
-                }
-                else if(touchY<400){
-                    touchCoordinates[3] = drawOrErase;
-                }
-                else if(touchY<500){
-                    touchCoordinates[4] = drawOrErase;
-                }
-                else if(touchY<600){
-                    touchCoordinates[5] = drawOrErase;
-                }
-                else if(touchY<700){
-                    touchCoordinates[6] = drawOrErase;
-                }
-                else if(touchY<800){
-                    touchCoordinates[7] = drawOrErase;
-                }
-                else if(touchY<900){
-                    touchCoordinates[8] = drawOrErase;
-                }
-                else if(touchY<1000){
-                    touchCoordinates[9] = drawOrErase;
-                }
-                else if(touchY<1100){
-                    touchCoordinates[10] = drawOrErase;
-                }
-                else if(touchY<1200){
-                    touchCoordinates[11] = drawOrErase;
-                }
-                else if(touchY<1300){
-                    touchCoordinates[12] = drawOrErase;
-                }
-                else if(touchY<1400){
-                    touchCoordinates[13] = drawOrErase;
-                }
-                else if(touchY<1500){
-                    touchCoordinates[14] = drawOrErase;
-                }
-                else if(touchY<1600){
-                    touchCoordinates[15] = drawOrErase;
-                }
-                else if(touchY<1700){
-                    touchCoordinates[16] = drawOrErase;
-                }
-                else if(touchY<1800){
-                    touchCoordinates[17] = drawOrErase;
-                }
-                else if(touchY<1900){
-                    touchCoordinates[18] = drawOrErase;
-                }
-                else if(touchY<2000){
-                    touchCoordinates[19] = drawOrErase;
-                }
+                touchCoordinates[touchY/100] = drawOrErase;
                 break;
+
             case MotionEvent.ACTION_MOVE:
-                if(touchY<100){
-                    touchCoordinates[0] = drawOrErase;//flag
-                }
-                else if(touchY<200){
-                    touchCoordinates[1] = drawOrErase;
-                }
-                else if(touchY<300){
-                    touchCoordinates[2] = drawOrErase;
-                }
-                else if(touchY<400){
-                    touchCoordinates[3] = drawOrErase;
-                }
-                else if(touchY<500){
-                    touchCoordinates[4] = drawOrErase;
-                }
-                else if(touchY<600){
-                    touchCoordinates[5] = drawOrErase;
-                }
-                else if(touchY<700){
-                    touchCoordinates[6] = drawOrErase;
-                }
-                else if(touchY<800){
-                    touchCoordinates[7] = drawOrErase;
-                }
-                else if(touchY<900){
-                    touchCoordinates[8] = drawOrErase;
-                }
-                else if(touchY<1000){
-                    touchCoordinates[9] = drawOrErase;
-                }
-                else if(touchY<1100){
-                    touchCoordinates[10] = drawOrErase;
-                }
-                else if(touchY<1200){
-                    touchCoordinates[11] = drawOrErase;
-                }
-                else if(touchY<1300){
-                    touchCoordinates[12] = drawOrErase;
-                }
-                else if(touchY<1400){
-                    touchCoordinates[13] = drawOrErase;
-                }
-                else if(touchY<1500){
-                    touchCoordinates[14] = drawOrErase;
-                }
-                else if(touchY<1600){
-                    touchCoordinates[15] = drawOrErase;
-                }
-                else if(touchY<1700){
-                    touchCoordinates[16] = drawOrErase;
-                }
-                else if(touchY<1800){
-                    touchCoordinates[17] = drawOrErase;
-                }
-                else if(touchY<1900){
-                    touchCoordinates[18] = drawOrErase;
-                }
-                else if(touchY<2000){
-                    touchCoordinates[19] = drawOrErase;
-                }
+                touchCoordinates[touchY/100] = drawOrErase;
                 break;
+
             case MotionEvent.ACTION_UP:
-                if(touchY<100){
-                    touchCoordinates[0] = drawOrErase;//flag
-                }
-                else if(touchY<200){
-                    touchCoordinates[1] = drawOrErase;
-                }
-                else if(touchY<300){
-                    touchCoordinates[2] = drawOrErase;
-                }
-                else if(touchY<400){
-                    touchCoordinates[3] = drawOrErase;
-                }
-                else if(touchY<500){
-                    touchCoordinates[4] = drawOrErase;
-                }
-                else if(touchY<600){
-                    touchCoordinates[5] = drawOrErase;
-                }
-                else if(touchY<700){
-                    touchCoordinates[6] = drawOrErase;
-                }
-                else if(touchY<800){
-                    touchCoordinates[7] = drawOrErase;
-                }
-                else if(touchY<900){
-                    touchCoordinates[8] = drawOrErase;
-                }
-                else if(touchY<1000){
-                    touchCoordinates[9] = drawOrErase;
-                }
-                else if(touchY<1100){
-                    touchCoordinates[10] = drawOrErase;
-                }
-                else if(touchY<1200){
-                    touchCoordinates[11] = drawOrErase;
-                }
-                else if(touchY<1300){
-                    touchCoordinates[12] = drawOrErase;
-                }
-                else if(touchY<1400){
-                    touchCoordinates[13] = drawOrErase;
-                }
-                else if(touchY<1500){
-                    touchCoordinates[14] = drawOrErase;
-                }
-                else if(touchY<1600){
-                    touchCoordinates[15] = drawOrErase;
-                }
-                else if(touchY<1700){
-                    touchCoordinates[16] = drawOrErase;
-                }
-                else if(touchY<1800){
-                    touchCoordinates[17] = drawOrErase;
-                }
-                else if(touchY<1900){
-                    touchCoordinates[18] = drawOrErase;
-                }
-                else if(touchY<2000){
-                    touchCoordinates[19] = drawOrErase;
-                }
+                touchCoordinates[touchY/100] = drawOrErase;
                 break;
 
             default:
