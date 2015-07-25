@@ -4,7 +4,10 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.ScrollView;
 import android.widget.Switch;
 import android.widget.ToggleButton;
 
@@ -15,15 +18,29 @@ public class TestActivity2 extends ActionBarActivity {
     private ToggleButton toggle2;
     private ToggleButton toggle3;
     private ToggleButton toggle4;
+    private ScrollView scrollView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test_activity2);
         drawView = (DrawingView) findViewById(R.id.drawing);
+        scrollView = (ScrollView) findViewById(R.id.scrollview_availability);
 //        toggle1 = (ToggleButton)findViewById(R.id.toggleButton);
 //        new TestActivity2Frag();
-        // comment
+        drawView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if( event.getAction() == MotionEvent.ACTION_DOWN ){
+                    scrollView.requestDisallowInterceptTouchEvent(true);
+                }
+                else if( event.getAction() == MotionEvent.ACTION_UP ||
+                        event.getAction() == MotionEvent.ACTION_CANCEL ){
+                    scrollView.requestDisallowInterceptTouchEvent(false);
+                }
+                return false;
+            }
+        });
 
         toggle1 = (Switch) findViewById(R.id.drawEraseSwitch);
         toggle1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {

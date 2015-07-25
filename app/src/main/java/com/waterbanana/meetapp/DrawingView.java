@@ -48,6 +48,8 @@ public class DrawingView extends View
     private void setupDrawing(){
         //get drawing area setup for interaction
         // comment
+
+
         drawPath = new Path();
         drawPaint = new Paint();
         drawPaint.setColor(paintColor);
