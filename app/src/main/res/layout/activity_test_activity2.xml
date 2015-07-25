@@ -1,63 +1,55 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/canvas_main">
+    android:layout_height="match_parent" >
 
-    <LinearLayout
-        android:orientation="horizontal"
+    <FrameLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:weightSum="4"
-        android:id="@+id/CanvasSwitchLayout">
+        android:layout_height="wrap_content"
+        android:id="@+id/canvas_main">
 
-        <TextView
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:background ="#FFFFFFFF"
-            android:layout_height="match_parent" />
-
-        <TextView
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:background ="#FFFFFFFF"
-            android:layout_height="match_parent" />
-
-        <com.waterbanana.meetapp.DrawingView
-            android:id="@+id/drawing"
-            android:layout_weight="1"
-            android:layout_width="0dp"
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="0dp"
-            android:layout_marginLeft="0dp"
-            android:layout_marginRight="0dp"
-            android:layout_marginTop="0dp"
+            android:weightSum="4"
+            android:id="@+id/CanvasSwitchLayout">
 
-            android:background="#00000000" />
+            <LinearLayout
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="1200dp"
+                android:background ="#FFFFFFFF" />
 
 
+            <LinearLayout
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:background ="#FFFFFFFF"
+                android:layout_height="1200dp" />
 
-        <!--<LinearLayout-->
-            <!--android:layout_weight="1"-->
-            <!--android:layout_width="0dp"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:orientation="vertical"-->
-            <!--android:weightSum="4"-->
-            <!--android:background="#FFFFFF"-->
-            <!--android:id = "@+id/SwitchLayout">-->
+            <com.waterbanana.meetapp.DrawingView
+                android:id="@+id/drawing"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="1200dp"
+                android:background="#00000000" />
 
             <Switch
                 android:id="@+id/drawEraseSwitch"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_height="1200dp"
                 android:layout_weight="1"
                 android:textOn="Erase"
                 android:textOff="Draw"
                 android:showText="true" />
 
-        <!--</LinearLayout>-->
 
+        </LinearLayout>
 
-    </LinearLayout>
+    </FrameLayout>
 
-</FrameLayout>
+</ScrollView>
