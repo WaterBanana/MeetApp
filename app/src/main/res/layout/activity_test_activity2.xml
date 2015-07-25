@@ -1,55 +1,63 @@
-<ScrollView
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:weightSum="20"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent">
 
-    <FrameLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/canvas_main">
+        android:layout_height="match_parent"
+        android:layout_weight="19">
 
-        <LinearLayout
-            android:orientation="horizontal"
+        <FrameLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:weightSum="4"
-            android:id="@+id/CanvasSwitchLayout">
+            android:layout_height="wrap_content"
+            android:id="@+id/canvas_main">
 
             <LinearLayout
-                android:layout_weight="1"
-                android:layout_width="wrap_content"
-                android:layout_height="1200dp"
-                android:background ="#FFFFFFFF" />
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:weightSum="3"
+                android:id="@+id/CanvasSwitchLayout">
 
+                <LinearLayout
+                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="1200dp"
+                    android:background ="#FFFFFFFF" />
 
-            <LinearLayout
-                android:layout_weight="1"
-                android:layout_width="wrap_content"
-                android:background ="#FFFFFFFF"
-                android:layout_height="1200dp" />
+                <com.waterbanana.meetapp.DrawingView
+                    android:id="@+id/drawing"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="1200dp"
+                    android:background="#00000000" />
 
-            <com.waterbanana.meetapp.DrawingView
-                android:id="@+id/drawing"
-                android:layout_weight="1"
-                android:layout_width="0dp"
-                android:layout_height="1200dp"
-                android:background="#00000000" />
+                <LinearLayout
+                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
+                    android:background ="#FFFFFFFF"
+                    android:layout_height="1200dp" />
 
-            <Switch
-                android:id="@+id/drawEraseSwitch"
-                android:layout_width="wrap_content"
-                android:layout_height="1200dp"
-                android:layout_weight="1"
-                android:textOn="Erase"
-                android:textOff="Draw"
-                android:showText="true" />
+            </LinearLayout>
 
+        </FrameLayout>
 
-        </LinearLayout>
+    </ScrollView>
 
-    </FrameLayout>
+    <Switch
+        android:id="@+id/drawEraseSwitch"
+        android:layout_weight="1"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textOn="Erase"
+        android:textOff="Draw"
+        android:showText="true" />
 
-</ScrollView>
+</LinearLayout>
