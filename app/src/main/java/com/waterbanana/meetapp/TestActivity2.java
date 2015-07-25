@@ -23,6 +23,7 @@ public class TestActivity2 extends ActionBarActivity {
         drawView = (DrawingView) findViewById(R.id.drawing);
 //        toggle1 = (ToggleButton)findViewById(R.id.toggleButton);
 //        new TestActivity2Frag();
+        // comment
 
         toggle1 = (Switch) findViewById(R.id.drawEraseSwitch);
         toggle1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
