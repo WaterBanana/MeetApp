@@ -40,9 +40,16 @@ public class DrawingView extends View
     //canvas bitmap
     private Bitmap canvasBitmap;
 
+    //The touchY coordinates are returned as pixels; (dp*density)
+    //To properly line up things, while using scroll view and different phones
+    //the returned value should be divided by the density (which in my phone's case is 3)
+
+    //so.... the received touchY needs to be divided by 3, then placed into touchCoordinates[]
+
     //Height is divided into integers.
     //When corresponding y-coordinate is pressed, then the group it belongs to out of 100, will be colored
-    private int[] touchCoordinates = new int[20];
+    private int timeIntervals = 96;
+    private int[] touchCoordinates = new int[timeIntervals];
 
     private Switch drawEraseButton;
 
@@ -94,7 +101,7 @@ public class DrawingView extends View
         //2. OnCreate is from activities
         //3. This file is a view.
 
-        LinearLayout canvasLayout = (LinearLayout)findViewById(R.id.canvas_main);//keeps on being null
+        //LinearLayout canvasLayout = (FrameLayout)findViewById(R.id.canvas_main);//keeps on being null
 //        View view = getLayoutInflater().inflate(R.layout.canvas_main)
 //        drawEraseButton = (Switch)canvasLayout.getChildAt(4);
         //end
@@ -137,7 +144,7 @@ public class DrawingView extends View
 /*        drawEraseButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked){
-                    drawOrErase = -1;
+                    drawOrErase = 0;
                 }else{
                     drawOrErase = 1;
                 }
@@ -148,15 +155,15 @@ public class DrawingView extends View
 
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                touchCoordinates[touchY/100] = drawOrErase;
+                touchCoordinates[touchY/timeIntervals] = drawOrErase;
                 break;
 
             case MotionEvent.ACTION_MOVE:
-                touchCoordinates[touchY/100] = drawOrErase;
+                touchCoordinates[touchY/timeIntervals] = drawOrErase;
                 break;
 
             case MotionEvent.ACTION_UP:
-                touchCoordinates[touchY/100] = drawOrErase;
+                touchCoordinates[touchY/timeIntervals] = drawOrErase;
                 break;
 
             default:
@@ -168,6 +175,7 @@ public class DrawingView extends View
         for(int i=0; i<touchCoordinates.length; i++){
             if(touchCoordinates[i]>0){
 //                drawCanvas.drawPoint(touchX, i, drawPaint);
+                //drawLine(float startX, float startY, float stopX, float stopY, Paint paint)
                 drawCanvas.drawLine(125, (0+i*100), 125, (100+i*100), drawPaint);
             }
             else if (touchCoordinates[i]<=0){
