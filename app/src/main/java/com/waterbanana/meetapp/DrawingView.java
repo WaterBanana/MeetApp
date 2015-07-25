@@ -143,7 +143,6 @@ public class DrawingView extends View
                 }else{
                     drawOrErase = 1;
                 }
-
             }
         });*/
         //end
