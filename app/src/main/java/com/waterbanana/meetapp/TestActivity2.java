@@ -19,10 +19,11 @@ public class TestActivity2 extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        drawView = (DrawingView)findViewById(R.id.drawing);
+        setContentView(R.layout.activity_test_activity2);
+        drawView = (DrawingView) findViewById(R.id.drawing);
 //        toggle1 = (ToggleButton)findViewById(R.id.toggleButton);
 //        new TestActivity2Frag();
-        setContentView(R.layout.activity_test_activity2);
+
         toggle1 = (Switch) findViewById(R.id.drawEraseSwitch);
         toggle1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
