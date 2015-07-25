@@ -1,21 +1,17 @@
 package com.waterbanana.meetapp;
 
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.view.LayoutInflater;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 import android.widget.ToggleButton;
 
 
 public class TestActivity2 extends ActionBarActivity {
     private DrawingView drawView;
-    private ToggleButton toggle1;
+    private Switch toggle1;
     private ToggleButton toggle2;
     private ToggleButton toggle3;
     private ToggleButton toggle4;
@@ -27,7 +23,18 @@ public class TestActivity2 extends ActionBarActivity {
 //        toggle1 = (ToggleButton)findViewById(R.id.toggleButton);
 //        new TestActivity2Frag();
         setContentView(R.layout.activity_test_activity2);
-
+        toggle1 = (Switch) findViewById(R.id.drawEraseSwitch);
+        toggle1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    drawView.setErase(true);
+                }
+                else{
+                    drawView.setErase(false);
+                }
+            }
+        });
     }
 
 //    @Override

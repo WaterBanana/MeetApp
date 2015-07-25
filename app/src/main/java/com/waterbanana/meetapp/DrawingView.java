@@ -1,31 +1,16 @@
 package com.waterbanana.meetapp;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PorterDuff;
-import android.view.MotionEvent;
-import android.content.Context;
 import android.util.AttributeSet;
-import android.view.View;
-
-import android.view.GestureDetector;
-import android.view.GestureDetector.OnGestureListener;
-
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.Path;
 import android.view.MotionEvent;
-import android.widget.CompoundButton;
-import android.widget.LinearLayout;
+import android.view.View;
 import android.widget.Switch;
-import android.widget.ToggleButton;
-
-import static com.waterbanana.meetapp.R.id.CanvasSwitchLayout;
-import static com.waterbanana.meetapp.R.id.drawEraseSwitch;
 
 public class DrawingView extends View
 {
@@ -108,6 +93,15 @@ public class DrawingView extends View
 
 
 
+    }
+
+    public void setErase(boolean opt){
+        if( opt == true ){
+            drawOrErase = 0;
+        }
+        else{
+            drawOrErase = 1;
+        }
     }
 
     @Override
