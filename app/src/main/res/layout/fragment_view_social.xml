@@ -2,89 +2,51 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-
-    <include layout="@layout/toolbar" android:id="@+id/toolbar"/>
-
-    <RelativeLayout
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
+   <!-- <include layout="@layout/toolbar" android:id="@+id/toolbar"/>-->
+    <!--, This is used alogn with SocialFrag.java, TitlesFragment.Java, DetailsFragment.java,
+            GroupInfo.java, SocialScreen.java-->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="12pt"
+        android:textColor="@color/ColorPrimary"
+        android:layout_gravity="center"
+        android:text="Your Groups"/>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+    <fragment
+        android:layout_width="fill_parent"
         android:layout_height="match_parent"
-        android:paddingBottom="@dimen/activity_vertical_margin"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        tools:context="com.waterbanana.meetapp.ViewGroups">
+        android:id="@+id/titles"
+        class="com.waterbanana.meetapp.TitlesFragment"
+        android:layout_weight="5"/>
 
-        <LinearLayout
+    <FrameLayout
+        android:id="@+id/details"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:background="?android:attr/detailsElementBackground"
+        android:layout_weight="1"/>
+</LinearLayout>
+    <LinearLayout
+        android:id="@+id/GroupButtons"
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:layout_alignParentBottom="true">
+        <Button
+            android:id="@+id/CreateG"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-        <TextView
+            android:layout_weight="1"
+            android:text="CREATE">
+        </Button>
+        <Button
+            android:id="@+id/LeaveG"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="left"
-            android:text="GROUPS:"/>
-            <HorizontalScrollView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-                    <LinearLayout
-                        android:orientation="horizontal"
-                        android:id="@+id/group_names"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/all_groups_header" >
-                        <Button
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Group 1"/>
-                        <Button
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Group 2"/>
-                        <Button
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Group 3"/>
-                        <Button
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Group 4"/>
-                        <Button
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Group 5"/>
-                        <Button
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Group 6"/>
-                    </LinearLayout>
-            </HorizontalScrollView>
-            <ListView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-            </ListView>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/buttonAddGroup"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="New Group"/>
-
-            <Button
-                android:id="@+id/buttonRemoveGroup"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Leave Group"/>
-
-        </LinearLayout>
-
-    </RelativeLayout>
+            android:layout_weight="1"
+            android:text="LEAVE">
+        </Button>
+    </LinearLayout>
 </LinearLayout>

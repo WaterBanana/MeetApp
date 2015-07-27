@@ -8,7 +8,12 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 
 import com.waterbanana.common.SlidingTabLayout;
-
+//class social extends activity{
+//private DbHandler db;
+//protected onCreate(Bundle){
+//db = new DbHandler();}
+//usage: db.getUserById(String);
+//instantiate db handler in oncreate in each class
 //Comment
 public class SocialScreen extends ActionBarActivity {
     private Toolbar toolbar;
@@ -40,43 +45,25 @@ public class SocialScreen extends ActionBarActivity {
         @Override
         public CharSequence getPageTitle(int position) {
             if( position == 0 )
-                return "G1";
-            else if(position == 1){
-                return "G2";
-            }
-            else if(position == 2) {
-                return "G3";
-            }
-            else if(position == 3){
-                return "G4";
-            }
+                return "Groups";
             else{
-                return "G5";
+                return "Contacts";
             }
         }
 
         @Override
         public Fragment getItem(int position) {
             if( position == 0 ){
-                return new ViewUsers();
-            }
-            else if (position == 1){
-                return new ViewGroups();
-            }
-            else if (position == 2){
-                return new TestFragment();
-            }
-            else if (position == 3){
-                return new Calendar();
+                return new SocialFrag();
             }
             else{
-                return new SocialFrag();
+                return new SocialContacts();
             }
         }
 
         @Override
         public int getCount() {
-            return 5;
+            return 2;
         }
     }
 }
