@@ -54,7 +54,7 @@
             android:label="@string/title_activity_availability" >
         </activity>
         <activity
-            android:name=".TestActivity2"
+            android:name=".DrawAvailability"
             android:label="@string/title_activity_test_activity2" >
         </activity>
         <activity

@@ -82,7 +82,7 @@ public class DrawingView extends View
         //start
         //GAA 25 JUL 2015 - 3:26am
         //I want to:
-        //1. Grab the switch drawEraseSwitch from activity_test_activity2.xml for it's erase or draw info
+        //1. Grab the switch drawEraseSwitch from activity_draw_availabilityity.xml for it's erase or draw info
         //
         //Issues:
         //1. OnCreateView is from fragments (tutorials point to using that method to change setContentView to the xml file with the drawEraseSwitch

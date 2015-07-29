@@ -12,7 +12,7 @@ import android.widget.Switch;
 import android.widget.ToggleButton;
 
 
-public class TestActivity2 extends ActionBarActivity {
+public class DrawAvailability extends ActionBarActivity {
     private DrawingView drawView;
     private Switch toggle1;
     private ToggleButton toggle2;
@@ -23,7 +23,7 @@ public class TestActivity2 extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_test_activity2);
+        setContentView(R.layout.activity_draw_availability);
         drawView = (DrawingView) findViewById(R.id.drawing);
         scrollView = (ScrollView) findViewById(R.id.scrollview_availability);
 //        toggle1 = (ToggleButton)findViewById(R.id.toggleButton);
@@ -59,7 +59,7 @@ public class TestActivity2 extends ActionBarActivity {
 //    @Override
 //    public View onCreateView(LayoutInflater inflater, ViewGroup container,
 //                             Bundle savedInstanceState) {
-//        View view = inflater.inflate(R.layout.activity_test_activity2, container, false);
+//        View view = inflater.inflate(R.layout.activity_draw_availability, container, false);
 //        toggle1 = (ToggleButton)view.findViewById(R.id.toggleButton);
 //        toggle2 = (ToggleButton)view.findViewById(R.id.toggleButton2);
 //        toggle3 = (ToggleButton)view.findViewById(R.id.toggleButton3);

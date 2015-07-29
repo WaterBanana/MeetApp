@@ -516,7 +516,7 @@ public class Calendar extends Fragment implements View.OnClickListener{
         @Override
         public void onClick(View view) {
             String date_month_year = (String) view.getTag();
-            Intent intent = new Intent(getActivity(), Availability.class);
+            Intent intent = new Intent(getActivity(), DrawAvailability.class);
             intent.putExtra("DATE", date_month_year);
             //selectedDayMonthYearButton.setText("Selected: " + date_month_year);
             //Log.e("Selected date", date_month_year);
