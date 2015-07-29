@@ -1,6 +1,7 @@
 package com.waterbanana.meetapp;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -17,6 +18,9 @@ import com.waterbanana.common.SlidingTabLayout;
 //Comment
 public class MainActivity extends ActionBarActivity {
     private Toolbar toolbar;
+    private SharedPreferences sp;
+    private final String PREFS_NAME = "VirginityCheck";
+    private final String PREFS_ISVIRGIN = "isVirgin";
     //private SlidingTabLayout mSTL;
     //GAA 05JUL2015 - Testing GitHub Version Control
     //hello
@@ -29,6 +33,15 @@ public class MainActivity extends ActionBarActivity {
         toolbar = (Toolbar) findViewById( R.id.toolbar );
         setSupportActionBar(toolbar);
 
+        sp = getSharedPreferences( PREFS_NAME, 0 );
+        boolean isVirgin = sp.getBoolean( PREFS_ISVIRGIN, true );
+        if( isVirgin ){
+            //sp.edit().putBoolean(PREFS_ISVIRGIN, false).apply();
+            Intent intent = new Intent( this, CherryPopper.class );
+            finish();
+            startActivity( intent );
+        }
+
         SlidingTabLayout mSTL = (SlidingTabLayout) findViewById( R.id.main_sliding_tabs_layout );
 
         MAViewPager viewPager = (MAViewPager) findViewById( R.id.pager );
@@ -40,7 +53,7 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate( R.menu.menu_main, menu );
+        getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
@@ -53,6 +66,13 @@ public class MainActivity extends ActionBarActivity {
         }
         else if( id == R.id.social ){
             Intent intent = new Intent( this, SocialScreen.class );
+            startActivity( intent );
+        }
+        else if( id == R.id.resetapp ){
+            sp.edit().putBoolean( PREFS_ISVIRGIN, true ).apply();
+            Intent intent = new Intent( this, MainActivity.class );
+            intent.addFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP );
+            finish();
             startActivity( intent );
         }
 

@@ -14,23 +14,25 @@ import java.util.ArrayList;
  * Created by Eddie on 6/18/2015.
  */
 public class DbHandler {
-    private static String
+    private static final String
             get_all_users_url = "http://waterbanana.comuv.com/dbhandler/get_userinfo.php";
-    private static String
+    private static final String
             select_user_url = "http://waterbanana.comuv.com/dbhandler/select_userinfo.php";
-    private static String
+    private static final String
+            register_user_url = "http://waterbanana.comuv.com/dbhandler/new_user.php";
+    private static final String
             new_user_url = "http://waterbanana.comuv.com/dbhandler/new_userinfo.php";
-    private static String
+    private static final String
             delete_user_url = "http://waterbanana.comuv.com/dbhandler/delete_userinfo.php";
-    private static String
+    private static final String
             update_user_url = "http://waterbanana.comuv.com/dbhandler/update_userinfo.php";
-    private static String
+    private static final String
             new_group_url = "http://waterbanana.comuv.com/dbhandler/new_group.php";
-    private static String
+    private static final String
             get_all_groups_url = "http://waterbanana.comuv.com/dbhandler/get_group.php";
-    private static String
+    private static final String
             select_group_url = "http://waterbanana.comuv.com/dbhandler/select_group.php";
-    private static String
+    private static final String
             leave_group_url = "http://waterbanana.comuv.com/dbhandler/leave_group.php";
     private static final String TAG_SUCCESS = "success";
     private static final String TAG_MESSAGE = "message";
@@ -108,7 +110,7 @@ public class DbHandler {
         Log.d( this.toString(), json.toString() );
 
         try{
-            int success = json.getInt( TAG_SUCCESS );
+            int success = json.getInt(TAG_SUCCESS);
             if( success == 1 ){
                 JSONArray allGroups = json.getJSONArray( TAG_GROUPS );
                 int groupsSize = allGroups.length();
@@ -143,7 +145,7 @@ public class DbHandler {
         JSONObject json = jsonParser.makeHttpRequest( select_group_url, "GET", params );
         Log.d( this.toString(), json.toString() );
         try{
-            int success = json.getInt( TAG_SUCCESS );
+            int success = json.getInt(TAG_SUCCESS);
             if( success == 1 ){
                 JSONArray entries = json.getJSONArray(TAG_USER);
                 int numUsers = entries.length();
@@ -163,6 +165,36 @@ public class DbHandler {
         }
 
         return users;
+    }
+
+    /**
+     * Registers a new user into the db.
+     * @param encPhoneNum User's encrypted phone number (aka userid)
+     * @return -1 upon failure
+     */
+    public int registerUser(String encPhoneNum){
+        int success = -1;
+        ArrayList<NameValuePair> params = new ArrayList<>();
+        params.add( new BasicNameValuePair( TAG_USERID, encPhoneNum ) );
+
+        JSONParser jsonParser = new JSONParser();
+        Log.d( this.toString(), "Registering User" );
+        JSONObject json = jsonParser.makeHttpRequest( register_user_url, "POST", params );
+        Log.d( this.toString(), json.toString() );
+
+        try{
+            success = json.getInt( TAG_SUCCESS );
+            if( success == 1 ){
+                return success;
+            }
+            else{
+                success = -1;
+            }
+        } catch( JSONException e ){
+            Log.e( this.toString(), e.toString() );
+        }
+        
+        return success;
     }
 
     /**

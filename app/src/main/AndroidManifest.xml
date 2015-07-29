@@ -3,6 +3,9 @@
     package="com.waterbanana.meetapp" >
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
 
     <application
         android:allowBackup="true"
@@ -53,6 +56,14 @@
         <activity
             android:name=".TestActivity2"
             android:label="@string/title_activity_test_activity2" >
+        </activity>
+        <activity
+            android:name=".CherryPopper"
+            android:label="@string/title_activity_cherry_popper" >
+        </activity>
+        <activity
+            android:name=".CPSMSHandler"
+            android:label="@string/title_activity_cpsmshandler" >
         </activity>
     </application>
 

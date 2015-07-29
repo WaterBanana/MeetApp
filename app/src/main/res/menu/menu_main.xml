@@ -13,4 +13,9 @@
         android:title="@string/social"
         app:showAsAction="always"
         android:icon="@android:drawable/btn_star_big_on"/>
+    <item
+        android:id="@+id/resetapp"
+        android:orderInCategory="300"
+        android:title="@string/reset"
+        app:showAsAction="never" />
 </menu>

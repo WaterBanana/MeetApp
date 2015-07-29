@@ -1,0 +1,16 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/screenwrapper"
+    tools:context="com.waterbanana.meetapp.CherryPopper">
+
+    <include layout="@layout/toolbar" android:id="@+id/toolbar" />
+
+    <android.support.v4.view.ViewPager
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/cherrypopper_viewpager"
+        android:layout_below="@id/toolbar" />
+
+</RelativeLayout>
