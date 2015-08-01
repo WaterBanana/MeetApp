@@ -216,6 +216,7 @@ public class Calendar extends Fragment implements View.OnClickListener{
         private final HashMap<String, Integer> eventsPerMonthMap;
         private final SimpleDateFormat dateFormatter = new SimpleDateFormat(
                 "dd-MMM-yyyy");
+        private int divideBy;
 
         // Days in Current Month
         public GridCellAdapter(Context context, int textViewResourceId,
@@ -228,9 +229,9 @@ public class Calendar extends Fragment implements View.OnClickListener{
             java.util.Calendar calendar = java.util.Calendar.getInstance();
             setCurrentDayOfMonth(calendar.get(java.util.Calendar.DAY_OF_MONTH));
             setCurrentWeekDay(calendar.get(java.util.Calendar.DAY_OF_WEEK));
-            Log.d(tag, "New Calendar:= " + calendar.getTime().toString());
-            Log.d(tag, "CurrentDayOfWeek :" + getCurrentWeekDay());
-            Log.d(tag, "CurrentDayOfMonth :" + getCurrentDayOfMonth());
+//            Log.d(tag, "New Calendar:= " + calendar.getTime().toString());
+//            Log.d(tag, "CurrentDayOfWeek :" + getCurrentWeekDay());
+//            Log.d(tag, "CurrentDayOfMonth :" + getCurrentDayOfMonth());
 
             initializeMeetingPopulation();
             recolorDaysDueToMeetingPopulation(6, 15, 0.91);//(5, 4) = (June, 16)
@@ -291,7 +292,7 @@ public class Calendar extends Fragment implements View.OnClickListener{
             new DisplayMonth().execute(month, year);
         }
 
-        private void displayMonth( int mm, int yy ){
+/*        private void displayMonth( int mm, int yy ){
             Log.d(tag, "==> printMonth: mm: " + mm + " " + "yy: " + yy);
             int trailingSpaces = 0;
             int daysInPrevMonth = 0;
@@ -342,10 +343,10 @@ public class Calendar extends Fragment implements View.OnClickListener{
             int currentWeekDay = cal.get(java.util.Calendar.DAY_OF_WEEK) - 1;
             trailingSpaces = currentWeekDay;
 
-//            Log.d(tag, "Week Day:" + currentWeekDay + " is "
-//                    + getWeekDayAsString(currentWeekDay));
-//            Log.d(tag, "No. Trailing space to Add: " + trailingSpaces);
-//            Log.d(tag, "No. of Days in Previous Month: " + daysInPrevMonth);
+            Log.d(tag, "Week Day:" + currentWeekDay + " is "
+                    + getWeekDayAsString(currentWeekDay));
+            Log.d(tag, "No. Trailing space to Add: " + trailingSpaces);
+            Log.d(tag, "No. of Days in Previous Month: " + daysInPrevMonth);
 
             if (cal.isLeapYear(cal.get(java.util.Calendar.YEAR)))
                 if (mm == 2)
@@ -413,7 +414,7 @@ public class Calendar extends Fragment implements View.OnClickListener{
                 list.add(String.valueOf(i + 1) + "-GREY" + "-"
                         + getMonthAsString(nextMonth) + "-" + nextYear);
             }
-        }
+        }*/
 
         /**
          * NOTE: YOU NEED TO IMPLEMENT THIS PART Given the YEAR, MONTH, retrieve
@@ -457,7 +458,7 @@ public class Calendar extends Fragment implements View.OnClickListener{
             int dp = (int) Math.ceil(screenHeight / (int) logicalDensity);
             dp -= 60;
             int cellPreHeight = (int) Math.ceil(dp * (int) logicalDensity);
-            gridcell.setHeight(cellPreHeight / 5);
+            gridcell.setHeight(cellPreHeight / divideBy);
 
             //Log.d(tag, "Current Day: " + getCurrentDayOfMonth());
             String[] day_color = list.get(position).split("-");
@@ -600,10 +601,11 @@ public class Calendar extends Fragment implements View.OnClickListener{
 //                        + " NextYear: " + nextYear);
                 }
 
+                // First day (name) of the month
                 int currentWeekDay = cal.get(java.util.Calendar.DAY_OF_WEEK) - 1;
                 trailingSpaces = currentWeekDay;
 
-//            Log.d(tag, "Week Day:" + currentWeekDay + " is "
+//            Log.d(tag, "Week Day in " + currentMonthName + ":" + currentWeekDay + " is "
 //                    + getWeekDayAsString(currentWeekDay));
 //            Log.d(tag, "No. Trailing space to Add: " + trailingSpaces);
 //            Log.d(tag, "No. of Days in Previous Month: " + daysInPrevMonth);
@@ -633,6 +635,20 @@ public class Calendar extends Fragment implements View.OnClickListener{
                             + getMonthAsString(prevMonth)
                             + "-"
                             + prevYear);
+                }
+
+                if( currentWeekDay == 0 && daysInMonth == 28 ){
+//                    Log.d( tag, "Number of weeks in month: 4" );
+                    divideBy = 4;
+                }
+                else if( (currentWeekDay == 5 && daysInMonth > 30)
+                        || (currentWeekDay == 6 && daysInMonth > 29) ) {
+//                    Log.d( tag, "Number of weeks in month: 6" );
+                    divideBy = 6;
+                }
+                else{
+//                    Log.d( tag, "Number of weeks in month: 5" );
+                    divideBy = 5;
                 }
 
                 // Current Month Days
