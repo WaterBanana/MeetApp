@@ -9,10 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-
-/**
- * A simple {@link Fragment} subclass.
- */
 public class CP1Home extends Fragment {
     private Button next;
     private static ViewPager viewPager;
@@ -30,12 +26,13 @@ public class CP1Home extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_cphome, container, false);
+        final int nextPage = viewPager.getCurrentItem() + 1;
 
         next = (Button) view.findViewById( R.id.btnCPGoToPg2 );
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                viewPager.setCurrentItem( 1 );
+                viewPager.setCurrentItem( nextPage );
             }
         });
 

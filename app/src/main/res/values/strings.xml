@@ -37,12 +37,14 @@
     <string name="title_activity_test_activity2">TestActivity2</string>
     <string name="hi_universe">Hi Universe!</string>
     <string name="social">Social Page</string>
-    <string name="title_activity_cherry_popper">CherryPopper</string>
+    <string name="title_activity_cherry_popper">Setup</string>
     <string name="cp_welcome">Looks like you\'re a first timer!\nLet\'s take a minute to set you up!</string>
     <string name="next"><![CDATA[>]]></string>
     <string name="reset">Reset Application</string>
-    <string name="cp_settingup">We will now try to verify your phone number by sending a text message to your phone and detect its arrival...</string>
+    <string name="cp_settingup">We will now try to verify your phone number by sending a text message to your phone and detect its arrival&#8230;</string>
     <string name="begin">Begin</string>
-    <string name="title_activity_cpsmshandler">CPSMSHandler</string>
-    <string name="cp_smshandling">Please wait while we try to verify your phone number...</string>
+    <string name="cp_smshandling">Please wait while we try to verify your phone number&#8230;</string>
+    <string name="cpfailed">Please enter your phone number.</string>
+    <string name="submit">Submit</string>
+    <string name="cancel">Cancel</string>
 </resources>

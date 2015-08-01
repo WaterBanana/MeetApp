@@ -5,7 +5,7 @@
 
     <include
         android:id="@+id/tool_bar"
-        layout="@layout/tool_bar"
+        layout="@layout/toolbar"
         android:layout_height="wrap_content"
         android:layout_width="match_parent" />
 

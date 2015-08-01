@@ -63,7 +63,7 @@
         </activity>
         <activity
             android:name=".CPSMSHandler"
-            android:label="@string/title_activity_cpsmshandler" >
+            android:label="@string/title_activity_cherry_popper" >
         </activity>
     </application>
 
