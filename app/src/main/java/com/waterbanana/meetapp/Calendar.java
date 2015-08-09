@@ -714,8 +714,11 @@ public class Calendar extends Fragment implements View.OnClickListener{
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            LayoutInflater inflater = (LayoutInflater) _context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View view = inflater.inflate(R.layout.weekday_header, parent, false);
+            View view = convertView;
+            if( convertView == null ) {
+                LayoutInflater inflater = (LayoutInflater) _context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                view = inflater.inflate(R.layout.weekday_header, parent, false);
+            }
 
             TextView weekdayName = (TextView) view.findViewById(R.id.weekdayName);
             String dayNameStr = weekdays[position].substring(0, 3);
