@@ -4,4 +4,5 @@
     <color name="ColorPrimaryDark">#C31C13</color>
     <color name="tabsScrollColor">#8A140E</color>
     <color name="DaySelected">#43BDF9</color>
+    <color name="RibbonColorPrimary">#ff00ff00</color>
 </resources>
