@@ -1,13 +1,15 @@
 package com.waterbanana.meetapp;
 
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.RelativeLayout;
 
-public class TestActivity extends ActionBarActivity {
+import com.waterbanana.common.RangeSeekBar;
+
+public class TestActivity extends AppCompatActivity {
     //private AvailabilityTickMarker marker;
     private String TAG = "TestActivity";
 

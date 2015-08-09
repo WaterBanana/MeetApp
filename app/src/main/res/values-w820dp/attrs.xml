@@ -1,4 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <attr name="day_selector" format="reference" />
+
+    <declare-styleable name="MultiSlider">
+
+
+        <attr name="scaleMin" format="integer"/>
+        <attr name="scaleMax" format="integer"/>
+        <attr name="scaleStep" format="integer"/>
+
+
+        <attr name="stepsThumbsApart" format="integer"/>
+        <attr name="drawThumbsApart" format="boolean"/>
+
+        <attr name="android:thumb"/>
+        <attr name="thumbNumber" format="integer"/>
+        <attr name="android:thumbOffset"/>
+
+        <attr name="thumbValue1" format="integer"/>
+        <attr name="thumbValue2" format="integer"/>
+        <attr name="range1" format="reference"/>
+        <attr name="range2" format="reference"/>
+
+        <attr name="android:track"/>
+
+        <attr name="range" format="reference"/>
+
+        <attr name="mirrorForRTL" format="boolean"/>
+
+
+    </declare-styleable>
+    <!-- style reference -->
+    <declare-styleable name="MultiSliderTheme">
+        <attr name="multiSliderStyle" format="reference"/>
+    </declare-styleable>
 </resources>

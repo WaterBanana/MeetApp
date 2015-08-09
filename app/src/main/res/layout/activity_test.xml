@@ -7,6 +7,14 @@
     android:id="@+id/relativeLayout_activity_test"
     tools:context="com.waterbanana.meetapp.TestActivity">
 
+    <!--<com.waterbanana.common.MultiSlider-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--thumbNumber="2"-->
+        <!--stepsThumbsApart="5"-->
+        <!--drawThumbsApart="true"-->
+        <!--/>-->
+
     <!--<com.waterbanana.meetapp.AvailabilityTickMarker-->
         <!--android:layout_width="match_parent"-->
         <!--android:layout_height="match_parent"-->

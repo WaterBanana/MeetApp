@@ -1,4 +1,4 @@
-package com.waterbanana.meetapp;
+package com.waterbanana.common;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -13,6 +13,8 @@ import android.os.Parcelable;
 import android.view.MotionEvent;
 import android.view.ViewConfiguration;
 import android.widget.ImageView;
+
+import com.waterbanana.meetapp.R;
 
 import java.math.BigDecimal;
 
@@ -60,7 +62,7 @@ public class RangeSeekBar<T extends Number> extends ImageView {
     // with API < 8 "Froyo".
     public static final int ACTION_POINTER_UP = 0x6, ACTION_POINTER_INDEX_MASK = 0x0000ff00, ACTION_POINTER_INDEX_SHIFT = 8;
 
-    private float mDownMotionY;
+    private float mDownMotionX;
     private int mActivePointerId = INVALID_POINTER_ID;
 
     /**
@@ -209,9 +211,9 @@ public class RangeSeekBar<T extends Number> extends ImageView {
                 // Remember where the motion event started
                 mActivePointerId = event.getPointerId(event.getPointerCount() - 1);
                 pointerIndex = event.findPointerIndex(mActivePointerId);
-                mDownMotionY = event.getY(pointerIndex);
+                mDownMotionX = event.getX(pointerIndex);
 
-                pressedThumb = evalPressedThumb(mDownMotionY);
+                pressedThumb = evalPressedThumb(mDownMotionX);
 
                 // Only handle thumb presses.
                 if (pressedThumb == null)
@@ -233,9 +235,9 @@ public class RangeSeekBar<T extends Number> extends ImageView {
                     else {
                         // Scroll to follow the motion event
                         pointerIndex = event.findPointerIndex(mActivePointerId);
-                        final float y = event.getY(pointerIndex);
+                        final float x = event.getX(pointerIndex);
 
-                        if (Math.abs(y - mDownMotionY) > mScaledTouchSlop) {
+                        if (Math.abs(x - mDownMotionX) > mScaledTouchSlop) {
                             setPressed(true);
                             invalidate();
                             onStartTrackingTouch();
@@ -272,7 +274,7 @@ public class RangeSeekBar<T extends Number> extends ImageView {
             case MotionEvent.ACTION_POINTER_DOWN: {
                 final int index = event.getPointerCount() - 1;
                 // final int index = ev.getActionIndex();
-                mDownMotionY = event.getY(index);
+                mDownMotionX = event.getX(index);
                 mActivePointerId = event.getPointerId(index);
                 invalidate();
                 break;
@@ -301,20 +303,20 @@ public class RangeSeekBar<T extends Number> extends ImageView {
             // a new active pointer and adjust accordingly.
             // TODO: Make this decision more intelligent.
             final int newPointerIndex = pointerIndex == 0 ? 1 : 0;
-            mDownMotionY = ev.getY(newPointerIndex);
+            mDownMotionX = ev.getX(newPointerIndex);
             mActivePointerId = ev.getPointerId(newPointerIndex);
         }
     }
 
     private final void trackTouchEvent(MotionEvent event) {
         final int pointerIndex = event.findPointerIndex(mActivePointerId);
-        final float y = event.getY(pointerIndex);
+        final float x = event.getX(pointerIndex);
 
         if (Thumb.MIN.equals(pressedThumb)) {
-            setNormalizedMinValue(screenToNormalized(y));
+            setNormalizedMinValue(screenToNormalized(x));
         }
         else if (Thumb.MAX.equals(pressedThumb)) {
-            setNormalizedMaxValue(screenToNormalized(y));
+            setNormalizedMaxValue(screenToNormalized(x));
         }
     }
 
@@ -346,13 +348,13 @@ public class RangeSeekBar<T extends Number> extends ImageView {
      */
     @Override
     protected synchronized void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int height = 200;
-        if (MeasureSpec.UNSPECIFIED != MeasureSpec.getMode(heightMeasureSpec)) {
-            height = MeasureSpec.getSize(widthMeasureSpec);
-        }
-        int width = thumbImage.getWidth();
+        int width = 200;
         if (MeasureSpec.UNSPECIFIED != MeasureSpec.getMode(widthMeasureSpec)) {
-            width = Math.min(width, MeasureSpec.getSize(widthMeasureSpec));
+            width = MeasureSpec.getSize(widthMeasureSpec);
+        }
+        int height = thumbImage.getHeight();
+        if (MeasureSpec.UNSPECIFIED != MeasureSpec.getMode(heightMeasureSpec)) {
+            height = Math.min(height, MeasureSpec.getSize(heightMeasureSpec));
         }
         setMeasuredDimension(width, height);
     }
@@ -365,12 +367,7 @@ public class RangeSeekBar<T extends Number> extends ImageView {
         super.onDraw(canvas);
 
         // draw seek bar background line
-        final RectF rect = new RectF(
-                padding,
-                0.5f * (getHeight() - lineHeight),
-                0.5f * (getHeight() + lineHeight),
-                getWidth() - padding
-        );
+        final RectF rect = new RectF(padding, 0.5f * (getHeight() - lineHeight), getWidth() - padding, 0.5f * (getHeight() + lineHeight));
         paint.setStyle(Style.FILL);
         paint.setColor(Color.TRANSPARENT);
         paint.setAntiAlias(true);
@@ -425,12 +422,7 @@ public class RangeSeekBar<T extends Number> extends ImageView {
      *            The canvas to draw upon.
      */
     private void drawThumb(float screenCoord, boolean pressed, Canvas canvas) {
-        canvas.drawBitmap(
-                pressed ? thumbPressedImage : thumbImage,
-                screenCoord - thumbHalfWidth,
-                (float) ((0.5f * getHeight()) - thumbHalfHeight),
-                paint
-        );
+        canvas.drawBitmap(pressed ? thumbPressedImage : thumbImage, screenCoord - thumbHalfWidth, (float) ((0.5f * getHeight()) - thumbHalfHeight), paint);
     }
 
     /**
@@ -526,7 +518,7 @@ public class RangeSeekBar<T extends Number> extends ImageView {
      * @return The converted value in screen space.
      */
     private float normalizedToScreen(double normalizedCoord) {
-        return (float) (padding + normalizedCoord * (getHeight() - 2 * padding));
+        return (float) (padding + normalizedCoord * (getWidth() - 2 * padding));
     }
 
     /**
@@ -537,13 +529,13 @@ public class RangeSeekBar<T extends Number> extends ImageView {
      * @return The normalized value.
      */
     private double screenToNormalized(float screenCoord) {
-        int height = getHeight();
-        if (height <= 2 * padding) {
+        int width = getWidth();
+        if (width <= 2 * padding) {
             // prevent division by zero, simply return 0.
             return 0d;
         }
         else {
-            double result = (screenCoord - padding) / (height - 2 * padding);
+            double result = (screenCoord - padding) / (width - 2 * padding);
             return Math.min(1d, Math.max(0d, result));
         }
     }
