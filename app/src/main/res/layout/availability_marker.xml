@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <com.waterbanana.meetapp.AvailabilityTickMarker
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView_availability_marker"
+        android:background="@drawable/availability_marker"
+        android:contentDescription="@string/marker"/>
+
+</LinearLayout>

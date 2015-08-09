@@ -18,7 +18,7 @@ public class mDayView extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.day_view);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.tool_bar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         Intent intent = getIntent();

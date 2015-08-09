@@ -65,6 +65,10 @@
             android:name=".CPSMSHandler"
             android:label="@string/title_activity_cherry_popper" >
         </activity>
+        <activity
+            android:name=".TestActivity"
+            android:label="@string/title_activity_test" >
+        </activity>
     </application>
 
 </manifest>

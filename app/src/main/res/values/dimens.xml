@@ -8,4 +8,10 @@
     <dimen name="current_month_font">30sp</dimen>
     <dimen name="popup_width">100dp</dimen>
     <dimen name="popup_height">100dp</dimen>
+    <!-- Edit together 1:-1 -->
+    <dimen name="av_marker_size">31dp</dimen>
+    <dimen name="availability_line_marker_position">4dp</dimen>
+    <!-- -->
+    <dimen name="availability_line_draw_position">20dp</dimen>
+    <dimen name="availability_line_draw_width">30dp</dimen>
 </resources>

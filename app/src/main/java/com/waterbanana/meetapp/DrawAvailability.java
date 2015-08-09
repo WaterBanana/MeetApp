@@ -1,12 +1,17 @@
 package com.waterbanana.meetapp;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
+import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.Switch;
 import android.widget.ToggleButton;
@@ -19,6 +24,16 @@ public class DrawAvailability extends ActionBarActivity {
     private ToggleButton toggle3;
     private ToggleButton toggle4;
     private ScrollView scrollView;
+    private RelativeLayout mRelativeLayout;
+    private View view;
+    private Handler handler = new Handler();
+    private AvailabilityTickMarker marker;
+    private String TAG = "DrawAvailability.java";
+    private GestureDetector mGestureDetector;
+
+    private static final int SWIPE_MIN_DISTANCE = 120;
+    private static final int SWIPE_MAX_OFF_PATH = 250;
+    private static final int SWIPE_THRESHOLD_VELOCITY = 200;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,11 +46,10 @@ public class DrawAvailability extends ActionBarActivity {
         drawView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if( event.getAction() == MotionEvent.ACTION_DOWN ){
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     scrollView.requestDisallowInterceptTouchEvent(true);
-                }
-                else if( event.getAction() == MotionEvent.ACTION_UP ||
-                        event.getAction() == MotionEvent.ACTION_CANCEL ){
+                } else if (event.getAction() == MotionEvent.ACTION_UP ||
+                        event.getAction() == MotionEvent.ACTION_CANCEL) {
                     scrollView.requestDisallowInterceptTouchEvent(false);
                 }
                 return false;
@@ -46,14 +60,41 @@ public class DrawAvailability extends ActionBarActivity {
         toggle1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
+                if (isChecked) {
                     drawView.setErase(true);
-                }
-                else{
+                } else {
                     drawView.setErase(false);
                 }
             }
         });
+
+        marker = new AvailabilityTickMarker(this);
+        mRelativeLayout = (RelativeLayout) findViewById(R.id.relativeLayout_availability_act);
+        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.WRAP_CONTENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT
+        );
+        LinearLayout llleft = (LinearLayout) findViewById(R.id.ll_leftside);
+        lp.addRule(RelativeLayout.RIGHT_OF, llleft.getId());
+        mRelativeLayout.addView(marker, lp);
+
+
+//        marker = new AvailabilityTickMarker(this);
+//        mGestureDetector = new GestureDetector(this, marker);
+//
+//        mRelativeLayout = (RelativeLayout) findViewById(R.id.relativeLayout_availability_act);
+//        view = getLayoutInflater().inflate( R.layout.availability_marker, null );
+//        view.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//                //Log.d(TAG, "Marker pressed." );
+//                return mGestureDetector.onTouchEvent(event);
+//            }
+//        });
+//        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
+//                RelativeLayout.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+//        lp.addRule(RelativeLayout.CENTER_IN_PARENT);
+//        mRelativeLayout.addView( view, lp );
     }
 
 //    @Override
@@ -89,6 +130,36 @@ public class DrawAvailability extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    public void onDragged(String action) {
+        if( action.equals("SWIPE_UP") ){
+            Log.d( TAG, "Swipe up" );
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
+                            RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                    lp.addRule(RelativeLayout.CENTER_HORIZONTAL);
+                    lp.addRule(RelativeLayout.ALIGN_TOP);
+                    mRelativeLayout.updateViewLayout(view, lp);
+                }
+            });
+        }
+        else{
+            Log.d(TAG, "Swipe down");
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
+                            RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                    lp.addRule(RelativeLayout.CENTER_HORIZONTAL);
+                    lp.addRule(RelativeLayout.ALIGN_BOTTOM);
+                    mRelativeLayout.updateViewLayout(view, lp);
+                }
+            });
+        }
+    }
+
 //
 //    @Override
 //    public boolean onTouchEvent(MotionEvent event) {

@@ -47,4 +47,6 @@
     <string name="cpfailed">Please enter your phone number.</string>
     <string name="submit">Submit</string>
     <string name="cancel">Cancel</string>
+    <string name="marker">marker</string>
+    <string name="title_activity_test">TestActivity</string>
 </resources>

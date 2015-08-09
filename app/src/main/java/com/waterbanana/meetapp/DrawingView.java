@@ -1,18 +1,20 @@
 package com.waterbanana.meetapp;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PorterDuff;
+import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Switch;
+import android.widget.RelativeLayout;
 
-public class DrawingView extends View
+public class DrawingView extends RelativeLayout
 {
     //drawing path
     private Path drawPath;
@@ -24,6 +26,9 @@ public class DrawingView extends View
     private Canvas drawCanvas;
     //canvas bitmap
     private Bitmap canvasBitmap;
+    private Resources r;
+    private Handler handler = new Handler();
+    private String TAG = "DrawingView";
 
     //The touchY coordinates are returned as pixels; (dp*density)
     //To properly line up things, while using scroll view and different phones
@@ -36,19 +41,21 @@ public class DrawingView extends View
     private int timeIntervals = 96;
     private int[] touchCoordinates = new int[timeIntervals];
 
-    private Switch drawEraseButton;
+    private AvailabilityTickMarker marker;
+    private View markerView;
 
     private int drawOrErase = 1;
 
     public DrawingView(Context context, AttributeSet attrs){
         super(context, attrs);
-        setupDrawing();
+        setupDrawing(context);
     }
 
-    private void setupDrawing(){
+    private void setupDrawing(Context context){
         //get drawing area setup for interaction
         // comment
 
+        r = getResources();
 
         drawPath = new Path();
         drawPaint = new Paint();
@@ -60,13 +67,13 @@ public class DrawingView extends View
 
         //initial path properties
         drawPaint.setAntiAlias(true);
-        drawPaint.setStrokeWidth(100);
+        drawPaint.setStrokeWidth(r.getDimension(R.dimen.availability_line_draw_width));
         drawPaint.setStyle(Paint.Style.FILL);
         drawPaint.setStrokeJoin(Paint.Join.MITER);
         drawPaint.setStrokeCap(Paint.Cap.SQUARE);
 
         erasePaint.setAntiAlias(true);
-        erasePaint.setStrokeWidth(100);
+        erasePaint.setStrokeWidth(r.getDimension(R.dimen.availability_line_draw_width));
         erasePaint.setStyle(Paint.Style.STROKE);
         erasePaint.setStrokeJoin(Paint.Join.ROUND);
         erasePaint.setStrokeCap(Paint.Cap.ROUND);
@@ -78,6 +85,19 @@ public class DrawingView extends View
         for(int i=0; i<touchCoordinates.length; i++){
             touchCoordinates[i] = 0;
         }
+
+//        RelativeLayout.LayoutParams lp = new LayoutParams(
+//                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
+//        );
+//        lp.addRule(RelativeLayout.CENTER_VERTICAL);
+//        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//        markerView = inflater.inflate(R.layout.availability_marker, null);
+//        markerView.setPadding(
+//                r.getDimensionPixelOffset(R.dimen.availability_line_marker_position), 0, 0, 0
+//        );
+//        markerView = new AvailabilityTickMarker(getContext());
+//        addView(markerView);
+
         //host layout
         //start
         //GAA 25 JUL 2015 - 3:26am
@@ -172,7 +192,13 @@ public class DrawingView extends View
             if(touchCoordinates[i]>0){
 //                drawCanvas.drawPoint(touchX, i, drawPaint);
                 //drawLine(float startX, float startY, float stopX, float stopY, Paint paint)
-                drawCanvas.drawLine(125, (0+i*100), 125, (100+i*100), drawPaint);
+                drawCanvas.drawLine(
+                        r.getDimensionPixelOffset(R.dimen.availability_line_draw_position), // Ctrl+B to navigate to definition
+                        (0+i*100),
+                        r.getDimensionPixelOffset(R.dimen.availability_line_draw_position),
+                        (100+i*100),
+                        drawPaint
+                );
             }
             else if (touchCoordinates[i]<=0){
                 //drawCanvas.drawLine(75, (0+i*100), 75, (100+i*100), erasePaint);

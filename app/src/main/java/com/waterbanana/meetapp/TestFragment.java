@@ -25,7 +25,7 @@ public class TestFragment extends Fragment{
         openActivity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent( getActivity(), Availability.class );
+                Intent intent = new Intent( getActivity(), TestActivity.class );
                 startActivity( intent );
             }
         });

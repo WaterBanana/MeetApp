@@ -140,6 +140,7 @@ public class CPSMSHandler extends ActionBarActivity
         sendTextMessage();
         dialog.getDialog().cancel();
         progressBar.setVisibility( View.VISIBLE );
+        //DialogTest4Button btn = DialogTest4Button.instantiate(this, DialogTest4Button.class.getName());
     }
 
     @Override
