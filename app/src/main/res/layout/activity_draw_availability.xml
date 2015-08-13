@@ -24,7 +24,7 @@
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:weightSum="3"
+                android:weightSum="4"
                 android:id="@+id/CanvasSwitchLayout">
 
                 <LinearLayout
@@ -34,6 +34,13 @@
                     android:id="@+id/ll_leftside"
                     android:orientation="horizontal"
                     android:background ="#FFFFFFFF" />
+
+                <com.waterbanana.meetapp.GroupAvailabilityView
+                    android:id="@+id/groupBar"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="1200dp"
+                    android:background="#FFFFFFFF" />
 
                 <com.waterbanana.meetapp.DrawingView
                     android:id="@+id/drawing"
