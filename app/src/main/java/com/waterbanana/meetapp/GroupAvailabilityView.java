@@ -15,6 +15,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.RelativeLayout;
 
+import java.util.ArrayList;
+
 public class GroupAvailabilityView extends RelativeLayout
 {
     //drawing path
@@ -31,24 +33,17 @@ public class GroupAvailabilityView extends RelativeLayout
     private Handler handler = new Handler();
     private String TAG = "DrawingView";
 
-    //The touchY coordinates are returned as pixels; (dp*density)
-    //To properly line up things, while using scroll view and different phones
-    //the returned value should be divided by the density (which in my phone's case is 3)
-
-    //so.... the received touchY needs to be divided by 3, then placed into touchCoordinates[]
-
     //Height is divided into integers.
-    //When corresponding y-coordinate is pressed, then the group it belongs to out of 100, will be colored
     private int timeIntervals = 96;
-    private int[] touchCoordinates = new int[timeIntervals];
+    private int[] groupCoordinates = new int[timeIntervals];
 
     private AvailabilityTickMarker marker;
     private View markerView;
 
     private int drawOrErase = 1;
 
-    private DbHandler db;
-    private User[] users;
+//    private DbHandler db;
+//    private User[] users;
 
     public GroupAvailabilityView(Context context, AttributeSet attrs){
         super(context, attrs);
@@ -59,8 +54,29 @@ public class GroupAvailabilityView extends RelativeLayout
 //    userList.put( "end", Integer.toString( ribbons.get( j ).getEnd() ) );
 
     private void populateGroupAvailability(){
-        db = new DbHandler();
-        users = db.getAllUsers();
+        ArrayList<Ribbon> ribbons;
+        DbHandler db = new DbHandler();
+        User[] users = db.getAllUsers();
+//        int start;
+//        int end;
+
+
+
+//        //look through each ribbon and increment the corresponding time values by 1 each time
+//        //it is seen as available
+//        for( int i = 0; i < users.length; i++ ){
+//            Log.d( "MainActivity", "Number of distinct users: " + users.length );
+//            ribbons = users[i].getRibbons();
+//            for( int j = 0; j < ribbons.size(); j++ ){
+//                start = ribbons.get(j).getStart();
+//                end = ribbons.get(j).getEnd();
+//                for(int k=start; k<=end; k=k+15){
+//                    groupCoordinates[k%15]++;
+//
+//                }
+//            }
+//        }
+
 
 
     }
@@ -95,10 +111,11 @@ public class GroupAvailabilityView extends RelativeLayout
         //instantiate canvas
         canvasPaint = new Paint(Paint.DITHER_FLAG);
 
-        //initialize touchCoordinates to dummy values
-        for(int i=0; i<touchCoordinates.length; i++){
-            touchCoordinates[i] = 1;
+        //initialize groupCoordinates to dummy values
+        for(int i=0; i<groupCoordinates.length; i++){
+            groupCoordinates[i] = 0;
         }
+        populateGroupAvailability();
     }
 
     @Override
@@ -111,8 +128,9 @@ public class GroupAvailabilityView extends RelativeLayout
 
     @Override
     protected void onDraw(Canvas canvas) {
-        for(int i=0; i<touchCoordinates.length; i++){
-            if(touchCoordinates[i]>0){
+        for(int i=0; i<groupCoordinates.length; i++){
+            //this is where we'll change their colors depending on availabilities
+            if(groupCoordinates[i]>0){
                 drawCanvas.drawLine(
                         r.getDimensionPixelOffset(R.dimen.availability_line_draw_position), // Ctrl+B to navigate to definition
                         (0+i*100),
