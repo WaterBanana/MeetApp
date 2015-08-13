@@ -50,6 +50,7 @@ public class RangeSeekBar<T extends Number> extends ImageView {
     private OnRangeSeekBarChangeListener<T> listener;
     private String startTime, endTime;
     private TextView startTimeView, endTimeView;
+    private final RectF rect;
 
 //    /**
 //     * Default color of a {@link RangeSeekBar}, #FF33B5E5. This is also known as "Ice Cream Sandwich" blue.
@@ -96,6 +97,7 @@ public class RangeSeekBar<T extends Number> extends ImageView {
         absoluteMaxValuePrim = absoluteMaxValue.doubleValue();
         numberType = NumberType.fromNumber(absoluteMinValue);
 
+        rect = new RectF();
         startTimeView = new TextView(context);
         endTimeView = new TextView(context);
 
@@ -382,7 +384,6 @@ public class RangeSeekBar<T extends Number> extends ImageView {
         // draw seek bar background line
         final float width = getWidth();
         final float height = getHeight();
-        final RectF rect = new RectF();
         rect.set(
                 0.5f * (width - lineHeight),
                 padding,
