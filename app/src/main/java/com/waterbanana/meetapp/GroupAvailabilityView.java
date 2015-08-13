@@ -70,13 +70,26 @@ public class GroupAvailabilityView extends RelativeLayout
                 start = ribbons.get(j).getStart();
                 end = ribbons.get(j).getEnd();
                 for(int k=start; k<=end; k=k+15){
-                    groupCoordinates[k%15]++;
+                    groupCoordinates[k%96]++;
 
                 }
             }
         }
-        invalidate();
-        this.draw(drawCanvas);
+        for(int i=0; i<groupCoordinates.length; i++) {
+            if (groupCoordinates[i] > 0) {
+//                drawCanvas.drawPoint(touchX, i, drawPaint);
+                //drawLine(float startX, float startY, float stopX, float stopY, Paint paint)
+                drawCanvas.drawLine(
+                        r.getDimensionPixelOffset(R.dimen.availability_line_draw_position), // Ctrl+B to navigate to definition
+                        (0 + i * 100),
+                        r.getDimensionPixelOffset(R.dimen.availability_line_draw_position),
+                        (100 + i * 100),
+                        drawPaint
+                );
+            }
+        }
+        invalidate();//should call the onDraw method
+//        this.draw(drawCanvas);
 
     }
 
