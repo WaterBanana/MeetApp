@@ -69,8 +69,10 @@ public class GroupAvailabilityView extends RelativeLayout
             for( int j = 0; j < ribbons.size(); j++ ){
                 start = ribbons.get(j).getStart();
                 end = ribbons.get(j).getEnd();
-                for(int k=start; k<=end; k=k+15){
-                    groupCoordinates[k%96]++;
+                //ended here GAA 13 AUG 2015
+                //having issues with managing the times
+                for(int k=start; k<=end; k++){
+                    groupCoordinates[k]++;
 
                 }
             }
