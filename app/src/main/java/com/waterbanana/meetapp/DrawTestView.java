@@ -20,23 +20,32 @@ public class DrawTestView extends View {
     private Canvas drawCanvas;
     private Bitmap canvasBitmap;
     private Resources r;
-    private int start, end, width, lineWidth;
+    private int startTime, endTime, width, lineWidth, seekBarStart, seekBarEnd;
+    private float startY, endY;
 
-    private int timeIntervals = 96;
-    private int[] touchCoordinates = new int[timeIntervals];
+//    private int timeIntervals = 96;
+//    private int[] touchCoordinates = new int[timeIntervals];
     private String TAG = "DrawTestView.java";
 
-    public DrawTestView(Context context, int viewWidth, int lineWidth, int start, int end) {
+    public DrawTestView(
+            Context context, int viewWidth, int lineWidth,
+            int startTime, int endTime, float startY, float endY,
+            int seekBarStart, int seekBarEnd
+    ) {
         this( context, null, 0, lineWidth );
-        this.start = start;
-        this.end = end;
-        Log.d( TAG, "Start: " + start + " End: " + end );
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.startY = startY;
+        this.endY = endY;
+        this.seekBarStart = seekBarStart;
+        this.seekBarEnd = seekBarEnd;
+        Log.d( TAG, "Start: " + startTime + " End: " + endTime );
         this.lineWidth = lineWidth;
         width = viewWidth;
 
-        for( int i = start; i < end; i++ ){
-            touchCoordinates[i] = 1;
-        }
+//        for( int i = startTime; i < endTime; i++ ){
+//            touchCoordinates[i] = 1;
+//        }
     }
 
     public DrawTestView(Context context, AttributeSet attrs) {
@@ -73,9 +82,9 @@ public class DrawTestView extends View {
         canvasPaint = new Paint(Paint.DITHER_FLAG);
 
         //initialize touchCoordinates as untouched (-1)
-        for(int i=0; i<touchCoordinates.length; i++){
-            touchCoordinates[i] = 0;
-        }
+//        for(int i=0; i<touchCoordinates.length; i++){
+//            touchCoordinates[i] = 0;
+//        }
     }
 
     @Override
@@ -99,20 +108,52 @@ public class DrawTestView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        for(int i=0; i<touchCoordinates.length; i++) {
-            if (touchCoordinates[i] > 0) {
+        drawCanvas.drawLine(
+                0.5f * (width - lineWidth),
+                startY,
+                0.5f * (width - lineWidth),
+                endY,
+                drawPaint
+        );
+
+//        for(int i=0; i<touchCoordinates.length; i++) {
+//            if (touchCoordinates[i] > 0) {
 //                drawCanvas.drawPoint(touchX, i, drawPaint);
-                //drawLine(float startX, float startY, float stopX, float stopY, Paint paint)
-                drawCanvas.drawLine(
-                        0,
-                        (i * 100 - 100),
-                        0,
-                        (20 + i * 100 - 100),
-                        drawPaint
-                );
-            }
-        }
+//                //drawLine(float startY, float endY, float stopX, float stopY, Paint paint)
+//                drawCanvas.drawLine(
+//                        0,
+//                        (i * 100 - 100),
+//                        0,
+//                        (20 + i * 100 - 100),
+//                        drawPaint
+//                );
+//            }
+//        }
         canvas.drawBitmap(canvasBitmap, 0, 0, canvasPaint);
-        canvas.drawPath(drawPath, drawPaint);
+        //canvas.drawPath(drawPath, drawPaint);
+    }
+
+    public int getStartTime() {
+        return startTime;
+    }
+
+    public int getEndTime() {
+        return endTime;
+    }
+
+    public float getStartY() {
+        return startY;
+    }
+
+    public float getEndY() {
+        return endY;
+    }
+
+    public int getSeekBarStart() {
+        return seekBarStart;
+    }
+
+    public int getSeekBarEnd() {
+        return seekBarEnd;
     }
 }
