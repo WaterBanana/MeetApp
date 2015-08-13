@@ -13,6 +13,7 @@ import android.os.Parcelable;
 import android.view.MotionEvent;
 import android.view.ViewConfiguration;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.waterbanana.meetapp.R;
 
@@ -47,6 +48,8 @@ public class RangeSeekBar<T extends Number> extends ImageView {
     private Thumb pressedThumb = null;
     private boolean notifyWhileDragging = false;
     private OnRangeSeekBarChangeListener<T> listener;
+    private String startTime, endTime;
+    private TextView startTimeView, endTimeView;
 
 //    /**
 //     * Default color of a {@link RangeSeekBar}, #FF33B5E5. This is also known as "Ice Cream Sandwich" blue.
@@ -93,6 +96,9 @@ public class RangeSeekBar<T extends Number> extends ImageView {
         absoluteMaxValuePrim = absoluteMaxValue.doubleValue();
         numberType = NumberType.fromNumber(absoluteMinValue);
 
+        startTimeView = new TextView(context);
+        endTimeView = new TextView(context);
+
         // make RangeSeekBar focusable.
         // This solves focus handling issues in case EditText widgets
         // are being used along with the RangeSeekBar within ScrollViews.
@@ -103,6 +109,10 @@ public class RangeSeekBar<T extends Number> extends ImageView {
 
     private final void init() {
         mScaledTouchSlop = ViewConfiguration.get(getContext()).getScaledTouchSlop();
+    }
+
+    public float getLineHeight(){
+        return lineHeight;
     }
 
     public boolean isNotifyWhileDragging() {
@@ -439,6 +449,9 @@ public class RangeSeekBar<T extends Number> extends ImageView {
                 screenCoord - thumbHalfWidth,
                 paint
         );
+//        if( thumb == Thumb.MIN ){
+//
+//        }
     }
 
     /**

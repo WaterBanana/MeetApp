@@ -6,6 +6,8 @@
     <dimen name="day_cell_padding">5dp</dimen>
     <dimen name="calendar_spacing">1dp</dimen>
     <dimen name="current_month_font">30sp</dimen>
+    <dimen name="times_height">20dp</dimen>
+
     <dimen name="popup_width">100dp</dimen>
     <dimen name="popup_height">100dp</dimen>
     <!-- Edit together 1:-1 -->

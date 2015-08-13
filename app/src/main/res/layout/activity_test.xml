@@ -27,7 +27,7 @@
 
             <RelativeLayout
                 android:layout_width="0dp"
-                android:layout_height="1440dp"
+                android:layout_height="2000dp"
                 android:layout_weight="1"
                 android:layout_marginTop="4dp"
                 android:id="@+id/availability_layout_mid" />

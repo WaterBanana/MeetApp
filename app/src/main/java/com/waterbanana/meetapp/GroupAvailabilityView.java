@@ -7,11 +7,9 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
-import android.graphics.PorterDuff;
+import android.os.AsyncTask;
 import android.os.Handler;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.RelativeLayout;
 
@@ -53,10 +51,12 @@ public class GroupAvailabilityView extends RelativeLayout
 //    userList.put( "start", Integer.toString(ribbons.get(j).getStart()) );
 //    userList.put( "end", Integer.toString( ribbons.get( j ).getEnd() ) );
 
+    ArrayList<Ribbon> ribbons;
+    DbHandler db = new DbHandler();
+    User[] users;
+
     private void populateGroupAvailability(){
-        ArrayList<Ribbon> ribbons;
-        DbHandler db = new DbHandler();
-        User[] users = db.getAllUsers();
+        new LoadAllUsers().execute();
 //        int start;
 //        int end;
 
@@ -146,4 +146,16 @@ public class GroupAvailabilityView extends RelativeLayout
         canvas.drawPath(drawPath, drawPaint);
     }
 
+    class LoadAllUsers extends AsyncTask<String, String, String>{
+
+        @Override
+        protected String doInBackground(String... params) {
+            ArrayList<Ribbon> ribbons;
+            DbHandler db = new DbHandler();
+
+            users = db.getAllUsers();
+
+            return null;
+        }
+    }
 }
