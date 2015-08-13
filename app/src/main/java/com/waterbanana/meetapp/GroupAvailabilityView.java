@@ -10,7 +10,9 @@ import android.graphics.Path;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
@@ -56,28 +58,25 @@ public class GroupAvailabilityView extends RelativeLayout
     User[] users;
 
     private void populateGroupAvailability(){
-        new LoadAllUsers().execute();
-//        int start;
-//        int end;
+        int start;
+        int end;
 
+        //look through each ribbon and increment the corresponding time values by 1 each time
+        //it is seen as available
+        for( int i = 0; i < users.length; i++ ){
+            Log.d("MainActivity", "Number of distinct users: " + users.length);
+            ribbons = users[i].getRibbons();
+            for( int j = 0; j < ribbons.size(); j++ ){
+                start = ribbons.get(j).getStart();
+                end = ribbons.get(j).getEnd();
+                for(int k=start; k<=end; k=k+15){
+                    groupCoordinates[k%15]++;
 
-
-//        //look through each ribbon and increment the corresponding time values by 1 each time
-//        //it is seen as available
-//        for( int i = 0; i < users.length; i++ ){
-//            Log.d( "MainActivity", "Number of distinct users: " + users.length );
-//            ribbons = users[i].getRibbons();
-//            for( int j = 0; j < ribbons.size(); j++ ){
-//                start = ribbons.get(j).getStart();
-//                end = ribbons.get(j).getEnd();
-//                for(int k=start; k<=end; k=k+15){
-//                    groupCoordinates[k%15]++;
-//
-//                }
-//            }
-//        }
-
-
+                }
+            }
+        }
+        invalidate();
+        this.draw(drawCanvas);
 
     }
 
@@ -115,7 +114,9 @@ public class GroupAvailabilityView extends RelativeLayout
         for(int i=0; i<groupCoordinates.length; i++){
             groupCoordinates[i] = 0;
         }
-        populateGroupAvailability();
+
+        new LoadAllUsers().execute();
+
     }
 
     @Override
@@ -128,18 +129,6 @@ public class GroupAvailabilityView extends RelativeLayout
 
     @Override
     protected void onDraw(Canvas canvas) {
-        for(int i=0; i<groupCoordinates.length; i++){
-            //this is where we'll change their colors depending on availabilities
-            if(groupCoordinates[i]>0){
-                drawCanvas.drawLine(
-                        r.getDimensionPixelOffset(R.dimen.availability_line_draw_position), // Ctrl+B to navigate to definition
-                        (0+i*100),
-                        r.getDimensionPixelOffset(R.dimen.availability_line_draw_position),
-                        (100+i*100),
-                        drawPaint
-                );
-            }
-        }
 
         //draw view
         canvas.drawBitmap(canvasBitmap, 0, 0, canvasPaint);
@@ -153,9 +142,16 @@ public class GroupAvailabilityView extends RelativeLayout
             ArrayList<Ribbon> ribbons;
             DbHandler db = new DbHandler();
 
+
             users = db.getAllUsers();
 
             return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s){
+            super.onPostExecute(s);
+            populateGroupAvailability();
         }
     }
 }
