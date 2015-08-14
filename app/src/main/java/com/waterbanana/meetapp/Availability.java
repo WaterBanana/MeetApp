@@ -5,13 +5,17 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -19,66 +23,42 @@ import android.widget.TextView;
 
 import com.waterbanana.common.RangeSeekBar;
 
-
 public class Availability extends AppCompatActivity {
     private GridView verticalTimes;
-    private RelativeLayout midlayout, leftlayout;
+    private RelativeLayout screenlayout, midlayout, leftlayout, rightlayout;
     private String[] times = new String[97];
-    private int lastStartPosition, lastEndPosition;
-    private int minimumHeight = 500;
-    private int leftlayoutWidth;
-    RangeSeekBar<Integer> seekBar;
+    private int layoutHeight;
+    private RelativeLayout.LayoutParams paramsRLLeft;
+    private boolean isInEditMode = false;
+    private RangeSeekBar<Integer> seekBar;
+    private View viewListener;
+    private Button btnDeleteRibbon;
 
-    private String TAG = "TestActivity";
+    private String TAG = "Availability.java";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_test);
+        setContentView(R.layout.activity_availability);
 
-        // create RangeSeekBar as Integer range between 0 and 96
-        seekBar = new RangeSeekBar<>(0, 96, this);
-        seekBar.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                return paintRibbon(v);
-            }
-        });
-        seekBar.setOnRangeSeekBarChangeListener(new RangeSeekBar.OnRangeSeekBarChangeListener<Integer>() {
-            @Override
-            public void onRangeSeekBarValuesChanged(RangeSeekBar<?> bar, Integer minValue, Integer maxValue) {
-                // handle changed range values
-                Log.i(TAG, "User selected new range values: MIN=" + minValue + ", MAX=" + maxValue);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
-                verticalTimes.getChildAt(lastStartPosition).setBackgroundColor(Color.TRANSPARENT);
-                verticalTimes.getChildAt(lastEndPosition).setBackgroundColor(Color.TRANSPARENT);
-
-                verticalTimes.getChildAt(minValue).setBackgroundColor(
-                        getResources().getColor(R.color.RibbonColorPrimary)
-                );
-                verticalTimes.getChildAt(maxValue).setBackgroundColor(
-                        getResources().getColor(R.color.RibbonColorPrimary)
-                );
-
-                lastStartPosition = minValue;
-                lastEndPosition = maxValue;
-//                verticalTimes.invalidate();
-//                verticalTimes.getChildAt(minValue).setBackgroundColor(Color.TRANSPARENT);
-//                verticalTimes.getChildAt(maxValue).setBackgroundColor(Color.TRANSPARENT);
-            }
-        });
+        screenlayout = (RelativeLayout) findViewById(R.id.relativeLayout_activity_availability);
         midlayout = (RelativeLayout) findViewById(R.id.availability_layout_mid);
-        //layout.addView(seekBar);
+        leftlayout = (RelativeLayout) findViewById(R.id.availability_layout_left);
+        rightlayout = (RelativeLayout) findViewById(R.id.availability_layout_right);
 
         setupTimesArray();
-
         verticalTimes = new GridView(this);
         verticalTimes.setNumColumns(1);
         verticalTimes.setAdapter(new TimesViewAdapter(this));
+
+        // Remove touch events on the times
         verticalTimes.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                switch( event.getAction() & MotionEvent.ACTION_MASK ){
+                switch (event.getAction() & MotionEvent.ACTION_MASK) {
                     case MotionEvent.ACTION_DOWN:
                         break;
                     case MotionEvent.ACTION_UP:
@@ -90,50 +70,24 @@ public class Availability extends AppCompatActivity {
 
         midlayout.addView(verticalTimes);
 
-//        Log.d( TAG, "Child count: " + verticalTimes.getChildCount() );
-
         verticalTimes.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                verticalTimes.getChildAt(0).setBackgroundColor(
-                        getResources().getColor(R.color.RibbonColorPrimary)
-                );
-                verticalTimes.getChildAt(96).setBackgroundColor(
-                        getResources().getColor(R.color.RibbonColorPrimary)
-                );
-                lastStartPosition = 0;
-                lastEndPosition = 96;
-
-//                midlayout.setMinimumHeight(verticalTimes.getHeight());
-//                Log.d( TAG, "Minimum height: " + verticalTimes.getHeight() );
-//
-//                Log.d(TAG, "Child count: " + Integer.toString(verticalTimes.getChildCount()));
-                View lastTime = verticalTimes.getChildAt(verticalTimes.getChildCount() - 1);
-                minimumHeight = lastTime.getBottom() + 20;
-                Log.d( TAG, "Minimum height should be: " + lastTime.getBottom() );
-//                leftlayout.setMinimumHeight(lastTime.getBottom() - 500);
-//                leftlayout.invalidate();
-//                Log.d(TAG, "Bottom: " + Integer.toString(lastTime.getBottom()));
-//                midlayout.invalidate();
-//                midlayout.removeAllViews();
-//                midlayout.addView(verticalTimes);
-
+                // Set layout height accordingly (based on times GridView)
+                layoutHeight = verticalTimes.getChildAt(
+                        verticalTimes.getChildCount() - 1
+                ).getBottom() + getResources().getDimensionPixelOffset(R.dimen.dp10);
                 midlayout.setLayoutParams(new LinearLayout.LayoutParams(
-                        leftlayoutWidth,
-                        minimumHeight
+                        verticalTimes.getWidth(), layoutHeight
                 ));
 
                 leftlayout.setLayoutParams(new LinearLayout.LayoutParams(
-                        leftlayoutWidth,
-                        minimumHeight
+                        verticalTimes.getWidth(), layoutHeight
                 ));
 
-                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
-                        RelativeLayout.LayoutParams.WRAP_CONTENT,
-                        RelativeLayout.LayoutParams.WRAP_CONTENT
-                );
-                params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-                leftlayout.addView(seekBar, params);
+                rightlayout.setLayoutParams(new LinearLayout.LayoutParams(
+                        verticalTimes.getWidth(), layoutHeight
+                ));
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
                     verticalTimes.getViewTreeObserver().removeOnGlobalLayoutListener(this);
@@ -141,100 +95,32 @@ public class Availability extends AppCompatActivity {
                     verticalTimes.getViewTreeObserver().removeGlobalOnLayoutListener(this);
             }
         });
-
-        leftlayout = (RelativeLayout) findViewById(R.id.availability_layout_left);
-
-        leftlayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                leftlayoutWidth = leftlayout.getWidth();
-                Log.d(TAG, "Left layout width: " + leftlayoutWidth);
-                Log.d(TAG, "Minimum height: " + minimumHeight);
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
-                    verticalTimes.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                else
-                    verticalTimes.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-            }
-        });
-
-
-//        if(Build.VERSION.SDK_INT >= 17){
-//            params.setMarginStart(getResources().getDimensionPixelOffset(R.dimen.activity_horizontal_margin));
-//        }
-//        else{
-//            params.setMargins(
-//                    getResources().getDimensionPixelOffset(R.dimen.activity_horizontal_margin) * 10, 0, 0, 0
-//            );
-//        }
     }
 
-    private boolean paintRibbon(View view){
-        int h = (int) seekBar.getLineHeight();
-        int viewWidth = seekBar.getWidth();
-        final int seekBarStart = seekBar.getSelectedMinValue();
-        int seekBarEnd = seekBar.getSelectedMaxValue();
-        View lastStartView = verticalTimes.getChildAt(lastStartPosition);
-        View lastEndView  = verticalTimes.getChildAt(lastEndPosition);
-        lastStartView.setBackgroundColor(Color.TRANSPARENT);
-        lastEndView.setBackgroundColor(Color.TRANSPARENT);
+    // SEEKBAR
+    private void putRibbon(int min, int max){
+        if(isInEditMode) {
+            Log.d( TAG, "Is in edit mode" );
+            paintRibbon(viewListener, seekBar);
+            screenlayout.removeView(btnDeleteRibbon);
+            isInEditMode = false;
+        }
 
-        leftlayout.removeView(view);
-
-        final DrawTestView ribbon = new DrawTestView(
-                this, viewWidth, h, lastStartPosition, lastEndPosition,
-                lastStartView.getTop() + getResources().getDimensionPixelOffset(R.dimen.dp10),
-                lastEndView.getBottom() - getResources().getDimensionPixelOffset(R.dimen.dp10),
-                seekBarStart, seekBarEnd
-        );
-        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
-                RelativeLayout.LayoutParams.MATCH_PARENT,
-                RelativeLayout.LayoutParams.MATCH_PARENT
-        );
-        lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-
-        ribbon.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                int seekStart = ribbon.getSeekBarStart();
-                int seekEnd = ribbon.getSeekBarEnd();
-                leftlayout.removeView(v);
-                createSeekBar(seekStart, seekEnd);
-                return true;
-            }
-        });
-
-        leftlayout.addView(ribbon, lp);
-
-        return true;
-    }
-
-    private void createSeekBar(int start, int end){
         seekBar = new RangeSeekBar<>(0, 96, this);
-        seekBar.setSelectedMinValue(start);
-        seekBar.setSelectedMaxValue(end);
-
-        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
-                RelativeLayout.LayoutParams.MATCH_PARENT,
-                RelativeLayout.LayoutParams.MATCH_PARENT
-        );
-        lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-
-        seekBar.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                return paintRibbon(v);
-            }
-        });
+        seekBar.setSelectedMinValue(min);
+        seekBar.setSelectedMaxValue(max);
+        seekBar.setPrevMin(min);
+        seekBar.setPrevMax(max);
+        verticalTimes.getChildAt(min).setBackgroundColor(getResources().getColor(R.color.RibbonColorPrimary));
+        verticalTimes.getChildAt(max).setBackgroundColor(getResources().getColor(R.color.RibbonColorPrimary));
 
         seekBar.setOnRangeSeekBarChangeListener(new RangeSeekBar.OnRangeSeekBarChangeListener<Integer>() {
             @Override
             public void onRangeSeekBarValuesChanged(RangeSeekBar<?> bar, Integer minValue, Integer maxValue) {
-                // handle changed range values
                 Log.i(TAG, "User selected new range values: MIN=" + minValue + ", MAX=" + maxValue);
 
-                verticalTimes.getChildAt(lastStartPosition).setBackgroundColor(Color.TRANSPARENT);
-                verticalTimes.getChildAt(lastEndPosition).setBackgroundColor(Color.TRANSPARENT);
+                verticalTimes.getChildAt(seekBar.getPrevMin()).setBackgroundColor(Color.TRANSPARENT);
+                verticalTimes.getChildAt(seekBar.getPrevMax()).setBackgroundColor(Color.TRANSPARENT);
 
                 verticalTimes.getChildAt(minValue).setBackgroundColor(
                         getResources().getColor(R.color.RibbonColorPrimary)
@@ -243,19 +129,143 @@ public class Availability extends AppCompatActivity {
                         getResources().getColor(R.color.RibbonColorPrimary)
                 );
 
-                lastStartPosition = minValue;
-                lastEndPosition = maxValue;
-//                verticalTimes.invalidate();
-//                verticalTimes.getChildAt(minValue).setBackgroundColor(Color.TRANSPARENT);
-//                verticalTimes.getChildAt(maxValue).setBackgroundColor(Color.TRANSPARENT);
+                seekBar.setPrevMin(minValue);
+                seekBar.setPrevMax(maxValue);
             }
         });
 
-        leftlayout.addView(seekBar, lp);
+        seekBar.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Log.d(TAG, "SeekBar onLongClick");
+                paintRibbon(v, seekBar);
+                return true;
+            }
+        });
+
+        paramsRLLeft = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.MATCH_PARENT,
+                RelativeLayout.LayoutParams.MATCH_PARENT
+        );
+        paramsRLLeft.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+        Log.d(TAG, "Before adding view");
+        leftlayout.addView(seekBar, paramsRLLeft);
+        Log.d(TAG, "After adding view");
+        viewListener = seekBar;
+        isInEditMode = true;
+        Log.d(TAG, "EDIT MODE: " + isInEditMode);
+
+        btnDeleteRibbon = new Button(this);
+        btnDeleteRibbon.setText(getResources().getText(R.string.delete));
+        btnDeleteRibbon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                leftlayout.removeView(seekBar);
+                screenlayout.removeView(v);
+                int seekBarStart = seekBar.getSelectedMinValue();
+                int seekBarEnd = seekBar.getSelectedMaxValue();
+                View minView = verticalTimes.getChildAt(seekBarStart);
+                View maxView = verticalTimes.getChildAt(seekBarEnd);
+
+                minView.setBackgroundColor(Color.TRANSPARENT);
+                maxView.setBackgroundColor(Color.TRANSPARENT);
+                isInEditMode = false;
+            }
+        });
+
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.WRAP_CONTENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT
+        );
+
+        params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+        params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+
+        screenlayout.addView(btnDeleteRibbon, params);
+    }
+
+    // ACCEPTED RIBBON
+    private boolean paintRibbon(View view, RangeSeekBar seekBar){
+        int h = (int) seekBar.getLineHeight();
+        int viewWidth = seekBar.getWidth();
+        int seekBarStart = (int) seekBar.getSelectedMinValue();
+        int seekBarEnd = (int) seekBar.getSelectedMaxValue();
+        View minView = verticalTimes.getChildAt(seekBarStart);
+        View maxView = verticalTimes.getChildAt(seekBarEnd);
+
+        minView.setBackgroundColor(Color.TRANSPARENT);
+        maxView.setBackgroundColor(Color.TRANSPARENT);
+
+        leftlayout.removeView(view);    // Removes seekBar
+        screenlayout.removeView(btnDeleteRibbon);
+
+        final DrawTestView ribbon = new DrawTestView(
+                this, viewWidth, h, seekBarStart, seekBarEnd,
+                minView.getTop() + getResources().getDimensionPixelOffset(R.dimen.dp10),
+                maxView.getBottom() - getResources().getDimensionPixelOffset(R.dimen.dp10)
+        );
+        ribbon.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                leftlayout.removeView(v);
+                putRibbon(ribbon.getStartTime(), ribbon.getEndTime());
+
+                return true;
+            }
+        });
+
+        paramsRLLeft = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.MATCH_PARENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT
+        );
+        paramsRLLeft.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+        paramsRLLeft.setMargins(0, (int) ribbon.getStartY(), 0, 0);
+//        ribbon.setTop((int) ribbon.getStartY());
+//        ribbon.setBottom((int) ribbon.getEndY());
+        leftlayout.addView(ribbon, paramsRLLeft);
+
+        ribbon.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                //ribbon.setTop((int) ribbon.getStartY());
+                ribbon.setBottom((int) ribbon.getEndY());
+                Log.d(TAG, "Top: " + ribbon.getTop() + " Bottom: " + ribbon.getBottom());
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
+                    ribbon.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                else
+                    ribbon.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+            }
+        });
+
+        isInEditMode = false;
+        Log.d( TAG, "EDIT MODE: " + isInEditMode );
+
+        return true;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_availability, menu);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()){
+            case R.id.new_ribbon:
+                putRibbon(0, 96);
+                break;
+            default:
+                break;
+        }
+
+        return true;
     }
 
     private void setupTimesArray(){
-        Log.d( TAG, "Setting up times" );
+        Log.d(TAG, "Setting up times");
         times[0] = times[96] = "12:00am";
         times[1] = "12:15";
         times[2] = "12:30";

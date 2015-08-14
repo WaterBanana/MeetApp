@@ -50,4 +50,6 @@
     <string name="marker">marker</string>
     <string name="title_activity_test">TestActivity</string>
     <string name="title_activity_dbhandle_view">DBHandleViewActivity</string>
+    <string name="new_ribbon">New Ribbon</string>
+    <string name="delete">Delete</string>
 </resources>

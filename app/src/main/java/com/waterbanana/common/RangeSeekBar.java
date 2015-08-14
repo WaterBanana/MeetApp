@@ -13,7 +13,6 @@ import android.os.Parcelable;
 import android.view.MotionEvent;
 import android.view.ViewConfiguration;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.waterbanana.meetapp.R;
 
@@ -48,8 +47,7 @@ public class RangeSeekBar<T extends Number> extends ImageView {
     private Thumb pressedThumb = null;
     private boolean notifyWhileDragging = false;
     private OnRangeSeekBarChangeListener<T> listener;
-    private String startTime, endTime;
-    private TextView startTimeView, endTimeView;
+    private int prevMin, prevMax;
     private final RectF rect;
 
 //    /**
@@ -98,8 +96,6 @@ public class RangeSeekBar<T extends Number> extends ImageView {
         numberType = NumberType.fromNumber(absoluteMinValue);
 
         rect = new RectF();
-        startTimeView = new TextView(context);
-        endTimeView = new TextView(context);
 
         // make RangeSeekBar focusable.
         // This solves focus handling issues in case EditText widgets
@@ -115,6 +111,22 @@ public class RangeSeekBar<T extends Number> extends ImageView {
 
     public float getLineHeight(){
         return lineHeight;
+    }
+
+    public void setPrevMin(int prevMin) {
+        this.prevMin = prevMin;
+    }
+
+    public void setPrevMax(int prevMax) {
+        this.prevMax = prevMax;
+    }
+
+    public int getPrevMin() {
+        return prevMin;
+    }
+
+    public int getPrevMax() {
+        return prevMax;
     }
 
     public boolean isNotifyWhileDragging() {

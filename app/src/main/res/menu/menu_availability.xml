@@ -3,5 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.waterbanana.meetapp.Availability">
     <item android:id="@+id/action_settings" android:title="@string/action_settings"
-        android:orderInCategory="100" app:showAsAction="never" />
+        android:orderInCategory="200" app:showAsAction="never" />
+    <item android:id="@+id/new_ribbon" android:title="@string/new_ribbon"
+        android:orderInCategory="100" app:showAsAction="ifRoom" />
 </menu>
