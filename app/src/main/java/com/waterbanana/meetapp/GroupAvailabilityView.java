@@ -40,7 +40,9 @@ public class GroupAvailabilityView extends RelativeLayout
     private AvailabilityTickMarker marker;
     private View markerView;
 
-    private int drawOrErase = 1;
+    private int myWidth;
+    private int myHeight;
+    private int barResolution;
 
 //    private DbHandler db;
 //    private User[] users;
@@ -56,6 +58,9 @@ public class GroupAvailabilityView extends RelativeLayout
     ArrayList<Ribbon> ribbons;
     DbHandler db = new DbHandler();
     User[] users;
+    double tallyPercentage;
+    int currentColor;
+
 
     private void populateGroupAvailability(){
         int start;
@@ -63,8 +68,9 @@ public class GroupAvailabilityView extends RelativeLayout
 
         //look through each ribbon and increment the corresponding time values by 1 each time
         //it is seen as available
+        Log.d("MainActivity", "Number of distinct users: " + users.length);
         for( int i = 0; i < users.length; i++ ){
-            Log.d("MainActivity", "Number of distinct users: " + users.length);
+
             ribbons = users[i].getRibbons();
             for( int j = 0; j < ribbons.size(); j++ ){
                 start = ribbons.get(j).getStart();
@@ -79,13 +85,42 @@ public class GroupAvailabilityView extends RelativeLayout
         }
         for(int i=0; i<groupCoordinates.length; i++) {
             if (groupCoordinates[i] > 0) {
-//                drawCanvas.drawPoint(touchX, i, drawPaint);
-                //drawLine(float startX, float startY, float stopX, float stopY, Paint paint)
-                drawCanvas.drawLine(
-                        r.getDimensionPixelOffset(R.dimen.availability_line_draw_position), // Ctrl+B to navigate to definition
-                        (0 + i * 100),
-                        r.getDimensionPixelOffset(R.dimen.availability_line_draw_position),
-                        (100 + i * 100),
+//                drawCanvas.drawLine(
+//                        r.getDimensionPixelOffset(R.dimen.availability_line_draw_position), // Ctrl+B to navigate to definition
+//                        (float)(0 + i * barResolution),
+//                        r.getDimensionPixelOffset(R.dimen.availability_line_draw_position),
+//                        (float)(barResolution + i * barResolution),
+//                        drawPaint
+//                );
+                tallyPercentage = (groupCoordinates[i]*1.0)/users.length;
+
+                if(tallyPercentage<.33){
+                    currentColor = Color.RED;
+                }else if(tallyPercentage<.66){
+                    currentColor = Color.YELLOW;
+                }else if(tallyPercentage<1.00){
+                    currentColor = Color.GREEN;
+                }
+
+
+                drawPaint.setStyle(Paint.Style.FILL);
+                drawPaint.setColor(currentColor);
+                drawPaint.setStrokeWidth(r.getDimension(R.dimen.availability_line_draw_width));
+                drawCanvas.drawRect(
+                        75, //left
+                        (float) (barResolution + i * barResolution), //top
+                        200, //right
+                        (float) (0 + i * barResolution), //bottom
+                        drawPaint
+                );
+                drawPaint.setStyle(Paint.Style.STROKE);
+                drawPaint.setColor(Color.BLACK);
+                drawPaint.setStrokeWidth(1);
+                drawCanvas.drawRect(
+                        75, //left
+                        (float)(barResolution+i*barResolution), //top
+                        200, //right
+                        (float)(0+i*barResolution), //bottom
                         drawPaint
                 );
             }
@@ -138,6 +173,9 @@ public class GroupAvailabilityView extends RelativeLayout
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         //view given size
         super.onSizeChanged(w, h, oldw, oldh);
+        this.myWidth = w;
+        this.myHeight = h;
+        this.barResolution = h/timeIntervals;
         canvasBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
         drawCanvas = new Canvas(canvasBitmap);
     }

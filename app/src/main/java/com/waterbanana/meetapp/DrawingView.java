@@ -10,6 +10,7 @@ import android.graphics.Path;
 import android.graphics.PorterDuff;
 import android.os.Handler;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -19,7 +20,7 @@ public class DrawingView extends RelativeLayout
     //drawing path
     private Path drawPath;
     //drawing and canvas paint
-    private Paint drawPaint, canvasPaint, erasePaint;
+    private Paint drawPaint, canvasPaint, erasePaint, testPaint;
     //initial color
     private int paintColor = 0xff00ff00;
     //canvas
@@ -45,6 +46,9 @@ public class DrawingView extends RelativeLayout
     private View markerView;
 
     private int drawOrErase = 1;
+    private int myWidth;
+    private int myHeight;
+    private int barResolution;
 
     public DrawingView(Context context, AttributeSet attrs){
         super(context, attrs);
@@ -69,14 +73,19 @@ public class DrawingView extends RelativeLayout
         drawPaint.setAntiAlias(true);
         drawPaint.setStrokeWidth(r.getDimension(R.dimen.availability_line_draw_width));
         drawPaint.setStyle(Paint.Style.FILL);
-        drawPaint.setStrokeJoin(Paint.Join.MITER);
+//        drawPaint.setStrokeJoin(Paint.Join.MITER);
         drawPaint.setStrokeCap(Paint.Cap.SQUARE);
+
+//        testPaint.setAntiAlias(true);
+//        testPaint.setColor(Color.RED);
+//        testPaint.setStyle(Paint.Style.STROKE);
+//        testPaint.setStrokeWidth(4.5f);
 
         erasePaint.setAntiAlias(true);
         erasePaint.setStrokeWidth(r.getDimension(R.dimen.availability_line_draw_width));
         erasePaint.setStyle(Paint.Style.STROKE);
         erasePaint.setStrokeJoin(Paint.Join.ROUND);
-        erasePaint.setStrokeCap(Paint.Cap.ROUND);
+        erasePaint.setStrokeCap(Paint.Cap.SQUARE);
 
         //instantiate canvas
         canvasPaint = new Paint(Paint.DITHER_FLAG);
@@ -131,6 +140,9 @@ public class DrawingView extends RelativeLayout
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         //view given size
         super.onSizeChanged(w, h, oldw, oldh);
+        this.myWidth = w;
+        this.myHeight = h;
+        this.barResolution = h/timeIntervals;
         canvasBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
         drawCanvas = new Canvas(canvasBitmap);
     }
@@ -171,15 +183,33 @@ public class DrawingView extends RelativeLayout
 
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                touchCoordinates[touchY/timeIntervals] = drawOrErase;
+                try {
+                    touchCoordinates[touchY / barResolution] = drawOrErase;
+                }
+                catch(Exception e){
+                    touchCoordinates[timeIntervals-1] = drawOrErase;
+                }
+                Log.d("Height:", Integer.toString(myHeight));
+                Log.d("Y:", Integer.toString(touchY));
+                Log.d("Cell:", Integer.toString(touchY/barResolution));
                 break;
 
             case MotionEvent.ACTION_MOVE:
-                touchCoordinates[touchY/timeIntervals] = drawOrErase;
+                try {
+                    touchCoordinates[touchY / barResolution] = drawOrErase;
+                }
+                catch(Exception e){
+                    touchCoordinates[timeIntervals-1] = drawOrErase;
+                }
                 break;
 
             case MotionEvent.ACTION_UP:
-                touchCoordinates[touchY/timeIntervals] = drawOrErase;
+                try {
+                    touchCoordinates[touchY / barResolution] = drawOrErase;
+                }
+                catch(Exception e){
+                    touchCoordinates[timeIntervals-1] = drawOrErase;
+                }
                 break;
 
             default:
@@ -190,15 +220,35 @@ public class DrawingView extends RelativeLayout
         drawCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
         for(int i=0; i<touchCoordinates.length; i++){
             if(touchCoordinates[i]>0){
-//                drawCanvas.drawPoint(touchX, i, drawPaint);
-                //drawLine(float startX, float startY, float stopX, float stopY, Paint paint)
-                drawCanvas.drawLine(
-                        r.getDimensionPixelOffset(R.dimen.availability_line_draw_position), // Ctrl+B to navigate to definition
-                        (0+i*100),
-                        r.getDimensionPixelOffset(R.dimen.availability_line_draw_position),
-                        (100+i*100),
+//                drawCanvas.drawLine(
+//                        r.getDimensionPixelOffset(R.dimen.availability_line_draw_position), // Ctrl+B to navigate to definition
+//                        (float)(0+i*barResolution),
+//                        r.getDimensionPixelOffset(R.dimen.availability_line_draw_position),
+//                        (float)(barResolution+i*barResolution),
+//                        drawPaint
+//                );
+                //drawRect (float left, float top, float right, float bottom, Paint paint)
+                drawPaint.setStyle(Paint.Style.FILL);
+                drawPaint.setColor(Color.GREEN);
+                drawPaint.setStrokeWidth(r.getDimension(R.dimen.availability_line_draw_width));
+                drawCanvas.drawRect(
+                        75, //left
+                        (float) (barResolution + i * barResolution), //top
+                        200, //right
+                        (float) (0 + i * barResolution), //bottom
                         drawPaint
                 );
+                drawPaint.setStyle(Paint.Style.STROKE);
+                drawPaint.setColor(Color.BLACK);
+                drawPaint.setStrokeWidth(1);
+                drawCanvas.drawRect(
+                        75, //left
+                        (float)(barResolution+i*barResolution), //top
+                        200, //right
+                        (float)(0+i*barResolution), //bottom
+                        drawPaint
+                );
+
             }
             else if (touchCoordinates[i]<=0){
                 //drawCanvas.drawLine(75, (0+i*100), 75, (100+i*100), erasePaint);
