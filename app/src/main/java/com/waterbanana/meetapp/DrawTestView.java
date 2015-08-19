@@ -6,11 +6,9 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
-import android.os.Build;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewTreeObserver;
 
 /**
  * Created by Eddie on 8/12/2015.
@@ -70,19 +68,21 @@ public class DrawTestView extends View {
         //instantiate canvas
         canvasPaint = new Paint(Paint.DITHER_FLAG);
 
-        getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                canvasBitmap = Bitmap.createBitmap(getWidth(), getHeight(), Bitmap.Config.ARGB_8888);
-                Log.d( TAG, "Width: " + getWidth() + " Height: " + getHeight() );
-                drawCanvas = new Canvas(canvasBitmap);
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
-                    getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                else
-                    getViewTreeObserver().removeGlobalOnLayoutListener(this);
-            }
-        });
+//        getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+//            @Override
+//            public void onGlobalLayout() {
+//                Bitmap unscaledcanvasBitmap = Bitmap.createBitmap(getWidth(), getHeight(), Bitmap.Config.ARGB_8888);
+//                //canvasBitmap = Bitmap.(unscaledcanvasBitmap, getWidth(), getHeight(), false);
+//                Log.d( TAG, "Width: " + getWidth() + " Height: " + getHeight() );
+//
+//                drawCanvas = new Canvas(canvasBitmap);
+//
+//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
+//                    getViewTreeObserver().removeOnGlobalLayoutListener(this);
+//                else
+//                    getViewTreeObserver().removeGlobalOnLayoutListener(this);
+//            }
+//        });
 
         //initialize touchCoordinates as untouched (-1)
 //        for(int i=0; i<touchCoordinates.length; i++){
@@ -112,13 +112,13 @@ public class DrawTestView extends View {
         super.onDraw(canvas);
         Log.d( TAG, "onDraw" );
 
-        drawCanvas.drawLine(
-                0.5f * (width - lineWidth),
-                0,
-                0.5f * (width - lineWidth),
-                endY - startY,
-                drawPaint
-        );
+//        drawCanvas.drawLine(
+//                0.5f * (width - lineWidth),
+//                0,
+//                0.5f * (width - lineWidth),
+//                endY - startY,
+//                drawPaint
+//        );
 
 //        for(int i=0; i<touchCoordinates.length; i++) {
 //            if (touchCoordinates[i] > 0) {
@@ -133,7 +133,14 @@ public class DrawTestView extends View {
 //                );
 //            }
 //        }
-        canvas.drawBitmap(canvasBitmap, 0, 0, canvasPaint);
+        canvas.drawLine(
+                0.5f * (width - lineWidth),
+                0,
+                0.5f * (width - lineWidth),
+                endY - startY,
+                drawPaint
+        );
+        //canvas.drawBitmap(canvasBitmap, 0, 0, canvasPaint);
         //canvas.drawPath(drawPath, drawPaint);
     }
 
