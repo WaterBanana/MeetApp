@@ -147,7 +147,7 @@ public class Availability extends AppCompatActivity {
                 RelativeLayout.LayoutParams.MATCH_PARENT,
                 RelativeLayout.LayoutParams.MATCH_PARENT
         );
-        paramsRLLeft.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+        paramsRLLeft.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
         Log.d(TAG, "Before adding view");
         leftlayout.addView(seekBar, paramsRLLeft);
         Log.d(TAG, "After adding view");
@@ -218,7 +218,7 @@ public class Availability extends AppCompatActivity {
                 RelativeLayout.LayoutParams.MATCH_PARENT,
                 RelativeLayout.LayoutParams.WRAP_CONTENT
         );
-        paramsRLLeft.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+        paramsRLLeft.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
         paramsRLLeft.setMargins(0, (int) ribbon.getStartY(), 0, 0);
 //        ribbon.setTop((int) ribbon.getStartY());
 //        ribbon.setBottom((int) ribbon.getEndY());
