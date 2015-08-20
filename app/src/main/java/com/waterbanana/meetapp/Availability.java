@@ -199,6 +199,12 @@ public class Availability extends AppCompatActivity {
         leftlayout.removeView(view);    // Removes seekBar
         screenlayout.removeView(btnDeleteRibbon);
 
+        final GroupTestAvailability gRibbon = new GroupTestAvailability (
+                this, viewWidth, h, seekBarStart, seekBarEnd,
+                minView.getTop() + getResources().getDimensionPixelOffset(R.dimen.dp10),
+                maxView.getBottom() - getResources().getDimensionPixelOffset(R.dimen.dp10)
+        );
+
         final DrawTestView ribbon = new DrawTestView(
                 this, viewWidth, h, seekBarStart, seekBarEnd,
                 minView.getTop() + getResources().getDimensionPixelOffset(R.dimen.dp10),
