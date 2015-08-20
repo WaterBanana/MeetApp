@@ -60,7 +60,8 @@ public class DrawTestView extends View {
 
         //initial path properties
         drawPaint.setAntiAlias(true);
-        drawPaint.setStrokeWidth(width);
+//        drawPaint.setStrokeWidth(width);
+        drawPaint.setStrokeWidth(100);
         drawPaint.setStyle(Paint.Style.FILL);
         drawPaint.setStrokeJoin(Paint.Join.MITER);
         drawPaint.setStrokeCap(Paint.Cap.SQUARE);
@@ -132,7 +133,7 @@ public class DrawTestView extends View {
 //                        drawPaint
 //                );
 //            }
-//        }
+//        }'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
         canvas.drawLine(
                 0.5f * (width - lineWidth),
                 0,
