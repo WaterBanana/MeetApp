@@ -107,22 +107,25 @@ public class GroupAvailabilityView extends RelativeLayout
                 drawPaint.setColor(currentColor);
                 drawPaint.setStrokeWidth(r.getDimension(R.dimen.availability_line_draw_width));
                 drawCanvas.drawRect(
-                        75, //left
+                        0, //left
                         (float) (barResolution + i * barResolution), //top
-                        200, //right
+                        75, //right
                         (float) (0 + i * barResolution), //bottom
                         drawPaint
                 );
+                /*
                 drawPaint.setStyle(Paint.Style.STROKE);
                 drawPaint.setColor(Color.BLACK);
                 drawPaint.setStrokeWidth(1);
                 drawCanvas.drawRect(
-                        75, //left
+                        0, //left
                         (float)(barResolution+i*barResolution), //top
-                        200, //right
+                        75, //right
                         (float)(0+i*barResolution), //bottom
                         drawPaint
                 );
+                */
+
             }
         }
         invalidate();//should call the onDraw method
