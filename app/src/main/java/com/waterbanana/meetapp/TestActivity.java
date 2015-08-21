@@ -69,7 +69,7 @@ public class TestActivity extends AppCompatActivity {
 //            }
 //        });
 
-        RelativeLayout leftlayout = (RelativeLayout) findViewById(R.id.availability_layout_right);
+        RelativeLayout rightLayout = (RelativeLayout) findViewById(R.id.availability_layout_right);
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
                 RelativeLayout.LayoutParams.WRAP_CONTENT,
                 RelativeLayout.LayoutParams.WRAP_CONTENT
@@ -83,7 +83,7 @@ public class TestActivity extends AppCompatActivity {
 //            );
 //        }
         params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-        leftlayout.addView(seekBar, params);
+        rightLayout.addView(seekBar, params);
     }
 
     @Override
