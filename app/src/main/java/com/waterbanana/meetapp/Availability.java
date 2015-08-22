@@ -1,6 +1,7 @@
 package com.waterbanana.meetapp;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -25,7 +26,7 @@ import com.waterbanana.common.RangeSeekBar;
 
 public class Availability extends AppCompatActivity {
     private GridView verticalTimes;
-    private RelativeLayout screenlayout, midlayout, leftlayout, rightlayout;
+    private RelativeLayout screenlayout, midlayout, rightlayout, leftlayout;
     private String[] times = new String[97];
     private int layoutHeight;
     private RelativeLayout.LayoutParams paramsRLLeft;
@@ -33,6 +34,7 @@ public class Availability extends AppCompatActivity {
     private RangeSeekBar<Integer> seekBar;
     private View viewListener;
     private Button btnDeleteRibbon;
+    private String date;
 
     private String TAG = "Availability.java";
 
@@ -41,13 +43,17 @@ public class Availability extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_availability);
 
+        Intent intent = getIntent();
+        Bundle bundle = intent.getExtras();
+        date = bundle.getString("date");
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         screenlayout = (RelativeLayout) findViewById(R.id.relativeLayout_activity_availability);
         midlayout = (RelativeLayout) findViewById(R.id.availability_layout_mid);
-        leftlayout = (RelativeLayout) findViewById(R.id.availability_layout_left);
         rightlayout = (RelativeLayout) findViewById(R.id.availability_layout_right);
+        leftlayout = (RelativeLayout) findViewById(R.id.availability_layout_left);
 
         setupTimesArray();
         verticalTimes = new GridView(this);
@@ -69,6 +75,7 @@ public class Availability extends AppCompatActivity {
         });
 
         midlayout.addView(verticalTimes);
+        final GroupTestAvailability gRibbon = (GroupTestAvailability)findViewById (R.id.availability_layout_left);
 
         verticalTimes.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
@@ -81,13 +88,15 @@ public class Availability extends AppCompatActivity {
                         verticalTimes.getWidth(), layoutHeight
                 ));
 
-                leftlayout.setLayoutParams(new LinearLayout.LayoutParams(
-                        verticalTimes.getWidth(), layoutHeight
-                ));
-
                 rightlayout.setLayoutParams(new LinearLayout.LayoutParams(
                         verticalTimes.getWidth(), layoutHeight
                 ));
+
+                leftlayout.setLayoutParams(new LinearLayout.LayoutParams(
+                        verticalTimes.getWidth(), layoutHeight
+                ));
+                gRibbon.setTimesView(verticalTimes);
+                gRibbon.setDate(date);
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
                     verticalTimes.getViewTreeObserver().removeOnGlobalLayoutListener(this);
@@ -95,6 +104,8 @@ public class Availability extends AppCompatActivity {
                     verticalTimes.getViewTreeObserver().removeGlobalOnLayoutListener(this);
             }
         });
+
+
     }
 
     // SEEKBAR
@@ -149,7 +160,7 @@ public class Availability extends AppCompatActivity {
         );
         paramsRLLeft.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
         Log.d(TAG, "Before adding view");
-        leftlayout.addView(seekBar, paramsRLLeft);
+        rightlayout.addView(seekBar, paramsRLLeft);
         Log.d(TAG, "After adding view");
         viewListener = seekBar;
         isInEditMode = true;
@@ -160,7 +171,7 @@ public class Availability extends AppCompatActivity {
         btnDeleteRibbon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                leftlayout.removeView(seekBar);
+                rightlayout.removeView(seekBar);
                 screenlayout.removeView(v);
                 int seekBarStart = seekBar.getSelectedMinValue();
                 int seekBarEnd = seekBar.getSelectedMaxValue();
@@ -196,14 +207,12 @@ public class Availability extends AppCompatActivity {
         minView.setBackgroundColor(Color.TRANSPARENT);
         maxView.setBackgroundColor(Color.TRANSPARENT);
 
-        leftlayout.removeView(view);    // Removes seekBar
+        rightlayout.removeView(view);    // Removes seekBar
         screenlayout.removeView(btnDeleteRibbon);
 
-        final GroupTestAvailability gRibbon = new GroupTestAvailability (
-                this, viewWidth, h, seekBarStart, seekBarEnd,
-                minView.getTop() + getResources().getDimensionPixelOffset(R.dimen.dp10),
-                maxView.getBottom() - getResources().getDimensionPixelOffset(R.dimen.dp10)
-        );
+
+
+
 
         final DrawTestView ribbon = new DrawTestView(
                 this, viewWidth, h, seekBarStart, seekBarEnd,
@@ -213,7 +222,7 @@ public class Availability extends AppCompatActivity {
         ribbon.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                leftlayout.removeView(v);
+                rightlayout.removeView(v);
                 putRibbon(ribbon.getStartTime(), ribbon.getEndTime());
 
                 return true;
@@ -228,7 +237,7 @@ public class Availability extends AppCompatActivity {
         paramsRLLeft.setMargins(0, (int) ribbon.getStartY(), 0, 0);
 //        ribbon.setTop((int) ribbon.getStartY());
 //        ribbon.setBottom((int) ribbon.getEndY());
-        leftlayout.addView(ribbon, paramsRLLeft);
+        rightlayout.addView(ribbon, paramsRLLeft);
 
         ribbon.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override

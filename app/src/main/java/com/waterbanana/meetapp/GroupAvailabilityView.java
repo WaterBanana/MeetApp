@@ -97,8 +97,10 @@ public class GroupAvailabilityView extends RelativeLayout
                 if(tallyPercentage<.33){
                     currentColor = Color.RED;
                 }else if(tallyPercentage<.66){
-                    currentColor = Color.YELLOW;
+                    currentColor = Color.rgb(255,165,0);//Orange
                 }else if(tallyPercentage<1.00){
+                    currentColor = Color.YELLOW;
+                }else if(tallyPercentage==1.00){
                     currentColor = Color.GREEN;
                 }
 

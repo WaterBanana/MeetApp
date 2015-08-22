@@ -25,6 +25,19 @@
     <string name="Nov">November</string>
     <string name="Dec">December</string>
 
+    <string name="JanVal">01</string>
+    <string name="FebVal">02</string>
+    <string name="MarVal">03</string>
+    <string name="AprVal">04</string>
+    <string name="MayVal">05</string>
+    <string name="JunVal">06</string>
+    <string name="JulVal">07</string>
+    <string name="AugVal">08</string>
+    <string name="SepVal">09</string>
+    <string name="OctVal">10</string>
+    <string name="NovVal">11</string>
+    <string name="DecVal">12</string>
+
     <string name="Sun">Sunday</string>
     <string name="Mon">Monday</string>
     <string name="Tue">Tuesday</string>

@@ -20,11 +20,12 @@
             android:orientation="horizontal"
             android:weightSum="3">
 
-            <RelativeLayout
+            <com.waterbanana.meetapp.GroupTestAvailability
+                android:id="@+id/availability_layout_left"
+                android:layout_weight="1"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:id="@+id/availability_layout_right" />
+                android:background="#FFFFFFFF" />
 
             <RelativeLayout
                 android:layout_width="0dp"
@@ -35,9 +36,10 @@
 
             <RelativeLayout
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="match_parent"
-                android:id="@+id/availability_layout_left" />
+                android:layout_weight="1"
+                android:id="@+id/availability_layout_right" />
+
 
         </LinearLayout>
 
