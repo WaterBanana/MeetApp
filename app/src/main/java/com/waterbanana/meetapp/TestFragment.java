@@ -26,6 +26,7 @@ public class TestFragment extends Fragment{
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent( getActivity(), Availability.class );
+                intent.putExtra("date", "1999-01-01");
                 startActivity( intent );
             }
         });

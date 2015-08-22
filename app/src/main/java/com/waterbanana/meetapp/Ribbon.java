@@ -5,7 +5,7 @@ package com.waterbanana.meetapp;
  */
 public class Ribbon {
     private int id;
-    private String date;
+    private String date;//YYYY-MM-DD
     private int start;
     private int end;
 
@@ -32,6 +32,9 @@ public class Ribbon {
         this.id = id;
     }
 
+    /**
+     * @return YYYY-MM-DD
+     */
     public String getDate() {
         return date;
     }

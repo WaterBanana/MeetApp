@@ -52,6 +52,7 @@ public class GroupTestAvailability extends RelativeLayout {
     private String TAG = "GroupTestAvailability";
 
     private GridView timesView;
+    private String date;
 
 //    public GroupTestAvailability (
 //            Context context, int viewWidth, int lineWidth,
@@ -81,6 +82,10 @@ public class GroupTestAvailability extends RelativeLayout {
 
     public void setTimesView(GridView timesView){
         this.timesView = timesView;
+    }
+
+    public void setDate(String date){
+        this.date = date;
     }
 
     private void setupDrawing(Context context){
@@ -170,13 +175,15 @@ public class GroupTestAvailability extends RelativeLayout {
 
             ribbons = users[i].getRibbons();
             for( int j = 0; j < ribbons.size(); j++ ){
-                start = ribbons.get(j).getStart();
-                end = ribbons.get(j).getEnd();
-                //ended here GAA 13 AUG 2015
-                //having issues with managing the times
-                for(int k=start; k<=end; k++){
-                    groupCoordinates[k]++;
+                if(ribbons.get(j).getDate().equals(date)) {
+                    start = ribbons.get(j).getStart();
+                    end = ribbons.get(j).getEnd();
+                    //ended here GAA 13 AUG 2015
+                    //having issues with managing the times
+                    for (int k = start; k <= end; k++) {
+                        groupCoordinates[k]++;
 
+                    }
                 }
             }
         }

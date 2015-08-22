@@ -54,6 +54,9 @@ public class Calendar extends Fragment implements View.OnClickListener{
     private final String[] weekdays = new String[7];
     private final int[] monthIds = {R.string.Jan, R.string.Feb, R.string.Mar, R.string.Apr, R.string.May,
             R.string.Jun, R.string.Jul, R.string.Aug, R.string.Sep, R.string.Oct, R.string.Nov, R.string.Dec};
+    private final int[] monthNums = {R.string.JanVal, R.string.FebVal, R.string.MarVal, R.string.AprVal,
+            R.string.MayVal, R.string.JunVal, R.string.JulVal, R.string.AugVal, R.string.SepVal, R.string.OctVal,
+            R.string.NovVal, R.string.DecVal};
     private final String[] months = new String[12];
     private int screenHeight;
     private ArrayList<ArrayList<Double>> meetingPopulations = new ArrayList<ArrayList<Double>> ();
@@ -214,8 +217,9 @@ public class Calendar extends Fragment implements View.OnClickListener{
         private Button gridcell;
         private TextView num_events_per_day;
         private final HashMap<String, Integer> eventsPerMonthMap;
-        private final SimpleDateFormat dateFormatter = new SimpleDateFormat(
-                "dd-MMM-yyyy");
+//        private final SimpleDateFormat dateFormatter = new SimpleDateFormat(
+//                "dd-MMM-yyyy");
+        private final SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-mm-dd");
         private int divideBy;
 
         // Days in Current Month
@@ -262,6 +266,8 @@ public class Calendar extends Fragment implements View.OnClickListener{
         private String getMonthAsString(int i) {
             return months[i];
         }
+
+//        private String getMonthAsNum(int i){return monthNums[i];}
 
         private String getWeekDayAsString(int i) {
             return weekdays[i];
@@ -516,19 +522,70 @@ public class Calendar extends Fragment implements View.OnClickListener{
 
         @Override
         public void onClick(View view) {
-            String date_month_year = (String) view.getTag();
-            Intent intent = new Intent(getActivity(), DrawAvailability.class);
-            intent.putExtra("DATE", date_month_year);
-            //selectedDayMonthYearButton.setText("Selected: " + date_month_year);
-            //Log.e("Selected date", date_month_year);
-            try {
-                Date parsedDate = dateFormatter.parse(date_month_year);
-                //Log.d(tag, "Parsed Date: " + parsedDate.toString());
+//            String date_month_year = (String) view.getTag();
+//            Intent intent = new Intent(getActivity(), DrawAvailability.class);
+//            intent.putExtra("DATE", date_month_year);
+//            //selectedDayMonthYearButton.setText("Selected: " + date_month_year);
+//            //Log.e("Selected date", date_month_year);
+//            try {
+//                Date parsedDate = dateFormatter.parse(date_month_year);
+//                //Log.d(tag, "Parsed Date: " + parsedDate.toString());
+//
+//            } catch (ParseException e) {
+//                e.printStackTrace();
+//            }
+//            startActivity(intent);
 
-            } catch (ParseException e) {
-                e.printStackTrace();
+            final String date_month_year = (String) view.getTag();
+            String[] stringDateSplit = date_month_year.split("-");
+            switch(stringDateSplit[1]){
+                case "January":
+                    stringDateSplit[1] = "01";
+                    break;
+                case "February":
+                    stringDateSplit[1] = "02";
+                    break;
+                case "March":
+                    stringDateSplit[1] = "03";
+                    break;
+                case "April":
+                    stringDateSplit[1] = "04";
+                    break;
+                case "May":
+                    stringDateSplit[1] = "05";
+                    break;
+                case "June":
+                    stringDateSplit[1] = "06";
+                    break;
+                case "July":
+                    stringDateSplit[1] = "07";
+                    break;
+                case "August":
+                    stringDateSplit[1] = "08";
+                    break;
+                case "September":
+                    stringDateSplit[1] = "09";
+                    break;
+                case "October":
+                    stringDateSplit[1] = "10";
+                    break;
+                case "November":
+                    stringDateSplit[1] = "11";
+                    break;
+                case "December":
+                    stringDateSplit[1] = "12";
+                    break;
+
             }
+            /**
+             * newDateFormat is yyyy-mm-dd
+             */
+            final String newDateFormat = stringDateSplit[2] + "-" + stringDateSplit[1] + "-" + stringDateSplit[0];
+            Log.d(tag, "newDateFormat = " + newDateFormat);
+            Intent intent = new Intent(getActivity(), Availability.class);
+            intent.putExtra("date", newDateFormat);
             startActivity(intent);
+
         }
 
         public int getCurrentDayOfMonth() {

@@ -1,6 +1,7 @@
 package com.waterbanana.meetapp;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -33,6 +34,7 @@ public class Availability extends AppCompatActivity {
     private RangeSeekBar<Integer> seekBar;
     private View viewListener;
     private Button btnDeleteRibbon;
+    private String date;
 
     private String TAG = "Availability.java";
 
@@ -40,6 +42,10 @@ public class Availability extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_availability);
+
+        Intent intent = getIntent();
+        Bundle bundle = intent.getExtras();
+        date = bundle.getString("date");
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -90,6 +96,7 @@ public class Availability extends AppCompatActivity {
                         verticalTimes.getWidth(), layoutHeight
                 ));
                 gRibbon.setTimesView(verticalTimes);
+                gRibbon.setDate(date);
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
                     verticalTimes.getViewTreeObserver().removeOnGlobalLayoutListener(this);
