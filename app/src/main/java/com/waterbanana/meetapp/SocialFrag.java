@@ -7,6 +7,7 @@ package com.waterbanana.meetapp;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
@@ -24,6 +25,7 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -38,6 +40,7 @@ public class SocialFrag extends Fragment implements View.OnClickListener{
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate( R.layout.fragment_view_social, container, false );
         usersG = (ListView)view.findViewById(R.id.titles);
+        usersG.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         usersGroups = new ArrayList<>();
         ArrayAdapter<Integer> connectArrayToListView = new
                 ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_activated_1,
@@ -68,15 +71,21 @@ public class SocialFrag extends Fragment implements View.OnClickListener{
         usersG.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                DetailsFragment memOfG = DetailsFragment.newInstance(l);
+                //view.setBackgroundColor(Color.LTGRAY);
+
+                usersG.setItemChecked(i, true);
+
+                //usersG.getst
+                long id = Long.valueOf((int)adapterView.getAdapter().getItem(i));
+                DetailsFragment memOfG = DetailsFragment.newInstance(id);
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
                 ft.replace(R.id.details, memOfG);
                 ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
                 ft.commit();
     //ADD THE PARAMS HERE
                 RelativeLayout rightFragment = (RelativeLayout) getActivity().findViewById(R.id.details);
-                rightFragment.setLayoutParams(new LinearLayout.LayoutParams(200, 200));
-
+                rightFragment.setLayoutParams(new LinearLayout.LayoutParams(190, 490));
+                //180, 490
             }
         });
 
@@ -115,12 +124,28 @@ public class SocialFrag extends Fragment implements View.OnClickListener{
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    ArrayAdapter<Integer> connectArrayToListView = new
-                            ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_activated_1,
-                            usersGroups);//used to be NAMES
-                    usersG.setAdapter(connectArrayToListView);
+                    groupAdapter usersGs = new groupAdapter(getActivity(), usersGroups);//used to be NAMES
+                    usersG.setAdapter(usersGs);
                 }
             });
+        }
+    }
+
+    class groupAdapter extends ArrayAdapter<Integer> {
+        public groupAdapter(Context context, ArrayList<Integer> groups) {
+            super(context, 0, groups);
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+
+            int groupId=getItem(position);
+            if(convertView==null){
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.group_rows, parent, false);
+            }
+            TextView groupgid = (TextView) convertView.findViewById(R.id.grouprows);
+            groupgid.setText(Integer.toString(groupId));
+            return convertView;
         }
     }
 }

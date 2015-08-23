@@ -105,15 +105,17 @@ public class DetailsFragment extends ListFragment {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
 
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    ArrayAdapter<String> connectArrayToListView = new
-                            ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_activated_1,
-                            userIds);
-                    setListAdapter(connectArrayToListView);
-                }
-            });
+            if(getActivity() != null) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        ArrayAdapter<String> connectArrayToListView = new
+                                ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_activated_1,
+                                userIds);
+                        setListAdapter(connectArrayToListView);
+                    }
+                });
+            }
         }
     }
 }
