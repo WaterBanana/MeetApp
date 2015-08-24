@@ -83,6 +83,22 @@ public class User {
 
     }
 
+    public int getRibbonIDwithDateStartEnd(String date, int start, int end){
+        int ribbonID = -1;
+
+        for(int i=0; i<timeslots.size(); i++){
+            if(timeslots.get(i).getDate().equals(date)){
+                if(timeslots.get(i).getStart() == start){
+                    if(timeslots.get(i).getEnd() == end){
+                        ribbonID = timeslots.get(i).getId();
+                    }
+                }
+            }
+        }
+
+        return ribbonID;
+    }
+
     /**
      * For testing purposes only.
      * Deprecated: Use {@link #newRibbon(Ribbon)} instead.
@@ -101,4 +117,6 @@ public class User {
     public void addToGroupList(int groupid){
         groups.add( groupid );
     }
+
+
 }

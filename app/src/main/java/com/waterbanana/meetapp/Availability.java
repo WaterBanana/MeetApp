@@ -1,7 +1,13 @@
+//Now need to create an actual table - GAA 22 AUG 2015
+//GAA 23AUG2015
+//Crashing on lines 122, 142, 365. Has something to do with the new table I'm trying to create(maybe the format?)
 package com.waterbanana.meetapp;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -24,6 +30,8 @@ import android.widget.TextView;
 
 import com.waterbanana.common.RangeSeekBar;
 
+import java.util.ArrayList;
+
 public class Availability extends AppCompatActivity {
     private GridView verticalTimes;
     private RelativeLayout screenlayout, midlayout, rightlayout, leftlayout;
@@ -35,8 +43,11 @@ public class Availability extends AppCompatActivity {
     private View viewListener;
     private Button btnDeleteRibbon;
     private String date;
-
+    private ArrayList<DrawTestView> drawTestViewArray;
     private String TAG = "Availability.java";
+    private LocalDbHandler helper;
+    private String month, day, year;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +57,10 @@ public class Availability extends AppCompatActivity {
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         date = bundle.getString("date");
+        month = date.split("-")[1];
+        day = date.split("-")[2];
+        year = date.split("-")[0];
+        Log.d("Availability.java", date);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -105,14 +120,77 @@ public class Availability extends AppCompatActivity {
             }
         });
 
+//        //CRASHING GAA 23AUG2015;
+//        helper = new LocalDbHandler(this);
+//        SQLiteDatabase sqlDB = helper.getReadableDatabase();
+//        Cursor cursor = sqlDB.query(LocalDbContract.TABLE,
+//                new String[]{
+//                        month+"ID",
+//                        month+"DATE",
+//                        month+"RIBBONSTART",
+//                        month+"RIBBONEND"},
+//                "Day=?", new String[]{day}, null, null, null);
 
+
+
+
+//        public static final String COLUMN_JAN_ID = "01ID";
+//        public static final String COLUMN_JAN_DATE = "01DATE";
+//        public static final String COLUMN_JAN_RIBBONSTART="01RIBBONSTART";
+//        public static final String COLUMN_JAN_RIBBONEND="01RIBBONEND";
+
+//        View minView = verticalTimes.getChildAt(minValue);
+//        View maxView = verticalTimes.getChildAt(maxValue);
+
+        //populate drawTestViewArray from the android db
+        drawTestViewArray = new ArrayList();
+
+//        //CRASHING - GAA 8:23 PM 23AUG2015:
+//        //The table isn't being created properly
+//        if (cursor.moveToFirst()) {
+//            while(!cursor.isAfterLast()) { // If you use c.moveToNext() here, you will bypass the first row, which is WRONG
+//                int min = Integer.parseInt(cursor.getString(cursor.getColumnIndex(month+"RIBBONSTART")));
+//                int max = Integer.parseInt(cursor.getString(cursor.getColumnIndex(month+"RIBBONEND")));
+//                View minView = verticalTimes.getChildAt(min);
+//                View maxView = verticalTimes.getChildAt(max);
+//
+//                DrawTestView newRibbon = new DrawTestView(
+//                        this,
+//                        min,
+//                        max,
+//                        minView.getTop() + getResources().getDimensionPixelOffset(R.dimen.dp10),
+//                        maxView.getBottom() - getResources().getDimensionPixelOffset(R.dimen.dp10));
+//
+//                drawTestViewArray.add(newRibbon);
+//                cursor.moveToNext();
+//            }
+//
+//        }
+//        cursor.close();
+
+        //Show the ribbons that are already there. They should be DrawTestView objects
+        if(drawTestViewArray != null) {
+            for (int i = 0; i < drawTestViewArray.size(); i++) {
+                paintRibbon(null,
+                        drawTestViewArray.get(i).getViewWidth(),//is there a default we can use or a method to grab this? Doing so with make our resulting array smaller
+                        drawTestViewArray.get(i).getLineWidth(),//same as above
+                        drawTestViewArray.get(i).getMinValue(),
+                        drawTestViewArray.get(i).getMaxValue());
+            }
+        }
+
+//        int height, int width, int seekBarStart, int seekBarEnd
     }
 
     // SEEKBAR
     private void putRibbon(int min, int max){
         if(isInEditMode) {
             Log.d( TAG, "Is in edit mode" );
-            paintRibbon(viewListener, seekBar);
+            paintRibbon(viewListener,
+                    (int)seekBar.getLineHeight(),
+                    seekBar.getWidth(),
+                    seekBar.getSelectedMinValue(),
+                    seekBar.getSelectedMaxValue());
             screenlayout.removeView(btnDeleteRibbon);
             isInEditMode = false;
         }
@@ -149,7 +227,11 @@ public class Availability extends AppCompatActivity {
             @Override
             public boolean onLongClick(View v) {
                 Log.d(TAG, "SeekBar onLongClick");
-                paintRibbon(v, seekBar);
+                paintRibbon(v,
+                        (int) seekBar.getLineHeight(),
+                        seekBar.getWidth(),
+                        seekBar.getSelectedMinValue(),
+                        seekBar.getSelectedMaxValue());
                 return true;
             }
         });
@@ -196,28 +278,23 @@ public class Availability extends AppCompatActivity {
     }
 
     // ACCEPTED RIBBON
-    private boolean paintRibbon(View view, RangeSeekBar seekBar){
-        int h = (int) seekBar.getLineHeight();
-        int viewWidth = seekBar.getWidth();
-        int seekBarStart = (int) seekBar.getSelectedMinValue();
-        int seekBarEnd = (int) seekBar.getSelectedMaxValue();
-        View minView = verticalTimes.getChildAt(seekBarStart);
-        View maxView = verticalTimes.getChildAt(seekBarEnd);
+    private boolean paintRibbon(View view, int lineWidth, int viewWidth, int minValue, int maxValue){
+
+        View minView = verticalTimes.getChildAt(minValue);
+        View maxView = verticalTimes.getChildAt(maxValue);
 
         minView.setBackgroundColor(Color.TRANSPARENT);
         maxView.setBackgroundColor(Color.TRANSPARENT);
-
-        rightlayout.removeView(view);    // Removes seekBar
-        screenlayout.removeView(btnDeleteRibbon);
-
-
-
-
+        if(view != null) {
+            rightlayout.removeView(view);    // Removes seekBar
+            screenlayout.removeView(btnDeleteRibbon);
+        }
 
         final DrawTestView ribbon = new DrawTestView(
-                this, viewWidth, h, seekBarStart, seekBarEnd,
+                this, viewWidth, lineWidth, minValue, maxValue,
                 minView.getTop() + getResources().getDimensionPixelOffset(R.dimen.dp10),
                 maxView.getBottom() - getResources().getDimensionPixelOffset(R.dimen.dp10)
+
         );
         ribbon.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -228,6 +305,9 @@ public class Availability extends AppCompatActivity {
                 return true;
             }
         });
+//        drawTestViewArray.add(ribbon);
+        //add the ribbon into the android db instead
+
 
         paramsRLLeft = new RelativeLayout.LayoutParams(
                 RelativeLayout.LayoutParams.MATCH_PARENT,
@@ -254,7 +334,7 @@ public class Availability extends AppCompatActivity {
         });
 
         isInEditMode = false;
-        Log.d( TAG, "EDIT MODE: " + isInEditMode );
+        Log.d(TAG, "EDIT MODE: " + isInEditMode);
 
         return true;
     }
@@ -270,13 +350,22 @@ public class Availability extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()){
             case R.id.new_ribbon:
-                putRibbon(0, 96);
+                putRibbon(0, 96);//can we make this focus on the screen?
                 break;
             default:
                 break;
         }
 
         return true;
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        //go and update the online db with the android db
+//        //CRASHING GAA 23AUG2015
+//        storeRibbonsInLocalDb();
+
     }
 
     private void setupTimesArray(){
@@ -316,6 +405,72 @@ public class Availability extends AppCompatActivity {
             i++; //counter++;
         }
     }
+
+    public void storeRibbonsInLocalDb(){
+        int ribbonBegin;
+        int ribbonEnd;
+        String[] ribbonDate;
+        int ribbonID;
+        int grabbedID;
+        User user;
+        String month;
+        SQLiteDatabase sqlDB;
+        DbHandler sqlOnlineDB;
+        ContentValues newIDValues;
+        ContentValues newDateValues;
+        ContentValues newRibbonStartValues;
+        ContentValues newRibbonEndValues;
+
+        sqlDB = helper.getReadableDatabase();
+        sqlOnlineDB = new DbHandler();
+
+        for (int i = 0; i < drawTestViewArray.size(); i++) {
+            ribbonID = -1;
+            ribbonDate = date.split("-");
+            month=ribbonDate[1];
+            ribbonBegin = drawTestViewArray.get(i).getMinValue();
+            ribbonEnd = drawTestViewArray.get(i).getMaxValue();
+
+            //create ribbon on online db and return online id
+            Log.d("Create Online Ribbon", ribbonDate + ":" + ribbonBegin + "-" + ribbonEnd);
+            Intent intent = new Intent(this, CreateEntryFromLocal.class);
+            intent.putExtra("ribbonID", ribbonID);
+            intent.putExtra("date", date);
+            intent.putExtra("ribbonBegin", ribbonBegin);
+            intent.putExtra("ribbonEnd", ribbonEnd);
+            startActivity(intent);
+
+
+            //how do we get back the online id?
+            user = sqlOnlineDB.getAllRibbonsByUserId("0");
+            grabbedID = user.getRibbonIDwithDateStartEnd(date, ribbonBegin, ribbonEnd);
+            ribbonID = grabbedID;
+
+
+            //using the online id, create the ribbon in the local database
+            newIDValues = new ContentValues();
+//            newValues.put("YOUR_COLUMN", "newValue");
+            newIDValues.put(month+"ID", ribbonID);
+            sqlDB.update(LocalDbContract.TABLE, newIDValues, "Day="+ribbonDate[2], null);
+
+            newDateValues = new ContentValues();
+//            newValues.put("YOUR_COLUMN", "newValue");
+            newDateValues.put(month+"DATE", date);
+            sqlDB.update(LocalDbContract.TABLE, newDateValues, "Day="+ribbonDate[2], null);
+
+            newRibbonStartValues = new ContentValues();
+//            newValues.put("YOUR_COLUMN", "newValue");
+            newRibbonStartValues.put(month+"RIBBONSTART", ribbonBegin);
+            sqlDB.update(LocalDbContract.TABLE, newRibbonStartValues, "Day="+ribbonDate[2], null);
+
+            newRibbonEndValues = new ContentValues();
+//            newValues.put("YOUR_COLUMN", "newValue");
+            newRibbonEndValues.put(month+"RIBBONEND", ribbonEnd);
+            sqlDB.update(LocalDbContract.TABLE, newRibbonEndValues, "Day="+ribbonDate[2], null);
+
+        }
+    }
+
 
     class TimesViewAdapter extends BaseAdapter {
         Context _context;

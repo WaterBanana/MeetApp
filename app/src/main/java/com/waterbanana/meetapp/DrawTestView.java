@@ -40,9 +40,23 @@ public class DrawTestView extends View {
         this.lineWidth = lineWidth;
         width = viewWidth;
 
-//        for( int i = startTime; i < endTime; i++ ){
-//            touchCoordinates[i] = 1;
-//        }
+    }
+
+    //constructor that doesn't require a viewWidth and a lineWidth as input
+    public DrawTestView(
+            Context context,
+            int startTime, int endTime, float startY, float endY
+    ) {
+        this( context, null, 0, 100 );//lineWidth turned to 100 for now
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.startY = startY;
+        this.endY = endY;
+        Log.d( TAG, "Start: " + startTime + " End: " + endTime );
+        Log.d( TAG, "Start Y: " + startY + " End Y: " + endY );
+        this.lineWidth = 100;//lineWidth turned to 100 for now
+        width = 100;//viewWidth turned to 100 for now
+
     }
 
     public DrawTestView(Context context, AttributeSet attrs) {
@@ -124,7 +138,6 @@ public class DrawTestView extends View {
 //        for(int i=0; i<touchCoordinates.length; i++) {
 //            if (touchCoordinates[i] > 0) {
 //                drawCanvas.drawPoint(touchX, i, drawPaint);
-//                //drawLine(float startY, float endY, float stopX, float stopY, Paint paint)
 //                drawCanvas.drawLine(
 //                        0,
 //                        (i * 100 - 100),
@@ -160,4 +173,9 @@ public class DrawTestView extends View {
     public float getEndY() {
         return endY;
     }
+
+    public int getViewWidth(){return this.width;}
+    public int getLineWidth(){return this.lineWidth;}
+    public int getMinValue(){return this.startTime;}
+    public int getMaxValue(){return this.endTime;}
 }
