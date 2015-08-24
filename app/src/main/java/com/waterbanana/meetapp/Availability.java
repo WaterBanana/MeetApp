@@ -56,11 +56,12 @@ public class Availability extends AppCompatActivity {
 
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
-        date = bundle.getString("date");
+
+        date = bundle.getString("date", "1999-01-01");
         month = date.split("-")[1];
         day = date.split("-")[2];
         year = date.split("-")[0];
-        Log.d("Availability.java", date);
+        Log.d("Availability.java", "Month: " + month + " Day: " + day + " Year: " + year);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -90,7 +91,7 @@ public class Availability extends AppCompatActivity {
         });
 
         midlayout.addView(verticalTimes);
-        final GroupTestAvailability gRibbon = (GroupTestAvailability)findViewById (R.id.availability_layout_left);
+        final GroupTestAvailability gRibbon = (GroupTestAvailability)leftlayout;
 
         verticalTimes.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
@@ -121,15 +122,15 @@ public class Availability extends AppCompatActivity {
         });
 
 //        //CRASHING GAA 23AUG2015;
-//        helper = new LocalDbHandler(this);
-//        SQLiteDatabase sqlDB = helper.getReadableDatabase();
-//        Cursor cursor = sqlDB.query(LocalDbContract.TABLE,
-//                new String[]{
-//                        month+"ID",
-//                        month+"DATE",
-//                        month+"RIBBONSTART",
-//                        month+"RIBBONEND"},
-//                "Day=?", new String[]{day}, null, null, null);
+        helper = new LocalDbHandler(this);
+        SQLiteDatabase sqlDB = helper.getReadableDatabase();
+        Cursor cursor = sqlDB.query(LocalDbContract.TABLE,
+                new String[]{
+                        "`"+month+"ID`",
+                        "`"+month+"DATE`",
+                        "`"+month+"RIBBONSTART`",
+                        "`"+month+"RIBBONEND`"},
+                "Day=?", new String[]{day}, null, null, null);
 
 
 
@@ -143,33 +144,33 @@ public class Availability extends AppCompatActivity {
 //        View maxView = verticalTimes.getChildAt(maxValue);
 
         //populate drawTestViewArray from the android db
-        drawTestViewArray = new ArrayList();
+        drawTestViewArray = new ArrayList<>();
 
 //        //CRASHING - GAA 8:23 PM 23AUG2015:
 //        //The table isn't being created properly
-//        if (cursor.moveToFirst()) {
-//            while(!cursor.isAfterLast()) { // If you use c.moveToNext() here, you will bypass the first row, which is WRONG
-//                int min = Integer.parseInt(cursor.getString(cursor.getColumnIndex(month+"RIBBONSTART")));
-//                int max = Integer.parseInt(cursor.getString(cursor.getColumnIndex(month+"RIBBONEND")));
-//                View minView = verticalTimes.getChildAt(min);
-//                View maxView = verticalTimes.getChildAt(max);
-//
-//                DrawTestView newRibbon = new DrawTestView(
-//                        this,
-//                        min,
-//                        max,
-//                        minView.getTop() + getResources().getDimensionPixelOffset(R.dimen.dp10),
-//                        maxView.getBottom() - getResources().getDimensionPixelOffset(R.dimen.dp10));
-//
-//                drawTestViewArray.add(newRibbon);
-//                cursor.moveToNext();
-//            }
-//
-//        }
-//        cursor.close();
+        if (cursor.moveToFirst()) {
+            while(!cursor.isAfterLast()) { // If you use c.moveToNext() here, you will bypass the first row, which is WRONG
+                int min = Integer.parseInt(cursor.getString(cursor.getColumnIndex(month+"RIBBONSTART")));
+                int max = Integer.parseInt(cursor.getString(cursor.getColumnIndex(month+"RIBBONEND")));
+                View minView = verticalTimes.getChildAt(min);
+                View maxView = verticalTimes.getChildAt(max);
+
+                DrawTestView newRibbon = new DrawTestView(
+                        this,
+                        min,
+                        max,
+                        minView.getTop() + getResources().getDimensionPixelOffset(R.dimen.dp10),
+                        maxView.getBottom() - getResources().getDimensionPixelOffset(R.dimen.dp10));
+
+                drawTestViewArray.add(newRibbon);
+                cursor.moveToNext();
+            }
+
+        }
+        cursor.close();
 
         //Show the ribbons that are already there. They should be DrawTestView objects
-        if(drawTestViewArray != null) {
+        if(!drawTestViewArray.isEmpty()) {
             for (int i = 0; i < drawTestViewArray.size(); i++) {
                 paintRibbon(null,
                         drawTestViewArray.get(i).getViewWidth(),//is there a default we can use or a method to grab this? Doing so with make our resulting array smaller
@@ -432,7 +433,7 @@ public class Availability extends AppCompatActivity {
             ribbonEnd = drawTestViewArray.get(i).getMaxValue();
 
             //create ribbon on online db and return online id
-            Log.d("Create Online Ribbon", ribbonDate + ":" + ribbonBegin + "-" + ribbonEnd);
+            Log.d("Create Online Ribbon", ribbonDate[i] + ":" + ribbonBegin + "-" + ribbonEnd);
             Intent intent = new Intent(this, CreateEntryFromLocal.class);
             intent.putExtra("ribbonID", ribbonID);
             intent.putExtra("date", date);

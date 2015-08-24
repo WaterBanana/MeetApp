@@ -7,6 +7,7 @@ package com.waterbanana.meetapp;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 /**
  * Created by gerar_000 on 7/29/2015.
@@ -14,6 +15,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 
 public class LocalDbHandler extends SQLiteOpenHelper {
+    private final String TAG = "LocalDbHandler.java";
 
     public LocalDbHandler(Context context) {
         super(context, LocalDbContract.DB_NAME, null, LocalDbContract.DB_VERSION);
@@ -22,68 +24,68 @@ public class LocalDbHandler extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         String CREATE_RIBBON_TABLE = String.format("CREATE TABLE %s(" +
-                        "%s INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                        "%s TEXT, " +
-                        "%s TEXT, " +
-                        "%s TEXT, " +
-                        "%s TEXT, " +
-                        "%s TEXT, " +
-                        "%s TEXT, " +
-                        "%s TEXT, " +
-                        "%s TEXT, " +
-                        "%s TEXT, " +
-                        "%s TEXT, " +
-                        "%s TEXT, " +
-                        "%s TEXT, " +
-                        "%s TEXT, " +
-                        "%s TEXT, " +
-                        "%s TEXT, " +
-                        "%s TEXT, " +
-                        "%s TEXT, " +
-                        "%s TEXT, " +
-                        "%s TEXT, " +
-                        "%s TEXT, " +
-                        "%s TEXT, " +
-                        "%s TEXT, " +
-                        "%s TEXT, " +
-                        "%s TEXT, " +
-                        "%s TEXT, " +
-                        "%s TEXT, " +
-                        "%s TEXT, " +
-                        "%s TEXT, " +
-                        "%s TEXT, " +
-                        "%s TEXT, " +
-                        "%s TEXT, " +
-                        "%s TEXT, " +
-                        "%s TEXT, " +
-                        "%s TEXT, " +
-                        "%s TEXT, " +
-                        "%s TEXT, " +
-                        "%s TEXT, " +
-                        "%s TEXT, " +
-                        "%s TEXT, " +
-                        "%s TEXT, " +
-                        "%s TEXT, " +
-                        "%s TEXT, " +
-                        "%s TEXT, " +
-                        "%s TEXT, " +
-                        "%s TEXT, " +
-                        "%s TEXT, " +
-                        "%s TEXT, " +
-                        "%s TEXT, " +
-                        "%s TEXT, " +
-                        "%s TEXT, " +
-                        "%s TEXT, " +
-                        "%s TEXT, " +
-                        "%s TEXT, " +
-                        "%s TEXT, " +
-                        "%s TEXT, " +
-                        "%s TEXT, " +
-                        "%s TEXT, " +
-                        "%s TEXT, " +
-                        "%s TEXT, " +
-                        "%s TEXT, " +
-                        "%s TEXT)",
+                        "`%s` INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                        "`%s` TEXT, " +
+                        "`%s` TEXT, " +
+                        "`%s` TEXT, " +
+                        "`%s` TEXT, " +
+                        "`%s` TEXT, " +
+                        "`%s` TEXT, " +
+                        "`%s` TEXT, " +
+                        "`%s` TEXT, " +
+                        "`%s` TEXT, " +
+                        "`%s` TEXT, " +
+                        "`%s` TEXT, " +
+                        "`%s` TEXT, " +
+                        "`%s` TEXT, " +
+                        "`%s` TEXT, " +
+                        "`%s` TEXT, " +
+                        "`%s` TEXT, " +
+                        "`%s` TEXT, " +
+                        "`%s` TEXT, " +
+                        "`%s` TEXT, " +
+                        "`%s` TEXT, " +
+                        "`%s` TEXT, " +
+                        "`%s` TEXT, " +
+                        "`%s` TEXT, " +
+                        "`%s` TEXT, " +
+                        "`%s` TEXT, " +
+                        "`%s` TEXT, " +
+                        "`%s` TEXT, " +
+                        "`%s` TEXT, " +
+                        "`%s` TEXT, " +
+                        "`%s` TEXT, " +
+                        "`%s` TEXT, " +
+                        "`%s` TEXT, " +
+                        "`%s` TEXT, " +
+                        "`%s` TEXT, " +
+                        "`%s` TEXT, " +
+                        "`%s` TEXT, " +
+                        "`%s` TEXT, " +
+                        "`%s` TEXT, " +
+                        "`%s` TEXT, " +
+                        "`%s` TEXT, " +
+                        "`%s` TEXT, " +
+                        "`%s` TEXT, " +
+                        "`%s` TEXT, " +
+                        "`%s` TEXT, " +
+                        "`%s` TEXT, " +
+                        "`%s` TEXT, " +
+                        "`%s` TEXT, " +
+                        "`%s` TEXT, " +
+                        "`%s` TEXT, " +
+                        "`%s` TEXT, " +
+                        "`%s` TEXT, " +
+                        "`%s` TEXT, " +
+                        "`%s` TEXT, " +
+                        "`%s` TEXT, " +
+                        "`%s` TEXT, " +
+                        "`%s` TEXT, " +
+                        "`%s` TEXT, " +
+                        "`%s` TEXT, " +
+                        "`%s` TEXT, " +
+                        "`%s` TEXT, " +
+                        "`%s` TEXT)",
             LocalDbContract.TABLE,
                 LocalDbContract.Columns.COLUMN_ID,
             LocalDbContract.Columns.COLUMN_DAY,
@@ -150,6 +152,7 @@ public class LocalDbHandler extends SQLiteOpenHelper {
 
         );
         db.execSQL(CREATE_RIBBON_TABLE);
+        Log.d( TAG, "Local DB created" );
 
     }
 
