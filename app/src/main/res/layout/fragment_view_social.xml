@@ -1,42 +1,58 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
-    <!-- <include layout="@layout/toolbar" android:id="@+id/toolbar"/>-->
-    <!--, This is used alogn with SocialFrag.java, TitlesFragment.Java, DetailsFragment.java,
-            GroupInfo.java, SocialScreen.java-->
-    <TextView
-        android:layout_width="wrap_content"
+    android:orientation="vertical"
+    android:weightSum="8">
+
+   <!-- <LinearLayout
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:textSize="12pt"
-        android:textColor="@color/ColorPrimary"
-        android:layout_gravity="center"
-        android:text="Your Groups"/>
+        android:orientation="horizontal"
+        android:layout_gravity="top"
+        android:background="@color/ColorPrimary"
+        android:layout_weight="1">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="6pt"
+            android:textColor="#FFFFFF"
+            android:layout_weight="1"
+            android:text="Your Groups"
+            android:gravity="center"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="6pt"
+            android:textColor="#FFFFFF"
+            android:text="Members"
+            android:layout_weight="1"
+            android:layout_gravity="center"/>
+    </LinearLayout>-->
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:baselineAligned="false"
-        android:orientation="horizontal">
-       <!-- android:weightSum="8">-->
+        android:orientation="horizontal"
+        android:layout_weight="7">
+
         <ListView
             android:layout_width="160dp"
-            android:layout_height="490dp"
+            android:layout_height="520dp"
             android:id="@+id/titles"/>
-           <!-- android:layout_weight="1"/>-->
+
         <RelativeLayout
             android:id="@+id/details"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-            <!--android:background="?android:attr/detailsElementBackground"/>-->
-           <!-- android:layout_weight="7"-->
-
+            android:layout_height="match_parent"/>
 
     </LinearLayout>
     <LinearLayout
         android:id="@+id/GroupButtons"
         android:layout_height="wrap_content"
         android:layout_width="fill_parent"
-        android:layout_alignParentBottom="true">
+        android:layout_gravity="bottom"
+        android:background="@color/ColorPrimary"
+        android:layout_weight="1">
         <Button
             android:id="@+id/CreateG"
             android:layout_width="wrap_content"
@@ -50,6 +66,13 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="LEAVE">
+        </Button>
+        <Button
+            android:id="@+id/Invite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="INVITE">
         </Button>
     </LinearLayout>
 </LinearLayout>

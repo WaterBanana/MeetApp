@@ -52,8 +52,8 @@ public class SocialFrag extends Fragment implements View.OnClickListener{
             @Override
             public void onClick(View v) {
                 //GroupInfo.createGroup("Kumar");
-                Intent intent = new Intent( getActivity(), CreateGroup.class );
-                startActivity( intent );
+                Intent intent = new Intent(getActivity(), CreateGroup.class);
+                startActivity(intent);
             }
         });
 
@@ -61,8 +61,18 @@ public class SocialFrag extends Fragment implements View.OnClickListener{
         openActivity2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent( getActivity(), RemoveGroup.class );
-                startActivity( intent );
+                Intent intent = new Intent(getActivity(), RemoveGroup.class);
+                startActivity(intent);
+            }
+        });
+//LOOK AT PICTURE ON PHONE
+        //TEMPORARILY REMOVE GROUP
+        Button openActivity3 = (Button) view.findViewById( R.id.Invite );
+        openActivity3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), RemoveGroup.class);
+                startActivity(intent);
             }
         });
 
@@ -84,7 +94,7 @@ public class SocialFrag extends Fragment implements View.OnClickListener{
                 ft.commit();
     //ADD THE PARAMS HERE
                 RelativeLayout rightFragment = (RelativeLayout) getActivity().findViewById(R.id.details);
-                rightFragment.setLayoutParams(new LinearLayout.LayoutParams(190, 490));
+                rightFragment.setLayoutParams(new LinearLayout.LayoutParams(200, 520));
                 //180, 490
             }
         });
@@ -145,6 +155,7 @@ public class SocialFrag extends Fragment implements View.OnClickListener{
             }
             TextView groupgid = (TextView) convertView.findViewById(R.id.grouprows);
             groupgid.setText(Integer.toString(groupId));
+
             return convertView;
         }
     }
