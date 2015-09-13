@@ -257,6 +257,26 @@ public class LocalDb {
         return userid;
     }
 
+    public String encryptId( String userid ) {
+        String result = "";
+        for( int i = 0; i < userid.length(); i++ ){
+            int encKey = (((int)userid.charAt(i)) + 2) * 2;
+            result += (char) encKey;
+        }
+
+        return result;
+    }
+
+    public String decryptId( String encUserid ){
+        String result = "";
+        for( int i = 0; i < encUserid.length(); i++ ){
+            int decKey = (((int)encUserid.charAt(i)) / 2) - 2;
+            result += (char) decKey;
+        }
+
+        return result;
+    }
+
     class LocalDbHelper extends SQLiteOpenHelper {
         public LocalDbHelper(Context context) {
             super(context, DB_NAME, null, DB_VERSION);

@@ -1,15 +1,18 @@
 package com.waterbanana.meetapp;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Telephony;
 import android.support.v4.app.DialogFragment;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.telephony.SmsManager;
 import android.telephony.SmsMessage;
@@ -23,7 +26,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 
-public class CPSMSHandler extends ActionBarActivity
+public class CPSMSHandler extends AppCompatActivity
         implements EnterPhoneNumberDialog.EnterPhoneNumberDialogListener{
 
     private Toolbar toolbar;
@@ -34,6 +37,7 @@ public class CPSMSHandler extends ActionBarActivity
     private EditText etPhonNum;
     private Handler handler = new Handler();
     private Runnable runDialog;
+    Context context;
 
     private final String PREFS_NAME = "VirginityCheck";
     private final String PREFS_ISVIRGIN = "isVirgin";
@@ -44,6 +48,7 @@ public class CPSMSHandler extends ActionBarActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cpsmshandler);
 
+        context = this;
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -80,13 +85,11 @@ public class CPSMSHandler extends ActionBarActivity
                 String origNum = msg.getOriginatingAddress();
                 Log.d(TAG, "(" + actionName + ") Verified number: " + origNum);
                 if( origNum.substring(1).equals( tNum ) ) {
-                    Log.d(TAG, "Number verified!");
-                    sp.edit().putBoolean( PREFS_ISVIRGIN, false ).apply();
-                    Toast.makeText( CPSMSHandler.this, "Phone number verified!", Toast.LENGTH_SHORT ).show();
-                    Intent mainIntent = new Intent( getBaseContext(), MainActivity.class );
-                    mainIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    finish();
-                    startActivity(mainIntent);
+                    LocalDb localDb = new LocalDb(context);
+                    localDb.saveLocalId(tNum);
+
+                    String encNum = localDb.encryptId(tNum);
+                    new RegisterUserTask().execute(encNum);
                 }
             }
         };
@@ -153,8 +156,55 @@ public class CPSMSHandler extends ActionBarActivity
         String message = "Thank you for joining us on MeetApp!";
 
         SmsManager.getDefault().sendTextMessage( tNum, null, message, null, null );
+        getContentResolver().delete(
+                Uri.parse("content://sms/outbox"),
+                "address = ? and body = ?",
+                new String[]{
+                        "+1" + tNum,
+                        message
+                }
+        );
+        getContentResolver().delete(
+                Uri.parse("content://sms/sent"),
+                "address = ? and body = ?",
+                new String[]{
+                        "+1" + tNum,
+                        message
+                }
+        );
 
         Log.d( TAG, "Wait 20 seconds before failure" );
         handler.postDelayed(runDialog, (long) 20000);
+    }
+
+    class RegisterUserTask extends AsyncTask<String, String, String> {
+        DbHandler db = new DbHandler();
+        int success = -1;
+
+        @Override
+        protected String doInBackground(String... params) {
+            Log.d( TAG, "Verifying number: " + params[0] );
+            success = db.registerUser(params[0]);
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+
+            if( success == 1 ) {
+                Log.d(TAG, "Number verified!");
+                sp.edit().putBoolean(PREFS_ISVIRGIN, false).apply();
+                Toast.makeText(CPSMSHandler.this, "Phone number verified!", Toast.LENGTH_SHORT).show();
+                Intent mainIntent = new Intent(getBaseContext(), MainActivity.class);
+                mainIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                ((Activity) context).finish();
+                startActivity(mainIntent);
+            }
+            else{
+                Toast.makeText(CPSMSHandler.this, "Server connection error.", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }

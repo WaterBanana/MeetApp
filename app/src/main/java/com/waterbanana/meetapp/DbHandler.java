@@ -178,7 +178,7 @@ public class DbHandler {
         params.add( new BasicNameValuePair( TAG_USERID, encPhoneNum ) );
 
         JSONParser jsonParser = new JSONParser();
-        Log.d( this.toString(), "Registering User" );
+        Log.d( this.toString(), "Registering User: " + encPhoneNum );
         JSONObject json = jsonParser.makeHttpRequest( register_user_url, "POST", params );
         Log.d( this.toString(), json.toString() );
 
