@@ -3,12 +3,11 @@
 //Crashing on lines 122, 142, 365. Has something to do with the new table I'm trying to create(maybe the format?)
 package com.waterbanana.meetapp;
 
-import android.content.ContentValues;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -30,6 +29,8 @@ import android.widget.TextView;
 
 import com.waterbanana.common.RangeSeekBar;
 
+import org.apache.http.NameValuePair;
+
 import java.util.ArrayList;
 
 public class Availability extends AppCompatActivity {
@@ -44,9 +45,14 @@ public class Availability extends AppCompatActivity {
     private Button btnDeleteRibbon;
     private String date;
     private ArrayList<DrawTestView> drawTestViewArray;
+    private ArrayList<NameValuePair> selfRibbons;
     private String TAG = "Availability.java";
     private LocalDbHandler helper;
+    private LocalDb localDb;
+    private int selectedRID;
     private String month, day, year;
+
+    private ProgressDialog pd;
 
 
     @Override
@@ -90,8 +96,12 @@ public class Availability extends AppCompatActivity {
             }
         });
 
+        pd = new ProgressDialog(this);
         midlayout.addView(verticalTimes);
         final GroupTestAvailability gRibbon = (GroupTestAvailability)leftlayout;
+
+        localDb = new LocalDb(this);
+        //selfRibbons = localDb.getRibbonsByUserId(localDb.getLocalId(), date);
 
         verticalTimes.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
@@ -114,6 +124,8 @@ public class Availability extends AppCompatActivity {
                 gRibbon.setTimesView(verticalTimes);
                 gRibbon.setDate(date);
 
+                new LoadSelfRibbons().execute();
+
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
                     verticalTimes.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 else
@@ -121,16 +133,38 @@ public class Availability extends AppCompatActivity {
             }
         });
 
+        btnDeleteRibbon = new Button(this);
+        btnDeleteRibbon.setText(getResources().getText(R.string.delete));
+        btnDeleteRibbon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                rightlayout.removeView(seekBar);
+                screenlayout.removeView(v);
+                int seekBarStart = seekBar.getSelectedMinValue();
+                int seekBarEnd = seekBar.getSelectedMaxValue();
+                View minView = verticalTimes.getChildAt(seekBarStart);
+                View maxView = verticalTimes.getChildAt(seekBarEnd);
+
+                minView.setBackgroundColor(Color.TRANSPARENT);
+                maxView.setBackgroundColor(Color.TRANSPARENT);
+
+                Log.d( TAG, "Deleting ribbon: " + selectedRID );
+                localDb.removeSelfRibbon(selectedRID);
+
+                isInEditMode = false;
+            }
+        });
+
 //        //CRASHING GAA 23AUG2015;
-        helper = new LocalDbHandler(this);
-        SQLiteDatabase sqlDB = helper.getReadableDatabase();
-        Cursor cursor = sqlDB.query(LocalDbContract.TABLE,
-                new String[]{
-                        "`"+month+"ID`",
-                        "`"+month+"DATE`",
-                        "`"+month+"RIBBONSTART`",
-                        "`"+month+"RIBBONEND`"},
-                "Day=?", new String[]{day}, null, null, null);
+//        helper = new LocalDbHandler(this);
+//        SQLiteDatabase sqlDB = helper.getReadableDatabase();
+//        Cursor cursor = sqlDB.query(LocalDbContract.TABLE,
+//                new String[]{
+//                        "`"+month+"ID`",
+//                        "`"+month+"DATE`",
+//                        "`"+month+"RIBBONSTART`",
+//                        "`"+month+"RIBBONEND`"},
+//                "Day=?", new String[]{day}, null, null, null);
 
 
 
@@ -144,41 +178,40 @@ public class Availability extends AppCompatActivity {
 //        View maxView = verticalTimes.getChildAt(maxValue);
 
         //populate drawTestViewArray from the android db
-        drawTestViewArray = new ArrayList<>();
 
 //        //CRASHING - GAA 8:23 PM 23AUG2015:
 //        //The table isn't being created properly
-        if (cursor.moveToFirst()) {
-            while(!cursor.isAfterLast()) { // If you use c.moveToNext() here, you will bypass the first row, which is WRONG
-                int min = Integer.parseInt(cursor.getString(cursor.getColumnIndex(month+"RIBBONSTART")));
-                int max = Integer.parseInt(cursor.getString(cursor.getColumnIndex(month+"RIBBONEND")));
-                View minView = verticalTimes.getChildAt(min);
-                View maxView = verticalTimes.getChildAt(max);
-
-                DrawTestView newRibbon = new DrawTestView(
-                        this,
-                        min,
-                        max,
-                        minView.getTop() + getResources().getDimensionPixelOffset(R.dimen.dp10),
-                        maxView.getBottom() - getResources().getDimensionPixelOffset(R.dimen.dp10));
-
-                drawTestViewArray.add(newRibbon);
-                cursor.moveToNext();
-            }
-
-        }
-        cursor.close();
+//        if (cursor.moveToFirst()) {
+//            while(!cursor.isAfterLast()) { // If you use c.moveToNext() here, you will bypass the first row, which is WRONG
+//                int min = Integer.parseInt(cursor.getString(cursor.getColumnIndex(month+"RIBBONSTART")));
+//                int max = Integer.parseInt(cursor.getString(cursor.getColumnIndex(month+"RIBBONEND")));
+//                View minView = verticalTimes.getChildAt(min);
+//                View maxView = verticalTimes.getChildAt(max);
+//
+//                DrawTestView newRibbon = new DrawTestView(
+//                        this,
+//                        min,
+//                        max,
+//                        minView.getTop() + getResources().getDimensionPixelOffset(R.dimen.dp10),
+//                        maxView.getBottom() - getResources().getDimensionPixelOffset(R.dimen.dp10));
+//
+//                drawTestViewArray.add(newRibbon);
+//                cursor.moveToNext();
+//            }
+//
+//        }
+//        cursor.close();
 
         //Show the ribbons that are already there. They should be DrawTestView objects
-        if(!drawTestViewArray.isEmpty()) {
-            for (int i = 0; i < drawTestViewArray.size(); i++) {
-                paintRibbon(null,
-                        drawTestViewArray.get(i).getViewWidth(),//is there a default we can use or a method to grab this? Doing so with make our resulting array smaller
-                        drawTestViewArray.get(i).getLineWidth(),//same as above
-                        drawTestViewArray.get(i).getMinValue(),
-                        drawTestViewArray.get(i).getMaxValue());
-            }
-        }
+//        if(!drawTestViewArray.isEmpty()) {
+//            for (int i = 0; i < drawTestViewArray.size(); i++) {
+//                paintRibbon(null,
+//                        drawTestViewArray.get(i).getViewWidth(),//is there a default we can use or a method to grab this? Doing so with make our resulting array smaller
+//                        drawTestViewArray.get(i).getLineWidth(),//same as above
+//                        drawTestViewArray.get(i).getMinValue(),
+//                        drawTestViewArray.get(i).getMaxValue());
+//            }
+//        }
 
 //        int height, int width, int seekBarStart, int seekBarEnd
     }
@@ -187,7 +220,7 @@ public class Availability extends AppCompatActivity {
     private void putRibbon(int min, int max){
         if(isInEditMode) {
             Log.d( TAG, "Is in edit mode" );
-            paintRibbon(viewListener,
+            paintRibbon(viewListener, -1,
                     (int)seekBar.getLineHeight(),
                     seekBar.getWidth(),
                     seekBar.getSelectedMinValue(),
@@ -228,7 +261,7 @@ public class Availability extends AppCompatActivity {
             @Override
             public boolean onLongClick(View v) {
                 Log.d(TAG, "SeekBar onLongClick");
-                paintRibbon(v,
+                paintRibbon(v, selectedRID, // check if editting ribbon
                         (int) seekBar.getLineHeight(),
                         seekBar.getWidth(),
                         seekBar.getSelectedMinValue(),
@@ -249,24 +282,6 @@ public class Availability extends AppCompatActivity {
         isInEditMode = true;
         Log.d(TAG, "EDIT MODE: " + isInEditMode);
 
-        btnDeleteRibbon = new Button(this);
-        btnDeleteRibbon.setText(getResources().getText(R.string.delete));
-        btnDeleteRibbon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                rightlayout.removeView(seekBar);
-                screenlayout.removeView(v);
-                int seekBarStart = seekBar.getSelectedMinValue();
-                int seekBarEnd = seekBar.getSelectedMaxValue();
-                View minView = verticalTimes.getChildAt(seekBarStart);
-                View maxView = verticalTimes.getChildAt(seekBarEnd);
-
-                minView.setBackgroundColor(Color.TRANSPARENT);
-                maxView.setBackgroundColor(Color.TRANSPARENT);
-                isInEditMode = false;
-            }
-        });
-
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
                 RelativeLayout.LayoutParams.WRAP_CONTENT,
                 RelativeLayout.LayoutParams.WRAP_CONTENT
@@ -279,27 +294,37 @@ public class Availability extends AppCompatActivity {
     }
 
     // ACCEPTED RIBBON
-    private boolean paintRibbon(View view, int lineWidth, int viewWidth, int minValue, int maxValue){
+    private boolean paintRibbon(View view, int ribbonId, int lineWidth, int viewWidth, int minValue, int maxValue){
 
+        Log.d( TAG, "Child count: " + verticalTimes.getChildCount() +
+                "minVal: " + minValue + "maxVal: " + maxValue );
         View minView = verticalTimes.getChildAt(minValue);
         View maxView = verticalTimes.getChildAt(maxValue);
 
-        minView.setBackgroundColor(Color.TRANSPARENT);
-        maxView.setBackgroundColor(Color.TRANSPARENT);
         if(view != null) {
+            minView.setBackgroundColor(Color.TRANSPARENT);
+            maxView.setBackgroundColor(Color.TRANSPARENT);
             rightlayout.removeView(view);    // Removes seekBar
             screenlayout.removeView(btnDeleteRibbon);
         }
 
+        int newRibbonId = (int) localDb.saveSelfRibbon(ribbonId, date, lineWidth, viewWidth, minValue, maxValue);
+        if( newRibbonId == -1 )
+            newRibbonId = ribbonId;
+        Log.d( TAG, "New ribbon id: " + newRibbonId );
+
         final DrawTestView ribbon = new DrawTestView(
-                this, viewWidth, lineWidth, minValue, maxValue,
+                this, newRibbonId, viewWidth, lineWidth, minValue, maxValue,
                 minView.getTop() + getResources().getDimensionPixelOffset(R.dimen.dp10),
                 maxView.getBottom() - getResources().getDimensionPixelOffset(R.dimen.dp10)
 
         );
+
         ribbon.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
+                selectedRID = ribbon.getRID();
+                Log.d( TAG, "Selected ribbon id: " + selectedRID );
                 rightlayout.removeView(v);
                 putRibbon(ribbon.getStartTime(), ribbon.getEndTime());
 
@@ -351,7 +376,8 @@ public class Availability extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()){
             case R.id.new_ribbon:
-                putRibbon(0, 96);//can we make this focus on the screen?
+                selectedRID = -1;
+                putRibbon(0, 96);
                 break;
             default:
                 break;
@@ -368,6 +394,13 @@ public class Availability extends AppCompatActivity {
 //        storeRibbonsInLocalDb();
 
     }
+
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//
+//        new LoadSelfRibbons().execute();
+//    }
 
     private void setupTimesArray(){
         Log.d(TAG, "Setting up times");
@@ -407,7 +440,7 @@ public class Availability extends AppCompatActivity {
         }
     }
 
-    public void storeRibbonsInLocalDb(){
+    /*public void storeRibbonsInLocalDb(){
         int ribbonBegin;
         int ribbonEnd;
         String[] ribbonDate;
@@ -470,7 +503,7 @@ public class Availability extends AppCompatActivity {
             sqlDB.update(LocalDbContract.TABLE, newRibbonEndValues, "Day="+ribbonDate[2], null);
 
         }
-    }
+    }*/
 
 
     class TimesViewAdapter extends BaseAdapter {
@@ -507,6 +540,74 @@ public class Availability extends AppCompatActivity {
             time.setHeight(getResources().getDimensionPixelSize(R.dimen.times_height));
 
             return view;
+        }
+    }
+
+    class LoadSelfRibbons extends AsyncTask<String, String, String> {
+        int RID = -1, lineWidth = 0, viewWidth = 0, minVal = 0, maxVal = 0;
+
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            pd.setIndeterminate(true);
+            pd.show();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            selfRibbons = localDb.getSelfRibbons(date);
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+
+            if( !selfRibbons.isEmpty() ){
+                Log.d( TAG, "selfRibbons is not empty; size: " + selfRibbons.size() );
+                // Show saved ribbons
+
+                for( int i = 0; i < selfRibbons.size(); i++ ){
+                    switch(i%6){
+                        case 0:
+                            RID = Integer.parseInt( selfRibbons.get(i).getValue() );
+                            break;
+                        case 1:
+                            lineWidth = Integer.parseInt( selfRibbons.get(i).getValue() );
+                            break;
+                        case 2:
+                            viewWidth = Integer.parseInt( selfRibbons.get(i).getValue() );
+                            break;
+                        case 3:
+                            minVal = Integer.parseInt( selfRibbons.get(i).getValue() );
+                            break;
+                        case 4:
+                            maxVal = Integer.parseInt( selfRibbons.get(i).getValue() );
+                            break;
+                        default:    // First entry: .get(0)
+                            Log.d( TAG, "Painting ribbon." );
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    paintRibbon(null, RID, lineWidth, viewWidth, minVal, maxVal);
+                                }
+                            });
+                            //RID = Integer.parseInt( selfRibbons.get(0).getValue() );
+                            break;
+                    }
+                }
+//                runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        paintRibbon(null, RID, lineWidth, viewWidth, minVal, maxVal );
+//                    }
+//                });
+            }
+
+            pd.cancel();
         }
     }
 }

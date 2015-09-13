@@ -5,6 +5,7 @@ package com.waterbanana.meetapp;
  */
 public class Ribbon {
     private int id;
+    private int nwid;
     private String date;//YYYY-MM-DD
     private int start;
     private int end;
@@ -24,12 +25,28 @@ public class Ribbon {
         this.end = end;
     }
 
+    public Ribbon( int id, int nwid, String date, int begin, int end ){
+        this.id = id;
+        this.nwid = nwid;
+        this.date = date;
+        this.start = begin;
+        this.end = end;
+    }
+
     public int getId(){
         return this.id;
     }
 
     public void setId( int id ){
         this.id = id;
+    }
+
+    public void setNwid( int id ){
+        this.nwid = id;
+    }
+
+    public int getNwid(){
+        return nwid;
     }
 
     /**

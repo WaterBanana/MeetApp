@@ -19,7 +19,7 @@ public class DrawTestView extends View {
     private Canvas drawCanvas;
     private Bitmap canvasBitmap;
     private Resources r;
-    private int startTime, endTime, width, lineWidth, seekBarStart, seekBarEnd;
+    private int startTime, endTime, width, lineWidth, RID;
     private float startY, endY;
 
 //    private int timeIntervals = 96;
@@ -27,10 +27,11 @@ public class DrawTestView extends View {
     private String TAG = "DrawTestView.java";
 
     public DrawTestView(
-            Context context, int viewWidth, int lineWidth,
+            Context context, int ribbonId, int viewWidth, int lineWidth,
             int startTime, int endTime, float startY, float endY
     ) {
         this( context, null, 0, lineWidth );
+        this.RID = ribbonId;
         this.startTime = startTime;
         this.endTime = endTime;
         this.startY = startY;
@@ -118,14 +119,14 @@ public class DrawTestView extends View {
         if(MeasureSpec.UNSPECIFIED != MeasureSpec.getMode(heightMeasureSpec)) {
             height = MeasureSpec.getSize(heightMeasureSpec);
         }
-        Log.d( TAG, "Height: " + height );
+//        Log.d( TAG, "Height: " + height );
         setMeasuredDimension( width, height );
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        Log.d( TAG, "onDraw" );
+//        Log.d( TAG, "onDraw" );
 
 //        drawCanvas.drawLine(
 //                0.5f * (width - lineWidth),
@@ -176,6 +177,10 @@ public class DrawTestView extends View {
 
     public int getViewWidth(){return this.width;}
     public int getLineWidth(){return this.lineWidth;}
+
     public int getMinValue(){return this.startTime;}
+
     public int getMaxValue(){return this.endTime;}
+
+    public int getRID(){return this.RID;}
 }
