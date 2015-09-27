@@ -65,7 +65,7 @@ public class MainActivity extends ActionBarActivity {
 
         }
         else if( id == R.id.social ){
-            Intent intent = new Intent( this, SocialScreen.class );
+            Intent intent = new Intent( this, TmpGroupsPage.class );
             startActivity( intent );
         }
         else if( id == R.id.resetapp ){

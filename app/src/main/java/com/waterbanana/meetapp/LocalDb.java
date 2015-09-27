@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.AsyncTask;
 import android.util.Log;
 
 import org.apache.http.NameValuePair;
@@ -27,6 +28,8 @@ public class LocalDb {
     public static final String SR_MAXVAL = "maxVal";
     public static final String RIBBONS_TABLE = "Ribbons";
     public static final String GROUPS_TABLE = "Groups";
+    public static final String G_GID = "GroupId";
+    public static final String G_USER = "userid";
     public static final String T_RIBBONS_ID = "_id";
     public static final String R_NWID = "nwid";
     public static final String R_UID = "userid";
@@ -37,7 +40,7 @@ public class LocalDb {
 
     private static final String TAG = "LocalDb.java";
     private static final String DB_NAME = "MeetApp.db";
-    private static final int DB_VERSION = 3;
+    private static final int DB_VERSION = 4;    // EV 9-26-15-09-28
 
     private LocalDbHelper helper;
     private SQLiteDatabase db;
@@ -186,6 +189,9 @@ public class LocalDb {
             cv.put( SR_MINVAL, minValue );
             cv.put( SR_MAXVAL, maxValue );
             id = db.insert( SR_TBL, null, cv );
+
+            new SendToServer().execute( "new", date, Integer.toString(minValue), Integer.toString(maxValue) );
+
             Log.d( TAG, "Saved self ribbon. Id: " + id +
                     "minValue: " + minValue + "maxValue: " + maxValue );
         }
@@ -220,10 +226,40 @@ public class LocalDb {
         );
 
         if( c.getCount() > 0 ){
-            db.delete( SR_TBL, "_id = ?", new String[]{ Integer.toString(ribbonId) } );
+            db.delete(SR_TBL, "_id = ?", new String[]{Integer.toString(ribbonId)});
         }
 
         c.close();
+        db.close();
+    }
+
+    public void newGroupEntry( int groupid, String userid ){
+        db = helper.getWritableDatabase();
+
+        Cursor c = db.query(
+                GROUPS_TABLE,
+                new String[] {"_id"},
+                G_GID + " = ? AND " + G_USER + " = ?",
+                new String[]{ Integer.toString(groupid), userid },
+                null, null, null
+        );
+
+        if( c.getCount() < 1 ) {
+            ContentValues cv = new ContentValues();
+            cv.put( G_GID, groupid );
+            cv.put( G_USER, userid );
+            db.insert(GROUPS_TABLE, null, cv);
+        }
+
+        c.close();
+        db.close();
+    }
+
+    public void getSelfGroups(){
+        db = helper.getWritableDatabase();
+
+
+
         db.close();
     }
 
@@ -296,6 +332,11 @@ public class LocalDb {
                     SR_MINVAL + " INTEGER, " +
                     SR_MAXVAL + " INTEGER)";
 
+            String CREATE_SELF_GROUPS_TBL = "CREATE TABLE " + GROUPS_TABLE + "(" +
+                    "_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    G_GID + " INTEGER, " +
+                    G_USER + " VARCHAR(32))";
+
 //            String CREATE_RIBBONS_TBL = "CREATE TABLE " + RIBBONS_TABLE + "(" +
 //                    T_RIBBONS_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
 //                    R_NWID + " INTEGER, " +
@@ -307,6 +348,7 @@ public class LocalDb {
             try{
                 db.execSQL(SAVE_LOCAL_PHONENUM);
                 db.execSQL(CREATE_SELF_RIBBONS_TBL);
+                db.execSQL(CREATE_SELF_GROUPS_TBL);
                 //db.execSQL(CREATE_RIBBONS_TBL);
             } catch( SQLException e ){
                 e.printStackTrace();
@@ -322,6 +364,25 @@ public class LocalDb {
             db.execSQL(DROP_SELFRIBBONS_TBL);
             //db.execSQL(DROP_RIBBONS_TBL);
             onCreate(db);
+        }
+    }
+
+    class SendToServer extends AsyncTask<String, String, String>{
+        private DbHandler db = new DbHandler();
+
+        @Override
+        protected String doInBackground(String... params) {
+            String localId = getLocalId();
+            String encLocalId = encryptId(localId);
+            Ribbon newRibbon = new Ribbon( -1, params[1],
+                    Integer.parseInt(params[2]), Integer.parseInt(params[3]) );
+            try {
+                db.insertTimeslot(encLocalId, newRibbon);
+            } catch( DbHandler.DBException e ){
+                e.printStackTrace();
+            }
+
+            return null;
         }
     }
 }

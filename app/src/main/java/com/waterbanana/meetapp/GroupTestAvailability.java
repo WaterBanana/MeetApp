@@ -29,6 +29,7 @@ public class GroupTestAvailability extends RelativeLayout {
     private Resources r;
     private int startTime, endTime, width, lineWidth, seekBarStart, seekBarEnd;
     private float startY, endY;
+    private int groupidToLoad = 0000;
 
     ArrayList<Ribbon> ribbons;
     DbHandler db = new DbHandler();
@@ -39,7 +40,7 @@ public class GroupTestAvailability extends RelativeLayout {
     Canvas leftCanvas;
 
     //Height is divided into integers.
-    private int timeIntervals = 96;
+    private int timeIntervals = 97;
     private int[] groupCoordinates = new int[timeIntervals];
 
     private AvailabilityTickMarker marker;
@@ -86,6 +87,10 @@ public class GroupTestAvailability extends RelativeLayout {
 
     public void setDate(String date){
         this.date = date;
+    }
+
+    public void setGroupidToLoad(int groupid){
+        groupidToLoad = groupid;
     }
 
     private void setupDrawing(Context context){
@@ -264,7 +269,7 @@ public class GroupTestAvailability extends RelativeLayout {
             DbHandler db = new DbHandler();
 
 
-            users = db.getAllUsers();
+            users = db.getUsersByGroupId(9999);
 
             return null;
         }

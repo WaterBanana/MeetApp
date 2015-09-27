@@ -75,6 +75,18 @@
             android:name=".DBHandleViewActivity"
             android:label="@string/title_activity_dbhandle_view" >
         </activity>
+        <activity
+            android:name=".TmpGroupsPage"
+            android:label="@string/title_activity_tmp_groups_page" >
+        </activity>
+        <activity
+            android:name=".TmpJoinGroup"
+            android:label="@string/title_activity_tmp_join_group" >
+        </activity>
+        <activity
+            android:name=".TmpGroupsView"
+            android:label="@string/title_activity_tmp_groups_view" >
+        </activity>
     </application>
 
 </manifest>

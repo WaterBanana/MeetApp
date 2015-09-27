@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -22,6 +23,7 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -33,7 +35,8 @@ import org.apache.http.NameValuePair;
 
 import java.util.ArrayList;
 
-public class Availability extends AppCompatActivity {
+public class Availability extends AppCompatActivity
+    implements EnterGroupIdDialog.GroupIdListener{
     private GridView verticalTimes;
     private RelativeLayout screenlayout, midlayout, rightlayout, leftlayout;
     private String[] times = new String[97];
@@ -44,13 +47,14 @@ public class Availability extends AppCompatActivity {
     private View viewListener;
     private Button btnDeleteRibbon;
     private String date;
-    private ArrayList<DrawTestView> drawTestViewArray;
     private ArrayList<NameValuePair> selfRibbons;
     private String TAG = "Availability.java";
     private LocalDbHandler helper;
     private LocalDb localDb;
     private int selectedRID;
     private String month, day, year;
+    private GroupTestAvailability gRibbon;
+    private ArrayList<Integer> listOfRibbons;
 
     private ProgressDialog pd;
 
@@ -98,7 +102,7 @@ public class Availability extends AppCompatActivity {
 
         pd = new ProgressDialog(this);
         midlayout.addView(verticalTimes);
-        final GroupTestAvailability gRibbon = (GroupTestAvailability)leftlayout;
+        gRibbon = (GroupTestAvailability)leftlayout;
 
         localDb = new LocalDb(this);
         //selfRibbons = localDb.getRibbonsByUserId(localDb.getLocalId(), date);
@@ -214,6 +218,29 @@ public class Availability extends AppCompatActivity {
 //        }
 
 //        int height, int width, int seekBarStart, int seekBarEnd
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        DialogFragment dialog = new EnterGroupIdDialog();
+        dialog.show(getSupportFragmentManager(), "EnterGroupIdDialog");
+    }
+
+    @Override
+    public void setPositiveButton(DialogFragment dialog) {
+        EditText etGroupId = (EditText) dialog.getDialog().findViewById(R.id.editTextCPFailed);
+        String groupIdStr = etGroupId.getText().toString();
+        gRibbon.setGroupidToLoad(Integer.parseInt(groupIdStr));
+        gRibbon.invalidate();
+
+        dialog.dismiss();
+    }
+
+    @Override
+    public void setNegativeButton(DialogFragment dialog) {
+        dialog.dismiss();
     }
 
     // SEEKBAR
