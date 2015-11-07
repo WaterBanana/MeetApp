@@ -80,7 +80,7 @@ public class TmpJoinGroup extends AppCompatActivity {
             success = db.insertToGroupsTable(encLocalId, Integer.parseInt( params[0] ));
             if( success == 1 ){
                 if(DEBUG) Log.d( "TmpJoinGroup.java", "Inserted to group" );
-                Toast.makeText( context, "Successfully joined group", Toast.LENGTH_SHORT ).show();
+                //Toast.makeText( context, "Successfully joined group", Toast.LENGTH_SHORT ).show();
             }
 
             return null;
@@ -90,7 +90,8 @@ public class TmpJoinGroup extends AppCompatActivity {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
 
-            progressDialog.cancel();
+            progressDialog.dismiss();
+            Log.d("TmpJoinGroup.java", "After dismiss");
         }
     }
 }

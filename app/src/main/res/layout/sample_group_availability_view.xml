@@ -8,4 +8,10 @@
         app:exampleString="Hello, GroupAvailabilityView"
         app:exampleDrawable="@android:drawable/ic_menu_add" />
 
+    <ViewStub
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/viewStub"
+        android:layout_gravity="right|center_vertical" />
+
 </FrameLayout>

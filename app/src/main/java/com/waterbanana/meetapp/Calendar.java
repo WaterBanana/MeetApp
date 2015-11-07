@@ -238,10 +238,10 @@ public class Calendar extends Fragment implements View.OnClickListener{
 //            Log.d(tag, "CurrentDayOfMonth :" + getCurrentDayOfMonth());
 
             initializeMeetingPopulation();
-            recolorDaysDueToMeetingPopulation(6, 15, 0.91);//(5, 4) = (June, 16)
-            recolorDaysDueToMeetingPopulation(6, 10, 0.89);//(5, 4) = (June, 11)
-            recolorDaysDueToMeetingPopulation(6, 8, 0.20);//(5, 4) = (June, 9)
-            recolorDaysDueToMeetingPopulation(6, 18, 0.55);//(5, 4) = (June, 17)
+//            recolorDaysDueToMeetingPopulation(6, 15, 0.91);//(5, 4) = (June, 16)
+//            recolorDaysDueToMeetingPopulation(6, 10, 0.89);//(5, 4) = (June, 11)
+//            recolorDaysDueToMeetingPopulation(6, 8, 0.20);//(5, 4) = (June, 9)
+//            recolorDaysDueToMeetingPopulation(6, 18, 0.55);//(5, 4) = (June, 17)
             // Print Month
             printMonth(month, year);
 
@@ -673,26 +673,28 @@ public class Calendar extends Fragment implements View.OnClickListener{
                     else if (mm == 3)
                         ++daysInPrevMonth;
 
+
+
                 // Trailing Month days
-                for (int i = 0; i < trailingSpaces; i++) {
-//                Log.d(tag,
-//                        "PREV MONTH:= "
-//                                + prevMonth
-//                                + " => "
-//                                + getMonthAsString(prevMonth)
-//                                + " "
-//                                + String.valueOf((daysInPrevMonth
-//                                - trailingSpaces + DAY_OFFSET)
-//                                + i));
-                    list.add(String
-                            .valueOf((daysInPrevMonth - trailingSpaces + DAY_OFFSET)
-                                    + i)
-                            + "-GREY"
-                            + "-"
-                            + getMonthAsString(prevMonth)
-                            + "-"
-                            + prevYear);
-                }
+//                for (int i = 0; i < trailingSpaces; i++) {
+////                Log.d(tag,
+////                        "PREV MONTH:= "
+////                                + prevMonth
+////                                + " => "
+////                                + getMonthAsString(prevMonth)
+////                                + " "
+////                                + String.valueOf((daysInPrevMonth
+////                                - trailingSpaces + DAY_OFFSET)
+////                                + i));
+//                    list.add(String
+//                            .valueOf((daysInPrevMonth - trailingSpaces + DAY_OFFSET)
+//                                    + i)
+//                            + "-GREY"
+//                            + "-"
+//                            + getMonthAsString(prevMonth)
+//                            + "-"
+//                            + prevYear);
+//                }
 
                 if( currentWeekDay == 0 && daysInMonth == 28 ){
 //                    Log.d( tag, "Number of weeks in month: 4" );
@@ -707,44 +709,45 @@ public class Calendar extends Fragment implements View.OnClickListener{
 //                    Log.d( tag, "Number of weeks in month: 5" );
                     divideBy = 5;
                 }
-
-                // Current Month Days
+//
+//                // Current Month Days
                 for (int i = 1; i <= daysInMonth; i++) {
-//                Log.d(currentMonthName, String.valueOf(i) + " "
-//                        + getMonthAsString(currentMonth) + " " + yy);
-                    if (i == getCurrentDayOfMonth()) {
-                        list.add(String.valueOf(i) + "-BLUE" + "-"
-                                + getMonthAsString(currentMonth) + "-" + yy);
-                    }else if(meetingPopulations.get(currentMonth).get(i-1) == 0.0){//Default
+                Log.d(currentMonthName, String.valueOf(i) + " "
+                        + getMonthAsString(currentMonth) + " " + yy + " " + daysInMonth);
+
+//                    if (i == getCurrentDayOfMonth()) {
+//                        list.add(String.valueOf(i) + "-BLUE" + "-"
+//                                + getMonthAsString(currentMonth) + "-" + yy);
+//                    }else if(meetingPopulations.get(currentMonth).get(i-1) == 0.0){//Default
+//                        list.add(String.valueOf(i) + "-WHITE" + "-"
+//                                + getMonthAsString(currentMonth) + "-" + yy);
+//                    }else if (meetingPopulations.get(currentMonth).get(i-1) <= 0.29) {//GAA 25 JUN 2015
+//                        //RED
+//                        list.add(String.valueOf(i) + "-RED" + "-"
+//                                + getMonthAsString(currentMonth) + "-" + yy);
+//                    }else if(meetingPopulations.get(currentMonth).get(i-1) <= 0.59){
+//                        //ORANGE
+//                        list.add(String.valueOf(i) + "-ORANGE" + "-"
+//                                + getMonthAsString(currentMonth) + "-" + yy);
+//                    }else if(meetingPopulations.get(currentMonth).get(i-1) <= 0.89){
+//                        //YELLOW
+//                        list.add(String.valueOf(i) + "-YELLOW" + "-"
+//                                + getMonthAsString(currentMonth) + "-" + yy);
+//                    }else if(meetingPopulations.get(currentMonth).get(i-1) <= 1.00){
+//                        //GREEN
+//                        list.add(String.valueOf(i) + "-GREEN" + "-"
+//                                + getMonthAsString(currentMonth) + "-" + yy);
+//                    }else{
                         list.add(String.valueOf(i) + "-WHITE" + "-"
                                 + getMonthAsString(currentMonth) + "-" + yy);
-                    }else if (meetingPopulations.get(currentMonth).get(i-1) <= 0.29) {//GAA 25 JUN 2015
-                        //RED
-                        list.add(String.valueOf(i) + "-RED" + "-"
-                                + getMonthAsString(currentMonth) + "-" + yy);
-                    }else if(meetingPopulations.get(currentMonth).get(i-1) <= 0.59){
-                        //ORANGE
-                        list.add(String.valueOf(i) + "-ORANGE" + "-"
-                                + getMonthAsString(currentMonth) + "-" + yy);
-                    }else if(meetingPopulations.get(currentMonth).get(i-1) <= 0.89){
-                        //YELLOW
-                        list.add(String.valueOf(i) + "-YELLOW" + "-"
-                                + getMonthAsString(currentMonth) + "-" + yy);
-                    }else if(meetingPopulations.get(currentMonth).get(i-1) <= 1.00){
-                        //GREEN
-                        list.add(String.valueOf(i) + "-GREEN" + "-"
-                                + getMonthAsString(currentMonth) + "-" + yy);
-                    }else{
-                        list.add(String.valueOf(i) + "-WHITE" + "-"
-                                + getMonthAsString(currentMonth) + "-" + yy);
-                    }
+//                    }
 
                 }
 
                 // Leading Month days
                 for (int i = 0; i < list.size() % 7; i++) {
                     //Log.d(tag, "NEXT MONTH:= " + getMonthAsString(nextMonth));
-                    list.add(String.valueOf(i + 1) + "-GREY" + "-"
+                    list.add(String.valueOf(i + 1) + "-WHITE" + "-"
                             + getMonthAsString(nextMonth) + "-" + nextYear);
                 }
 

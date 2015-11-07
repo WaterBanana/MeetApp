@@ -28,6 +28,8 @@ public class CreateEntryFromLocal extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_entry);
 
+        Log.d("CreateEntryFromLocal", "onCreate method");
+
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         ribbonID = bundle.getInt("ribbonID");
@@ -36,7 +38,7 @@ public class CreateEntryFromLocal extends ActionBarActivity {
         ribbonEnd = bundle.getInt("ribbonEnd");
         userID = 0;//dummy value
 
-        new CreateUser().execute();
+        new CreateUserFromLocal().execute();
     }
 
     @Override
@@ -61,7 +63,7 @@ public class CreateEntryFromLocal extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    class CreateUser extends AsyncTask<String, String, String> {
+    class CreateUserFromLocal extends AsyncTask<String, String, String> {
         private int success = -1;
 
         @Override
