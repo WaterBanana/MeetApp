@@ -129,10 +129,13 @@ public class GroupTestAvailability extends RelativeLayout {
             groupCoordinates[i] = 0;
         }
 
-        new LoadAllUsers().execute();
+        refreshUserList();
 
     }
 
+    public void refreshUserList(){
+        new LoadAllUsers().execute();
+    }
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
@@ -269,7 +272,7 @@ public class GroupTestAvailability extends RelativeLayout {
             DbHandler db = new DbHandler();
 
 
-            users = db.getUsersByGroupId(9999);
+            users = db.getUsersByGroupId(groupidToLoad);
 
             return null;
         }

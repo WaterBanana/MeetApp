@@ -11,6 +11,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 /**
+ * Script that communicates with online database.
+ *
  * Created by Eddie on 6/18/2015.
  */
 public class DbHandler {

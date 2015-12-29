@@ -224,8 +224,7 @@ public class Availability extends AppCompatActivity
     protected void onStart() {
         super.onStart();
 
-        DialogFragment dialog = new EnterGroupIdDialog();
-        dialog.show(getSupportFragmentManager(), "EnterGroupIdDialog");
+
     }
 
     @Override
@@ -580,6 +579,9 @@ public class Availability extends AppCompatActivity
 
             pd.setIndeterminate(true);
             pd.show();
+
+            DialogFragment dialog = new EnterGroupIdDialog();
+            dialog.show(getSupportFragmentManager(), "EnterGroupIdDialog");
         }
 
         @Override

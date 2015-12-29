@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 /**
+ * Currently used for local db transactions.
+ *
  * Created by Eddie on 8/30/2015.
  */
 public class LocalDb {
@@ -41,7 +43,7 @@ public class LocalDb {
 
     private static final String TAG = "LocalDb.java";
     private static final String DB_NAME = "MeetApp.db";
-    private static final int DB_VERSION = 4;    // EV 9-26-15-09-28
+    private static final int DB_VERSION = 7;    // EV 28DEC2015|2046
 
     private LocalDbHelper helper;
     private SQLiteDatabase db;
@@ -50,6 +52,12 @@ public class LocalDb {
         helper = new LocalDbHelper(context);
     }
 
+    /**
+     * Purpose was to clone online db
+     * @param userid
+     * @param ribbon
+     * @return
+     */
     public long newRibbon(String userid, Ribbon ribbon){
         db = helper.getWritableDatabase();
 
@@ -168,6 +176,16 @@ public class LocalDb {
         return result;
     }
 
+    /**
+     *
+     * @param ribbonId
+     * @param date
+     * @param lineWidth
+     * @param viewWidth
+     * @param minValue
+     * @param maxValue
+     * @return online ribbon ID, -1 upon some type of error
+     */
     public long saveSelfRibbon(int ribbonId, String date, int lineWidth, int viewWidth,
                                int minValue, int maxValue){
         db = helper.getWritableDatabase();
@@ -183,24 +201,36 @@ public class LocalDb {
         long id = -1;
         // Create a new one
         if( c.getCount() < 1 && ribbonId == -1 ){
-            ContentValues cv = new ContentValues();
-            cv.put( SR_DATE, date );
-            cv.put( SR_LINEWIDTH, lineWidth );
-            cv.put( SR_VIEWWIDTH, viewWidth );
-            cv.put( SR_MINVAL, minValue );
-            cv.put( SR_MAXVAL, maxValue );
-            db.insert( SR_TBL, null, cv );
+            int success = -1;
 
             try {
                 id = new SendToServer().execute( "new", date, Integer.toString(minValue), Integer.toString(maxValue) ).get();
+
+                success = 1;
+
+                Log.d( TAG, "Saved self ribbon. Id: " + id +
+                        "minValue: " + minValue + "maxValue: " + maxValue );
             } catch (InterruptedException e) {
                 e.printStackTrace();
             } catch (ExecutionException e) {
                 e.printStackTrace();
             }
 
-            Log.d( TAG, "Saved self ribbon. Id: " + id +
-                    "minValue: " + minValue + "maxValue: " + maxValue );
+            if(success == 1){
+                db = helper.getWritableDatabase();
+                ContentValues cv = new ContentValues();
+                cv.put( "_id", id );
+                cv.put( SR_DATE, date );
+                cv.put( SR_LINEWIDTH, lineWidth );
+                cv.put( SR_VIEWWIDTH, viewWidth );
+                cv.put( SR_MINVAL, minValue );
+                cv.put(SR_MAXVAL, maxValue);
+                db.insert( SR_TBL, null, cv );
+            }
+            else{
+                Log.e(TAG, "Could not connect to server. SendToServer() failed.");
+            }
+
         }
         // Update an existing one
         else{
@@ -358,7 +388,8 @@ public class LocalDb {
                     LOCAL_ID + " VARCHAR(32))";
 
             String CREATE_SELF_RIBBONS_TBL = "CREATE TABLE " + SR_TBL + "(" +
-                    "_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    "row_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    "_id INTEGER, " +
                     //R_NWID + "INTEGER, " +
                     SR_DATE + " VARCHAR(10), " +
                     SR_LINEWIDTH + " INTEGER, " +
