@@ -13,6 +13,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by Eddie on 8/30/2015.
@@ -179,7 +180,7 @@ public class LocalDb {
                 null, null, null
         );
 
-        long id;
+        long id = -1;
         // Create a new one
         if( c.getCount() < 1 && ribbonId == -1 ){
             ContentValues cv = new ContentValues();
@@ -188,9 +189,15 @@ public class LocalDb {
             cv.put( SR_VIEWWIDTH, viewWidth );
             cv.put( SR_MINVAL, minValue );
             cv.put( SR_MAXVAL, maxValue );
-            id = db.insert( SR_TBL, null, cv );
+            db.insert( SR_TBL, null, cv );
 
-            new SendToServer().execute( "new", date, Integer.toString(minValue), Integer.toString(maxValue) );
+            try {
+                id = new SendToServer().execute( "new", date, Integer.toString(minValue), Integer.toString(maxValue) ).get();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
 
             Log.d( TAG, "Saved self ribbon. Id: " + id +
                     "minValue: " + minValue + "maxValue: " + maxValue );
@@ -212,6 +219,32 @@ public class LocalDb {
         db.close();
 
         return id;
+    }
+
+    public void setRibbonNWId( int ribbonid, int nwid ){
+        db = helper.getWritableDatabase();
+
+        Cursor c = db.query(
+                SR_TBL,
+                new String[]{"_id"},
+                "_id = ?",
+                new String[]{ Integer.toString(ribbonid) },
+                null, null, null
+        );
+
+        if( c.getCount() > 0 ){
+            ContentValues cv = new ContentValues();
+            cv.put(R_NWID, nwid);
+            db.update(
+                    SR_TBL,
+                    cv,
+                    "_id = ?",
+                    new String[]{ Integer.toString(ribbonid) }
+            );
+        }
+
+        c.close();
+        db.close();
     }
 
     public void removeSelfRibbon( int ribbonId ){
@@ -326,6 +359,7 @@ public class LocalDb {
 
             String CREATE_SELF_RIBBONS_TBL = "CREATE TABLE " + SR_TBL + "(" +
                     "_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    //R_NWID + "INTEGER, " +
                     SR_DATE + " VARCHAR(10), " +
                     SR_LINEWIDTH + " INTEGER, " +
                     SR_VIEWWIDTH + " INTEGER, " +
@@ -367,22 +401,23 @@ public class LocalDb {
         }
     }
 
-    class SendToServer extends AsyncTask<String, String, String>{
+    class SendToServer extends AsyncTask<String, String, Integer>{
         private DbHandler db = new DbHandler();
 
         @Override
-        protected String doInBackground(String... params) {
+        protected Integer doInBackground(String... params) {
+            int ribbonid = -1;
             String localId = getLocalId();
             String encLocalId = encryptId(localId);
             Ribbon newRibbon = new Ribbon( -1, params[1],
                     Integer.parseInt(params[2]), Integer.parseInt(params[3]) );
             try {
-                db.insertTimeslot(encLocalId, newRibbon);
+                ribbonid = db.insertTimeslot(encLocalId, newRibbon);
             } catch( DbHandler.DBException e ){
                 e.printStackTrace();
             }
 
-            return null;
+            return ribbonid;
         }
     }
 }

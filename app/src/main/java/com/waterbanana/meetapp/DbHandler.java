@@ -260,8 +260,8 @@ public class DbHandler {
     /**
      * Inserts a new ribbon into the database.
      * @param userid don't forget to encrypt
-     * @param ribbon date, start, end required
-     * @return ribbonid upon success, -1 if failed
+     * @param ribbon date, start, end in ribbon are required
+     * @return online ribbonid upon success, -1 if failed
      * @throws DBException
      */
     public int insertTimeslot( String userid, Ribbon ribbon ) throws DBException{
