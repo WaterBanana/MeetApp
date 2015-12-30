@@ -276,7 +276,6 @@ public class LocalDb {
     }
 
     public void removeSelfRibbon( int ribbonId ){
-        
 
         Cursor c = db.query(
                 SR_TBL,
@@ -288,6 +287,8 @@ public class LocalDb {
 
         if( c.getCount() > 0 ){
             db.delete(SR_TBL, "_id = ?", new String[]{Integer.toString(ribbonId)});
+
+            new SendToServer().execute("delete", Integer.toString(ribbonId));
         }
 
         c.close();
@@ -453,7 +454,16 @@ public class LocalDb {
             }
             else if(params[0].equals("update")){
                 try{
-                    db.updateTimeslot(Integer.parseInt(params[1]), Integer.parseInt(params[2]), Integer.parseInt(params[3]));
+                    ribbonid = Integer.parseInt(params[1]);
+                    db.updateTimeslot(ribbonid, Integer.parseInt(params[2]), Integer.parseInt(params[3]));
+                } catch( DbHandler.DBException e ){
+                    e.printStackTrace();
+                }
+            }
+            else if(params[0].equals("delete")){
+                try{
+                    ribbonid = Integer.parseInt(params[1]);
+                    db.removeTimeslot(ribbonid);
                 } catch( DbHandler.DBException e ){
                     e.printStackTrace();
                 }

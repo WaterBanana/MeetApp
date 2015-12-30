@@ -35,6 +35,13 @@ import org.apache.http.NameValuePair;
 
 import java.util.ArrayList;
 
+/**
+ * NOTES:
+ * - LocalDb edits will automatically update online database as well.
+ *
+ * **Please make sure to reset your application via options if you haven't updated since: 28DEC2015**
+ *
+ */
 public class Availability extends AppCompatActivity
     implements EnterGroupIdDialog.GroupIdListener{
     private GridView verticalTimes;
