@@ -50,6 +50,7 @@ public class LocalDb {
 
     public LocalDb( Context context ){
         helper = new LocalDbHelper(context);
+        db = helper.getWritableDatabase();
     }
 
     /**
@@ -59,7 +60,7 @@ public class LocalDb {
      * @return
      */
     public long newRibbon(String userid, Ribbon ribbon){
-        db = helper.getWritableDatabase();
+        
 
         String ribbonDate = ribbon.getDate();
         String ribbonStart = Integer.toString(ribbon.getStart());
@@ -94,7 +95,7 @@ public class LocalDb {
         }
 
         check.close();
-        db.close();
+        
         return id;
 
 //        Cursor check = db.query(
@@ -119,7 +120,7 @@ public class LocalDb {
 
     public Ribbon[] getRibbonsByUserId( String userid, String date ){
         Ribbon[] ribbons = null;
-        db = helper.getWritableDatabase();
+        
 
         Cursor c = db.query(
                 RIBBONS_TABLE,
@@ -142,13 +143,13 @@ public class LocalDb {
         }
 
         c.close();
-        db.close();
+        
         return ribbons;
     }
 
     public ArrayList<NameValuePair> getSelfRibbons( String date ){
         ArrayList<NameValuePair> result = new ArrayList<>();
-        db = helper.getWritableDatabase();
+        
 
         Log.d( TAG, "Loading self ribbons for: " + date );
         Cursor c = db.query(
@@ -172,7 +173,7 @@ public class LocalDb {
         }
 
         c.close();
-        db.close();
+        
         return result;
     }
 
@@ -187,10 +188,11 @@ public class LocalDb {
      * @return online ribbon ID, -1 upon some type of error
      */
     public long saveSelfRibbon(int ribbonId, String date, int lineWidth, int viewWidth,
-                               int minValue, int maxValue){
-        db = helper.getWritableDatabase();
+                               int minValue, int maxValue, boolean connectToNetwork){
 
-        Cursor c = db.query(
+        
+
+        Cursor check = db.query(
                 SR_TBL,
                 new String[]{ "_id" },
                 "_id = ?",
@@ -200,35 +202,27 @@ public class LocalDb {
 
         long id = -1;
         // Create a new one
-        if( c.getCount() < 1 && ribbonId == -1 ){
-            int success = -1;
+        if( check.getCount() < 1 && ribbonId == -1 ){
 
             try {
-                id = new SendToServer().execute( "new", date, Integer.toString(minValue), Integer.toString(maxValue) ).get();
+                id = new SendToServer().execute("new", date, Integer.toString(minValue), Integer.toString(maxValue)).get();
+                
+                ContentValues cv = new ContentValues();
+                cv.put("_id", id);
+                cv.put(SR_DATE, date);
+                cv.put(SR_LINEWIDTH, lineWidth);
+                cv.put(SR_VIEWWIDTH, viewWidth);
+                cv.put(SR_MINVAL, minValue);
+                cv.put(SR_MAXVAL, maxValue);
+                db.insert(SR_TBL, null, cv);
+                //success = 1;
 
-                success = 1;
-
-                Log.d( TAG, "Saved self ribbon. Id: " + id +
-                        "minValue: " + minValue + "maxValue: " + maxValue );
+                Log.d(TAG, "Saved self ribbon. Id: " + id +
+                        "minValue: " + minValue + "maxValue: " + maxValue);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             } catch (ExecutionException e) {
                 e.printStackTrace();
-            }
-
-            if(success == 1){
-                db = helper.getWritableDatabase();
-                ContentValues cv = new ContentValues();
-                cv.put( "_id", id );
-                cv.put( SR_DATE, date );
-                cv.put( SR_LINEWIDTH, lineWidth );
-                cv.put( SR_VIEWWIDTH, viewWidth );
-                cv.put( SR_MINVAL, minValue );
-                cv.put(SR_MAXVAL, maxValue);
-                db.insert( SR_TBL, null, cv );
-            }
-            else{
-                Log.e(TAG, "Could not connect to server. SendToServer() failed.");
             }
 
         }
@@ -236,23 +230,27 @@ public class LocalDb {
         else{
             //Log.d( TAG, "Found ribbon: " + ribbonId );
             id = ribbonId;
-            c.moveToFirst();
-            if( c.getInt(c.getColumnIndex("_id") ) == ribbonId ){
+            check.moveToFirst();
+            if( check.getInt(check.getColumnIndex("_id") ) == ribbonId ){
                 ContentValues cv = new ContentValues();
                 cv.put( SR_MINVAL, minValue );
                 cv.put( SR_MAXVAL, maxValue );
                 db.update( SR_TBL, cv, "_id = ?", new String[]{Integer.toString(ribbonId)} );
             }
+            if( connectToNetwork ) {
+                new SendToServer().execute("update",
+                        Integer.toString(ribbonId), Integer.toString(minValue), Integer.toString(maxValue));
+            }
         }
 
-        c.close();
-        db.close();
+        check.close();
+        //
 
         return id;
     }
 
     public void setRibbonNWId( int ribbonid, int nwid ){
-        db = helper.getWritableDatabase();
+        
 
         Cursor c = db.query(
                 SR_TBL,
@@ -274,11 +272,11 @@ public class LocalDb {
         }
 
         c.close();
-        db.close();
+        
     }
 
     public void removeSelfRibbon( int ribbonId ){
-        db = helper.getWritableDatabase();
+        
 
         Cursor c = db.query(
                 SR_TBL,
@@ -293,11 +291,11 @@ public class LocalDb {
         }
 
         c.close();
-        db.close();
+        
     }
 
     public void newGroupEntry( int groupid, String userid ){
-        db = helper.getWritableDatabase();
+        
 
         Cursor c = db.query(
                 GROUPS_TABLE,
@@ -315,32 +313,32 @@ public class LocalDb {
         }
 
         c.close();
-        db.close();
+        
     }
 
     public void getSelfGroups(){
-        db = helper.getWritableDatabase();
+        
 
 
 
-        db.close();
+        
     }
 
     public void saveLocalId( String userid ){
-        db = helper.getWritableDatabase();
+        
 
         ContentValues cv = new ContentValues();
         cv.put(LOCAL_ID, userid);
         db.insert(LOCAL_USERID_TBL, null, cv);
 
-        db.close();
+        
     }
 
     public String getLocalId(){
         String userid = "";
 
-        db = helper.getWritableDatabase();
-        Cursor c = db.query(
+        
+        Cursor localIdCurs = db.query(
                 LOCAL_USERID_TBL,
                 new String[]{LOCAL_ID},
                 null,
@@ -348,11 +346,11 @@ public class LocalDb {
                 null, null, null
         );
 
-        if( c.moveToLast() )
-            userid = c.getString( c.getColumnIndex(LOCAL_ID) );
+        if( localIdCurs.moveToLast() )
+            userid = localIdCurs.getString( localIdCurs.getColumnIndex(LOCAL_ID) );
 
-        c.close();
-        db.close();
+        localIdCurs.close();
+        //
         return userid;
     }
 
@@ -374,6 +372,10 @@ public class LocalDb {
         }
 
         return result;
+    }
+    
+    public void close(){
+        
     }
 
     class LocalDbHelper extends SQLiteOpenHelper {
@@ -440,12 +442,21 @@ public class LocalDb {
             int ribbonid = -1;
             String localId = getLocalId();
             String encLocalId = encryptId(localId);
-            Ribbon newRibbon = new Ribbon( -1, params[1],
-                    Integer.parseInt(params[2]), Integer.parseInt(params[3]) );
-            try {
-                ribbonid = db.insertTimeslot(encLocalId, newRibbon);
-            } catch( DbHandler.DBException e ){
-                e.printStackTrace();
+            if(params[0].equals("new")) {
+                Ribbon newRibbon = new Ribbon(-1, params[1],
+                        Integer.parseInt(params[2]), Integer.parseInt(params[3]));
+                try {
+                    ribbonid = db.insertTimeslot(encLocalId, newRibbon);
+                } catch (DbHandler.DBException e) {
+                    e.printStackTrace();
+                }
+            }
+            else if(params[0].equals("update")){
+                try{
+                    db.updateTimeslot(Integer.parseInt(params[1]), Integer.parseInt(params[2]), Integer.parseInt(params[3]));
+                } catch( DbHandler.DBException e ){
+                    e.printStackTrace();
+                }
             }
 
             return ribbonid;

@@ -118,7 +118,7 @@ public class DbHandler {
                 int groupsSize = allGroups.length();
                 groupids = new int[groupsSize];
                 for( int i = 0; i < groupsSize; i++ ){
-                    JSONObject entry = allGroups.getJSONObject( i );
+                    JSONObject entry = allGroups.getJSONObject(i);
                     groupids[i] = entry.getInt( TAG_GROUPID );
                 }
             }
@@ -252,7 +252,7 @@ public class DbHandler {
             }
 
         } catch( JSONException e ){
-            Log.e( this.toString(), e.toString() );
+            Log.e(this.toString(), e.toString());
         }
 
 
@@ -297,6 +297,37 @@ public class DbHandler {
         }
 
         return id;
+    }
+
+    public int updateTimeslot( int ribbonid, int newStartTime, int newEndTime ) throws DBException{
+        int success = -1;
+
+        ArrayList<NameValuePair> params = new ArrayList<>();
+        String id = Integer.toString( ribbonid );
+        String start = Integer.toString( newStartTime );
+        String end = Integer.toString( newEndTime );
+        params.add(new BasicNameValuePair(TAG_DBID, id));
+        params.add(new BasicNameValuePair(TAG_START, start));
+        params.add(new BasicNameValuePair(TAG_END, end));
+        JSONParser jsonParser = new JSONParser();
+
+        Log.d( this.toString(), "Updating ribbon ID: " + id );
+        JSONObject json = jsonParser.makeHttpRequest( update_user_url, "POST", params );
+        Log.d( this.toString(), json.toString() );
+
+        try {
+            success = json.getInt(TAG_SUCCESS);
+            if( success == 1 ){
+                Log.d( this.toString(), "Update successful." );
+            }
+            else{
+                throw new DBException(json.getString(TAG_MESSAGE));
+            }
+        } catch( JSONException e ){
+            Log.e( this.toString(), e.toString() );
+        }
+
+        return success;
     }
 
     /**

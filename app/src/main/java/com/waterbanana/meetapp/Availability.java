@@ -55,6 +55,7 @@ public class Availability extends AppCompatActivity
     private String month, day, year;
     private GroupTestAvailability gRibbon;
     private ArrayList<Integer> listOfRibbons;
+    private boolean saveOnline = false;
 
     private ProgressDialog pd;
 
@@ -224,7 +225,9 @@ public class Availability extends AppCompatActivity
     protected void onStart() {
         super.onStart();
 
-
+        if(localDb == null){
+            localDb = new LocalDb(this);
+        }
     }
 
     @Override
@@ -334,7 +337,7 @@ public class Availability extends AppCompatActivity
             screenlayout.removeView(btnDeleteRibbon);
         }
 
-        int newRibbonId = (int) localDb.saveSelfRibbon(ribbonId, date, lineWidth, viewWidth, minValue, maxValue);
+        int newRibbonId = (int) localDb.saveSelfRibbon(ribbonId, date, lineWidth, viewWidth, minValue, maxValue, saveOnline);
         if( newRibbonId == -1 )
             newRibbonId = ribbonId;
         Log.d( TAG, "New ribbon id: " + newRibbonId );
@@ -352,6 +355,7 @@ public class Availability extends AppCompatActivity
                 selectedRID = ribbon.getRID();
                 Log.d( TAG, "Selected ribbon id: " + selectedRID );
                 rightlayout.removeView(v);
+                saveOnline = true;
                 putRibbon(ribbon.getStartTime(), ribbon.getEndTime());
 
                 return true;
@@ -403,6 +407,7 @@ public class Availability extends AppCompatActivity
         switch(item.getItemId()){
             case R.id.new_ribbon:
                 selectedRID = -1;
+                saveOnline = true;
                 putRibbon(0, 96);
                 break;
             default:
@@ -410,6 +415,13 @@ public class Availability extends AppCompatActivity
         }
 
         return true;
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        localDb.close();
     }
 
     @Override
