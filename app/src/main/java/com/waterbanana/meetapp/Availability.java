@@ -7,6 +7,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -27,6 +28,7 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.waterbanana.common.RangeSeekBar;
@@ -63,7 +65,7 @@ public class Availability extends AppCompatActivity
     private GroupTestAvailability gRibbon;
     private ArrayList<Integer> listOfRibbons;
     private boolean saveOnline = false;
-
+    private ScrollView scrollView;
     private ProgressDialog pd;
 
 
@@ -88,6 +90,7 @@ public class Availability extends AppCompatActivity
         midlayout = (RelativeLayout) findViewById(R.id.availability_layout_mid);
         rightlayout = (RelativeLayout) findViewById(R.id.availability_layout_right);
         leftlayout = (RelativeLayout) findViewById(R.id.availability_layout_left);
+        scrollView = (ScrollView) findViewById(R.id.availability_scrollview);
 
         setupTimesArray();
         verticalTimes = new GridView(this);
@@ -264,6 +267,29 @@ public class Availability extends AppCompatActivity
             screenlayout.removeView(btnDeleteRibbon);
             isInEditMode = false;
         }
+
+        // This block will adjust new ribbons to fit only on the viewed times for ease of selecting.
+        boolean prevWasVisible = false;
+        for( int i = 0; i < verticalTimes.getChildCount(); i++ ){
+            Rect bounds = new Rect();
+            verticalTimes.getChildAt(i).getHitRect(bounds);
+
+            Rect scrollBounds = new Rect();
+            scrollView.getDrawingRect(scrollBounds);
+            if(Rect.intersects(bounds, scrollBounds)){
+                if(!prevWasVisible){
+                    min = i;
+                    prevWasVisible = true;
+                }
+                max = i;
+            }
+        }
+//        if( selectedRID == -1 ) {
+//            min = verticalTimes.getFirstVisiblePosition();
+//            max = verticalTimes.getLastVisiblePosition();
+//            Log.d( TAG, "First visible view: " + min );
+//            Log.d( TAG, "Last visible view: " + max );
+//        }
 
         seekBar = new RangeSeekBar<>(0, 96, this);
         seekBar.setSelectedMinValue(min);
