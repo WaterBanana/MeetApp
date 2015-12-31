@@ -271,7 +271,7 @@ public class GroupTestAvailability extends RelativeLayout {
             ArrayList<Ribbon> ribbons;
             DbHandler db = new DbHandler();
 
-
+            Log.d("GroupTestAvailability", "Loading group: " + groupidToLoad);
             users = db.getUsersByGroupId(groupidToLoad);
 
             return null;

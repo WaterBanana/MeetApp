@@ -24,7 +24,6 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -241,19 +240,27 @@ public class Availability extends AppCompatActivity
     }
 
     @Override
-    public void setPositiveButton(DialogFragment dialog) {
-        EditText etGroupId = (EditText) dialog.getDialog().findViewById(R.id.editTextCPFailed);
-        String groupIdStr = etGroupId.getText().toString();
-        gRibbon.setGroupidToLoad(Integer.parseInt(groupIdStr));
-        gRibbon.invalidate();
+    public void getSelectedId(DialogFragment dialog, String selectedGroupId){
+        gRibbon.setGroupidToLoad(Integer.parseInt(selectedGroupId.substring(9, 13)));
+        gRibbon.refreshUserList();
 
         dialog.dismiss();
     }
 
-    @Override
-    public void setNegativeButton(DialogFragment dialog) {
-        dialog.dismiss();
-    }
+//    @Override
+//    public void setPositiveButton(DialogFragment dialog) {
+//        EditText etGroupId = (EditText) dialog.getDialog().findViewById(R.id.editTextCPFailed);
+//        String groupIdStr = etGroupId.getText().toString();
+//        gRibbon.setGroupidToLoad(Integer.parseInt(groupIdStr));
+//        gRibbon.invalidate();
+//
+//        dialog.dismiss();
+//    }
+//
+//    @Override
+//    public void setNegativeButton(DialogFragment dialog) {
+//        dialog.dismiss();
+//    }
 
     // SEEKBAR
     private void putRibbon(int min, int max){
