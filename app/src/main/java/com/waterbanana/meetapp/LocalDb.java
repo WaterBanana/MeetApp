@@ -47,8 +47,10 @@ public class LocalDb {
 
     private LocalDbHelper helper;
     private SQLiteDatabase db;
+    private Context _context;
 
     public LocalDb( Context context ){
+        _context = context;
         helper = new LocalDbHelper(context);
         db = helper.getWritableDatabase();
     }
@@ -256,7 +258,7 @@ public class LocalDb {
                 SR_TBL,
                 new String[]{"_id"},
                 "_id = ?",
-                new String[]{ Integer.toString(ribbonid) },
+                new String[]{Integer.toString(ribbonid)},
                 null, null, null
         );
 
@@ -267,7 +269,7 @@ public class LocalDb {
                     SR_TBL,
                     cv,
                     "_id = ?",
-                    new String[]{ Integer.toString(ribbonid) }
+                    new String[]{Integer.toString(ribbonid)}
             );
         }
 
@@ -281,7 +283,7 @@ public class LocalDb {
                 SR_TBL,
                 new String[]{"_id"},
                 "_id = ?",
-                new String[]{ Integer.toString(ribbonId) },
+                new String[]{Integer.toString(ribbonId)},
                 null, null, null
         );
 
@@ -299,9 +301,9 @@ public class LocalDb {
 
         Cursor c = db.query(
                 GROUPS_TABLE,
-                new String[] {"_id"},
+                new String[]{"_id"},
                 G_GID + " = ? AND " + G_USER + " = ?",
-                new String[]{ Integer.toString(groupid), userid },
+                new String[]{Integer.toString(groupid), userid},
                 null, null, null
         );
 
@@ -316,6 +318,11 @@ public class LocalDb {
         
     }
 
+    /**
+     * Currently has no proper duplication of online correspondence.
+     * @param connectToNetwork
+     * @return
+     */
     public int[] getSelfGroups(boolean connectToNetwork){
         String encLocId = encryptId(getLocalId());
         int[] groupIdsArray = null;
@@ -356,8 +363,19 @@ public class LocalDb {
 
     }
 
-    public void leaveGroup(){
+    public int leaveGroup(int groupid){
+        Log.d(TAG, "leaveGroup -> " + groupid);
+        int success = -1;
 
+        try{
+            success = new SendToServer().execute("leavegroup", Integer.toString(groupid)).get();
+        } catch( InterruptedException e ){
+            e.printStackTrace();
+        } catch( ExecutionException e ){
+            e.printStackTrace();
+        }
+
+        return success;
     }
 
     public void saveLocalId( String userid ){
@@ -479,37 +497,64 @@ public class LocalDb {
         String localId = getLocalId();
         String encLocalId = encryptId(localId);
 
+//        boolean isLeavingGroup = false, deletionSucceeded = false;
+
         @Override
         protected Integer doInBackground(String... params) {
-            int ribbonid = -1;
+            int returnCode = -1;
             if(params[0].equals("new")) {
                 Ribbon newRibbon = new Ribbon(-1, params[1],
                         Integer.parseInt(params[2]), Integer.parseInt(params[3]));
                 try {
-                    ribbonid = db.insertTimeslot(encLocalId, newRibbon);
+                    returnCode = db.insertTimeslot(encLocalId, newRibbon);
                 } catch (DbHandler.DBException e) {
                     e.printStackTrace();
                 }
             }
             else if(params[0].equals("update")){
                 try{
-                    ribbonid = Integer.parseInt(params[1]);
-                    db.updateTimeslot(ribbonid, Integer.parseInt(params[2]), Integer.parseInt(params[3]));
+                    returnCode = Integer.parseInt(params[1]);
+                    db.updateTimeslot(returnCode, Integer.parseInt(params[2]), Integer.parseInt(params[3]));
                 } catch( DbHandler.DBException e ){
                     e.printStackTrace();
                 }
             }
             else if(params[0].equals("delete")){
                 try{
-                    ribbonid = Integer.parseInt(params[1]);
-                    db.removeTimeslot(ribbonid);
+                    returnCode = Integer.parseInt(params[1]);
+                    db.removeTimeslot(returnCode);
+                } catch( DbHandler.DBException e ){
+                    e.printStackTrace();
+                }
+            }
+            else if(params[0].equals("leavegroup")){
+                int groupid = Integer.parseInt(params[1]);
+//                isLeavingGroup = true;
+
+                try{
+                    Log.d("SendToServer", "Removing " + groupid );
+                    returnCode = db.removeFromGroupsTable(encLocalId, groupid);
                 } catch( DbHandler.DBException e ){
                     e.printStackTrace();
                 }
             }
 
-            return ribbonid;
+            return returnCode;
         }
+
+//        @Override
+//        protected void onPostExecute(Integer integer) {
+//            super.onPostExecute(integer);
+//
+//            if(isLeavingGroup){
+//                if(deletionSucceeded){
+//                    Toast.makeText(_context, "Left group", Toast.LENGTH_SHORT).show();
+//                }
+//                else{
+//                    Toast.makeText(_context, "Error leaving group", Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//        }
     }
 
     class ReceiveGroups extends AsyncTask<String, String, int[]>{

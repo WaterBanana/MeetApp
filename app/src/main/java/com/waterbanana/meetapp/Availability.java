@@ -276,19 +276,21 @@ public class Availability extends AppCompatActivity
         }
 
         // This block will adjust new ribbons to fit only on the viewed times for ease of selecting.
-        boolean prevWasVisible = false;
-        for( int i = 0; i < verticalTimes.getChildCount(); i++ ){
-            Rect bounds = new Rect();
-            verticalTimes.getChildAt(i).getHitRect(bounds);
+        if(selectedRID == -1) {
+            boolean prevWasVisible = false;
+            for (int i = 0; i < verticalTimes.getChildCount(); i++) {
+                Rect bounds = new Rect();
+                verticalTimes.getChildAt(i).getHitRect(bounds);
 
-            Rect scrollBounds = new Rect();
-            scrollView.getDrawingRect(scrollBounds);
-            if(Rect.intersects(bounds, scrollBounds)){
-                if(!prevWasVisible){
-                    min = i;
-                    prevWasVisible = true;
+                Rect scrollBounds = new Rect();
+                scrollView.getDrawingRect(scrollBounds);
+                if (Rect.intersects(bounds, scrollBounds)) {
+                    if (!prevWasVisible) {
+                        min = i;
+                        prevWasVisible = true;
+                    }
+                    max = i;
                 }
-                max = i;
             }
         }
 //        if( selectedRID == -1 ) {

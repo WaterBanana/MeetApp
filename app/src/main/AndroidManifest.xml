@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.waterbanana.meetapp" >
+    package="com.waterbanana.meetapp">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
@@ -13,10 +13,10 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -25,68 +25,55 @@
         </activity>
         <activity
             android:name=".CreateEntry"
-            android:label="@string/title_activity_create_entry" >
-        </activity>
+            android:label="@string/title_activity_create_entry"></activity>
         <activity
             android:name=".RemoveEntry"
-            android:label="@string/title_activity_remove_entry" >
-        </activity>
+            android:label="@string/title_activity_remove_entry"></activity>
         <activity
             android:name=".CreateGroup"
-            android:label="@string/title_activity_create_group" >
-        </activity>
+            android:label="@string/title_activity_create_group"></activity>
         <activity
             android:name=".RemoveGroup"
-            android:label="@string/title_activity_remove_group" >
-        </activity>
+            android:label="@string/title_activity_remove_group"></activity>
         <activity
             android:name=".mDayView"
-            android:label="@string/title_activity_m_day_view" >
-        </activity>
+            android:label="@string/title_activity_m_day_view"></activity>
         <activity
             android:name=".DrawAppMainActivity"
-            android:label="@string/title_activity_draw_app_main" >
-        </activity>
+            android:label="@string/title_activity_draw_app_main"></activity>
         <activity
             android:name=".SocialScreen"
-            android:label="@string/social" >
-        </activity>
+            android:label="@string/social"></activity>
         <activity
             android:name=".Availability"
-            android:label="@string/title_activity_availability" >
-        </activity>
+            android:label="@string/title_activity_availability"></activity>
         <activity
             android:name=".DrawAvailability"
-            android:label="@string/title_activity_test_activity2" >
-        </activity>
+            android:label="@string/title_activity_test_activity2"></activity>
         <activity
             android:name=".CherryPopper"
-            android:label="@string/title_activity_cherry_popper" >
-        </activity>
+            android:label="@string/title_activity_cherry_popper"></activity>
         <activity
             android:name=".CPSMSHandler"
-            android:label="@string/title_activity_cherry_popper" >
-        </activity>
+            android:label="@string/title_activity_cherry_popper"></activity>
         <activity
             android:name=".TestActivity"
-            android:label="@string/title_activity_test" >
-        </activity>
+            android:label="@string/title_activity_test"></activity>
         <activity
             android:name=".DBHandleViewActivity"
-            android:label="@string/title_activity_dbhandle_view" >
-        </activity>
+            android:label="@string/title_activity_dbhandle_view"></activity>
         <activity
             android:name=".TmpGroupsPage"
-            android:label="@string/title_activity_tmp_groups_page" >
-        </activity>
+            android:label="@string/title_activity_tmp_groups_page"></activity>
         <activity
             android:name=".TmpJoinGroup"
-            android:label="@string/title_activity_tmp_join_group" >
-        </activity>
+            android:label="@string/title_activity_tmp_join_group"></activity>
         <activity
             android:name=".TmpGroupsView"
-            android:label="@string/title_activity_tmp_groups_view" >
-        </activity>
+            android:label="@string/title_activity_tmp_groups_view"></activity>
+        <activity
+            android:name=".ConfirmationDialog"
+            android:label="@string/title_activity_confirmation_dialog"></activity>
     </application>
 
 </manifest>

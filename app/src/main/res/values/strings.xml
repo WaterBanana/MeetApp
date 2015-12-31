@@ -7,7 +7,7 @@
     <string name="title_activity_remove_entry">RemoveEntry</string>
     <string name="title_activity_availability">Availability</string>
 
-<!-- TODO: Remove or change this placeholder text -->
+    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_create_group">CreateGroup</string>
     <string name="title_activity_remove_group">RemoveGroup</string>
@@ -73,4 +73,11 @@
     <string name="join_group">Join Group</string>
     <string name="view_groups">My Groups</string>
     <string name="getting_self_groups">Getting your groups&#8230;</string>
+    <string name="title_activity_confirmation_dialog">ConfirmationDialog</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="leaving_group">Leaving group&#8230;</string>
+    <string name="left_group">Left group</string>
+    <string name="error">Error</string>
+    <string name="leave_group_ascertainty">Are you sure you want to leave this group?</string>
 </resources>
