@@ -296,7 +296,6 @@ public class LocalDb {
     }
 
     public void newGroupEntry( int groupid, String userid ){
-        
 
         Cursor c = db.query(
                 GROUPS_TABLE,
@@ -309,7 +308,7 @@ public class LocalDb {
         if( c.getCount() < 1 ) {
             ContentValues cv = new ContentValues();
             cv.put( G_GID, groupid );
-            cv.put( G_USER, userid );
+            cv.put(G_USER, userid);
             db.insert(GROUPS_TABLE, null, cv);
         }
 
@@ -317,12 +316,49 @@ public class LocalDb {
         
     }
 
-    public void getSelfGroups(){
-        
+    // CURRENT TODO
+    public int[] getSelfGroups(boolean connectToNetwork){
+        String encLocId = encryptId(getLocalId());
+        int[] groupIdsArray = null;
+        ArrayList<Integer> groupsList = new ArrayList<>();
+        if(connectToNetwork) {
+            try {
+                groupIdsArray = new ReceiveGroups().execute(encLocId).get();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+        }
+        else{
+            Cursor c = db.query(
+                    GROUPS_TABLE,
+                    new String[]{G_GID, G_USER},
+                    G_USER + " = ?",
+                    new String[]{encLocId}, null, null, null
+            );
 
+            if(c.moveToFirst()){
+                do {
+                    groupsList.add(c.getInt(c.getColumnIndex(G_GID)));
+                } while( c.moveToNext() );
+                groupIdsArray = new int[groupsList.size()];
+                for( int i = 0; i < groupsList.size(); i++ ){
+                    groupIdsArray[i] = groupsList.get(i);
+                }
+            }
+            else{
+                Log.e(TAG, "Error populating self groups.");
+            }
+            c.close();
+        }
 
+        return groupIdsArray;
 
-        
+    }
+
+    public void leaveGroup(){
+
     }
 
     public void saveLocalId( String userid ){
@@ -335,6 +371,10 @@ public class LocalDb {
         
     }
 
+    /**
+     *
+     * @return Non encrypted local id
+     */
     public String getLocalId(){
         String userid = "";
 
@@ -386,11 +426,11 @@ public class LocalDb {
 
         @Override
         public void onCreate(SQLiteDatabase db) {
-            String SAVE_LOCAL_PHONENUM = "CREATE TABLE " + LOCAL_USERID_TBL + "(" +
+            String SAVE_LOCAL_PHONENUM = "CREATE TABLE " + LOCAL_USERID_TBL + " IF NOT EXISTS(" +
                     "_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     LOCAL_ID + " VARCHAR(32))";
 
-            String CREATE_SELF_RIBBONS_TBL = "CREATE TABLE " + SR_TBL + "(" +
+            String CREATE_SELF_RIBBONS_TBL = "CREATE TABLE " + SR_TBL + " IF NOT EXISTS(" +
                     "row_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     "_id INTEGER, " +
                     //R_NWID + "INTEGER, " +
@@ -400,7 +440,7 @@ public class LocalDb {
                     SR_MINVAL + " INTEGER, " +
                     SR_MAXVAL + " INTEGER)";
 
-            String CREATE_SELF_GROUPS_TBL = "CREATE TABLE " + GROUPS_TABLE + "(" +
+            String CREATE_SELF_GROUPS_TBL = "CREATE TABLE " + GROUPS_TABLE + " IF NOT EXISTS(" +
                     "_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     G_GID + " INTEGER, " +
                     G_USER + " VARCHAR(32))";
@@ -428,8 +468,8 @@ public class LocalDb {
             String DROP_LOCALID_TBL = "DROP TABLE IF EXISTS " + LOCAL_USERID_TBL;
             String DROP_SELFRIBBONS_TBL = "DROP TABLE IF EXISTS " + SR_TBL;
             //String DROP_RIBBONS_TBL = "DROP TABLE IF EXISTS " + RIBBONS_TABLE;
-            db.execSQL(DROP_LOCALID_TBL);
-            db.execSQL(DROP_SELFRIBBONS_TBL);
+            //db.execSQL(DROP_LOCALID_TBL);
+            //db.execSQL(DROP_SELFRIBBONS_TBL);
             //db.execSQL(DROP_RIBBONS_TBL);
             onCreate(db);
         }
@@ -437,12 +477,12 @@ public class LocalDb {
 
     class SendToServer extends AsyncTask<String, String, Integer>{
         private DbHandler db = new DbHandler();
+        String localId = getLocalId();
+        String encLocalId = encryptId(localId);
 
         @Override
         protected Integer doInBackground(String... params) {
             int ribbonid = -1;
-            String localId = getLocalId();
-            String encLocalId = encryptId(localId);
             if(params[0].equals("new")) {
                 Ribbon newRibbon = new Ribbon(-1, params[1],
                         Integer.parseInt(params[2]), Integer.parseInt(params[3]));
@@ -470,6 +510,17 @@ public class LocalDb {
             }
 
             return ribbonid;
+        }
+    }
+
+    class ReceiveGroups extends AsyncTask<String, String, int[]>{
+        private DbHandler db = new DbHandler();
+
+        @Override
+        protected int[] doInBackground(String... params) {
+            String encLocalId = params[0];
+
+            return db.getGroupsByUserId(encLocalId);
         }
     }
 }

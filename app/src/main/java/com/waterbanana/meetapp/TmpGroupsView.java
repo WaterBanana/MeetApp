@@ -1,16 +1,71 @@
 package com.waterbanana.meetapp;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
 
-public class TmpGroupsView extends ActionBarActivity {
+import java.util.ArrayList;
+import java.util.HashMap;
+
+public class TmpGroupsView extends AppCompatActivity {
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private ListView listView;
+    private LocalDb localDb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tmp_groups_view);
+
+        localDb = new LocalDb(this);
+        listView = (ListView) findViewById(R.id.listView_ViewSelfGroups);
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.tmp_groups_view_swipe_refresh_layout);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshGroupsList(true);
+            }
+        });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        refreshGroupsList(true);
+    }
+
+    private void refreshGroupsList(boolean pullFromNetwork){
+        final ProgressDialog pd = new ProgressDialog(this);
+        pd.setIndeterminate(true);
+        pd.setMessage(getResources().getString(R.string.getting_self_groups));
+        pd.show();
+
+        int[] groupIds = localDb.getSelfGroups(pullFromNetwork);
+        final ArrayList<HashMap<String, String>> groupsList = new ArrayList<>();
+
+        for( int groupid : groupIds ){
+            HashMap<String, String> map = new HashMap<>();
+            map.put("groupid", Integer.toString(groupid));
+            groupsList.add(map);
+        }
+
+        Runnable refreshList = new Runnable() {
+            @Override
+            public void run() {
+                ListAdapter listAdapter = new SimpleAdapter( getBaseContext(), groupsList, R.layout.listview_contents_simple_single_entry,
+                        new String[]{"groupid"}, new int[]{R.id.tv_entry});
+                listView.setAdapter(listAdapter);
+                pd.cancel();
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        };
+        refreshList.run();
     }
 
     @Override

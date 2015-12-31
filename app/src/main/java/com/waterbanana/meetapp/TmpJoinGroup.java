@@ -90,8 +90,10 @@ public class TmpJoinGroup extends AppCompatActivity {
             super.onPostExecute(s);
 
             progressDialog.dismiss();
-            if( success == 1 )
-                Toast.makeText( context, "Successfully joined group", Toast.LENGTH_SHORT ).show();
+            if( success == 1 ) {
+                Toast.makeText(context, "Successfully joined group", Toast.LENGTH_SHORT).show();
+                finish();
+            }
         }
     }
 }
