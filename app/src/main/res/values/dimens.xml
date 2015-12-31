@@ -9,8 +9,8 @@
     <dimen name="times_height">20dp</dimen>
     <dimen name="dp10">10dp</dimen>
 
-    <dimen name="popup_width">100dp</dimen>
-    <dimen name="popup_height">100dp</dimen>
+    <dimen name="popup_width">250dp</dimen>
+    <dimen name="popup_height">200dp</dimen>
     <!-- Edit together 1:-1 -->
     <dimen name="av_marker_size">31dp</dimen>
     <dimen name="availability_line_marker_position">4dp</dimen>

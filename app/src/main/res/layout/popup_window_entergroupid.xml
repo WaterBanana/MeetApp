@@ -1,18 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/popup_window_entergroupid_layout"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <TextView
+        android:id="@+id/popup_window_entergroupid_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_centerHorizontal="true"
         android:text="@string/view_groups"
-        android:layout_gravity="center_horizontal" />
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"/>
 
     <ListView
+        android:id="@+id/popup_window_groupid_listview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/popup_window_groupid_listview"/>
+        android:layout_below="@id/popup_window_entergroupid_title" />
 
-</LinearLayout>
+    <ProgressBar
+        android:id="@+id/popup_window_entergroupid_progressdialog"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_below="@id/popup_window_entergroupid_title"
+        android:layout_centerHorizontal="true"
+        android:indeterminate="true" />
+
+
+</RelativeLayout>

@@ -69,31 +69,8 @@ public class TmpGroupsView extends AppCompatActivity
     }
 
     private void refreshGroupsList(boolean pullFromNetwork){
-        final ProgressDialog pd = new ProgressDialog(this);
-        pd.setIndeterminate(true);
-        pd.setMessage(getResources().getString(R.string.getting_self_groups));
-        pd.show();
-
-        int[] groupIds = localDb.getSelfGroups(pullFromNetwork);
-        final ArrayList<HashMap<String, String>> groupsList = new ArrayList<>();
-
-        for( int groupid : groupIds ){
-            HashMap<String, String> map = new HashMap<>();
-            map.put("groupid", Integer.toString(groupid));
-            groupsList.add(map);
-        }
-
-        Runnable refreshList = new Runnable() {
-            @Override
-            public void run() {
-                ListAdapter listAdapter = new SimpleAdapter( getBaseContext(), groupsList, R.layout.listview_contents_simple_single_entry,
-                        new String[]{"groupid"}, new int[]{R.id.tv_entry});
-                listView.setAdapter(listAdapter);
-                pd.cancel();
-                swipeRefreshLayout.setRefreshing(false);
-            }
-        };
-        refreshList.run();
+        int accessDB = pullFromNetwork ? 1 : -1;
+        new RefreshCurrGroupsList().execute(accessDB);
     }
 
     @Override
@@ -182,6 +159,57 @@ public class TmpGroupsView extends AppCompatActivity
 
             pd.cancel();
             refreshGroupsList(true);
+        }
+    }
+
+    class RefreshCurrGroupsList extends AsyncTask<Integer, String, String>{
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            pd.setIndeterminate(true);
+            pd.setMessage(getResources().getString(R.string.getting_self_groups));
+            pd.show();
+        }
+
+        @Override
+        protected String doInBackground(Integer... params) {
+            // HACKY FIXES: NEEDS REFINEMENT
+            boolean pullFromNetwork = params[0] == 1;
+            DbHandler dbHandler = new DbHandler();
+            String localId = localDb.getLocalId();
+            String encLocalId = localDb.encryptId(localId);
+            int[] groupIds = dbHandler.getGroupsByUserId(encLocalId);
+            final ArrayList<HashMap<String, String>> groupsList = new ArrayList<>();
+
+            for( int groupid : groupIds ){
+                HashMap<String, String> map = new HashMap<>();
+                map.put("groupid", Integer.toString(groupid));
+                groupsList.add(map);
+            }
+
+            Runnable refreshList = new Runnable() {
+                @Override
+                public void run() {
+                    ListAdapter listAdapter = new SimpleAdapter( getBaseContext(), groupsList, R.layout.listview_contents_simple_single_entry,
+                            new String[]{"groupid"}, new int[]{R.id.tv_entry});
+                    listView.setAdapter(listAdapter);
+                    pd.cancel();
+                    swipeRefreshLayout.setRefreshing(false);
+                }
+            };
+
+            runOnUiThread(refreshList);
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+
+            pd.cancel();
         }
     }
 }
