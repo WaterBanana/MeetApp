@@ -316,7 +316,6 @@ public class LocalDb {
         
     }
 
-    // CURRENT TODO
     public int[] getSelfGroups(boolean connectToNetwork){
         String encLocId = encryptId(getLocalId());
         int[] groupIdsArray = null;
