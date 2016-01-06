@@ -1,5 +1,6 @@
 package com.waterbanana.meetapp;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -22,12 +23,12 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 /**
  * Demonstration purposes only.
@@ -220,15 +221,17 @@ public class Calendar extends Fragment implements View.OnClickListener{
         private final HashMap<String, Integer> eventsPerMonthMap;
 //        private final SimpleDateFormat dateFormatter = new SimpleDateFormat(
 //                "dd-MMM-yyyy");
-        private final SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-mm-dd");
+//        private final SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-mm-dd");
         private int divideBy;
+        private ProgressDialog pd;
 
         // Days in Current Month
         public GridCellAdapter(Context context, int textViewResourceId,
                                int month, int year) {
             super();
             this._context = context;
-            this.list = new ArrayList<String>();
+            pd = new ProgressDialog(context);
+            this.list = new ArrayList<>();
             Log.d(tag, "==> Passed in Date FOR Month: " + month + " "
                     + "Year: " + year);
             java.util.Calendar calendar = java.util.Calendar.getInstance();
@@ -239,10 +242,7 @@ public class Calendar extends Fragment implements View.OnClickListener{
 //            Log.d(tag, "CurrentDayOfMonth :" + getCurrentDayOfMonth());
 
             initializeMeetingPopulation();
-//            recolorDaysDueToMeetingPopulation(6, 15, 0.91);//(5, 4) = (June, 16)
-//            recolorDaysDueToMeetingPopulation(6, 10, 0.89);//(5, 4) = (June, 11)
-//            recolorDaysDueToMeetingPopulation(6, 8, 0.20);//(5, 4) = (June, 9)
-//            recolorDaysDueToMeetingPopulation(6, 18, 0.55);//(5, 4) = (June, 17)
+
             // Print Month
             printMonth(month, year);
 
@@ -256,12 +256,59 @@ public class Calendar extends Fragment implements View.OnClickListener{
                 for(int j=0; j<getNumberOfDaysOfMonth(i); j++){
                     meetingPopulations.get(i).add(0.0);
                 }
+//                if( i == 1 )    // Add extra day for Feb anyway.(HACKY FIX)
+//                    meetingPopulations.get(i).add(0.0);
             }
         }
 
+        /**
+         * Based on nonzero month number system. i.e. January = 1; February = 2
+         * @param month
+         * @param day
+         * @param percentage 0.9-1 = green; 0-.29 = red
+         */
         private void recolorDaysDueToMeetingPopulation(int month, int day, double percentage){
             //temp values
-            meetingPopulations.get(month).set(day,percentage);//replaces the meeting population to 1, thus to RED
+            meetingPopulations.get(month-1).set(day-1,percentage);
+        }
+
+        private void pullInfoData(){
+            DbHandler db = new DbHandler();
+            LocalDb localDb = new LocalDb(_context);
+            HashMap<String, Integer> mapOfRibbons = new HashMap<>();
+
+            // Create a mapping of all ribbons for a particular month.
+            User[] users = db.getUsersByGroupId(groupIdToLoad);
+            for( User user : users ){
+                ArrayList<Ribbon> ribbonList = user.getRibbons();
+                HashMap<String, Integer> dateChecked = new HashMap<>();
+                for( Ribbon ribbon : ribbonList ){
+                    String date = ribbon.getDate();
+                    if( mapOfRibbons.get(date) == null ){
+                        // This date has no user ribbons, start populating/counting.
+                        mapOfRibbons.put(date, 1);
+                        dateChecked.put(date, 1);
+                    }
+                    else if(dateChecked.get(date) == null){
+                        int cnt = mapOfRibbons.get(date);
+                        mapOfRibbons.put(date, ++cnt);
+                        dateChecked.put(date, 1);
+                    }
+                }
+            }
+
+            // Update meetingpopulations based on map.
+            Set<String> mapKeys = mapOfRibbons.keySet();
+            for( String mapKey : mapKeys ){
+                String[] params = mapKey.split("-");
+                int mm = Integer.parseInt(params[1]);
+                int dd = Integer.parseInt(params[2]);
+                int cnt = mapOfRibbons.get(mapKey);
+                float percentage = (float) cnt / (float)users.length;
+                Log.d("Calendar", "Month: " + mm + " Day " + dd + " has count: " + cnt +
+                        " and length " + users.length + " resulting in %: "+ percentage);
+                recolorDaysDueToMeetingPopulation(mm, dd, percentage);
+            }
         }
 
         private String getMonthAsString(int i) {
@@ -294,12 +341,10 @@ public class Calendar extends Fragment implements View.OnClickListener{
          * @param yy
          */
         private void printMonth(int mm, int yy) {
-            String month = Integer.toString(mm);
-            String year = Integer.toString(yy);
-            new DisplayMonth().execute(month, year);
+            new DisplayMonth().execute(mm, yy);
         }
 
-/*        private void displayMonth( int mm, int yy ){
+        private void displayMonth( int mm, int yy ){
             Log.d(tag, "==> printMonth: mm: " + mm + " " + "yy: " + yy);
             int trailingSpaces = 0;
             int daysInPrevMonth = 0;
@@ -347,19 +392,24 @@ public class Calendar extends Fragment implements View.OnClickListener{
 //                        + " NextYear: " + nextYear);
             }
 
+            // First day (name) of the month
             int currentWeekDay = cal.get(java.util.Calendar.DAY_OF_WEEK) - 1;
             trailingSpaces = currentWeekDay;
 
-            Log.d(tag, "Week Day:" + currentWeekDay + " is "
-                    + getWeekDayAsString(currentWeekDay));
-            Log.d(tag, "No. Trailing space to Add: " + trailingSpaces);
-            Log.d(tag, "No. of Days in Previous Month: " + daysInPrevMonth);
+//            Log.d(tag, "Week Day in " + currentMonthName + ":" + currentWeekDay + " is "
+//                    + getWeekDayAsString(currentWeekDay));
+//            Log.d(tag, "No. Trailing space to Add: " + trailingSpaces);
+//            Log.d(tag, "No. of Days in Previous Month: " + daysInPrevMonth);
 
-            if (cal.isLeapYear(cal.get(java.util.Calendar.YEAR)))
+            if (cal.isLeapYear(cal.get(java.util.Calendar.YEAR))) {
+                meetingPopulations.get(1).add(0.0);
                 if (mm == 2)
                     ++daysInMonth;
                 else if (mm == 3)
                     ++daysInPrevMonth;
+            }
+
+
 
             // Trailing Month days
             for (int i = 0; i < trailingSpaces; i++) {
@@ -382,10 +432,25 @@ public class Calendar extends Fragment implements View.OnClickListener{
                         + prevYear);
             }
 
-            // Current Month Days
+            if( currentWeekDay == 0 && daysInMonth == 28 ){
+//                    Log.d( tag, "Number of weeks in month: 4" );
+                divideBy = 4;
+            }
+            else if( (currentWeekDay == 5 && daysInMonth > 30)
+                    || (currentWeekDay == 6 && daysInMonth > 29) ) {
+//                    Log.d( tag, "Number of weeks in month: 6" );
+                divideBy = 6;
+            }
+            else{
+//                    Log.d( tag, "Number of weeks in month: 5" );
+                divideBy = 5;
+            }
+//
+//                // Current Month Days
             for (int i = 1; i <= daysInMonth; i++) {
-//                Log.d(currentMonthName, String.valueOf(i) + " "
-//                        + getMonthAsString(currentMonth) + " " + yy);
+                Log.d(currentMonthName, String.valueOf(i) + " "
+                        + getMonthAsString(currentMonth) + " " + yy + " " + daysInMonth);
+
                 if (i == getCurrentDayOfMonth()) {
                     list.add(String.valueOf(i) + "-BLUE" + "-"
                             + getMonthAsString(currentMonth) + "-" + yy);
@@ -405,9 +470,9 @@ public class Calendar extends Fragment implements View.OnClickListener{
                     list.add(String.valueOf(i) + "-YELLOW" + "-"
                             + getMonthAsString(currentMonth) + "-" + yy);
                 }else if(meetingPopulations.get(currentMonth).get(i-1) <= 1.00){
-                    //GREEN
                     list.add(String.valueOf(i) + "-GREEN" + "-"
                             + getMonthAsString(currentMonth) + "-" + yy);
+                    //GREEN
                 }else{
                     list.add(String.valueOf(i) + "-WHITE" + "-"
                             + getMonthAsString(currentMonth) + "-" + yy);
@@ -418,10 +483,10 @@ public class Calendar extends Fragment implements View.OnClickListener{
             // Leading Month days
             for (int i = 0; i < list.size() % 7; i++) {
                 //Log.d(tag, "NEXT MONTH:= " + getMonthAsString(nextMonth));
-                list.add(String.valueOf(i + 1) + "-GREY" + "-"
+                list.add(String.valueOf(i + 1) + "-WHITE" + "-"
                         + getMonthAsString(nextMonth) + "-" + nextYear);
             }
-        }*/
+        }
 
         /**
          * NOTE: YOU NEED TO IMPLEMENT THIS PART Given the YEAR, MONTH, retrieve
@@ -606,154 +671,34 @@ public class Calendar extends Fragment implements View.OnClickListener{
             return currentWeekDay;
         }
 
-        class DisplayMonth extends AsyncTask<String, String, String>{
+        class DisplayMonth extends AsyncTask<Integer, String, String>{
+            int pMonth, pYear;
 
             @Override
-            protected String doInBackground(String... params) {
-                int mm = Integer.parseInt(params[0]);
-                int yy = Integer.parseInt(params[1]);
+            protected void onPreExecute() {
+                super.onPreExecute();
 
-                Log.d(tag, "==> printMonth: mm: " + mm + " " + "yy: " + yy);
-                int trailingSpaces = 0;
-                int daysInPrevMonth = 0;
-                int prevMonth = 0;
-                int prevYear = 0;
-                int nextMonth = 0;
-                int nextYear = 0;
+                pd.setIndeterminate(true);
+                pd.setMessage("Loading calendar");
+                pd.show();
+            }
 
-                int currentMonth = mm - 1;
-                String currentMonthName = getMonthAsString(currentMonth);
-                daysInMonth = getNumberOfDaysOfMonth(currentMonth);
+            @Override
+            protected String doInBackground(Integer... params) {
+                pMonth = params[0];
+                pYear = params[1];
 
-//            Log.d(tag, "Current Month: " + " " + currentMonthName + " having "
-//                    + daysInMonth + " days.");
-
-                GregorianCalendar cal = new GregorianCalendar(yy, currentMonth, 1);
-//            Log.d(tag, "Gregorian Calendar:= " + cal.getTime().toString());
-
-                if (currentMonth == 11) {
-                    prevMonth = currentMonth - 1;
-                    daysInPrevMonth = getNumberOfDaysOfMonth(prevMonth);
-                    nextMonth = 0;
-                    prevYear = yy;
-                    nextYear = yy + 1;
-//                Log.d(tag, "*->PrevYear: " + prevYear + " PrevMonth:"
-//                        + prevMonth + " NextMonth: " + nextMonth
-//                        + " NextYear: " + nextYear);
-                } else if (currentMonth == 0) {
-                    prevMonth = 11;
-                    prevYear = yy - 1;
-                    nextYear = yy;
-                    daysInPrevMonth = getNumberOfDaysOfMonth(prevMonth);
-                    nextMonth = 1;
-//                Log.d(tag, "**--> PrevYear: " + prevYear + " PrevMonth:"
-//                        + prevMonth + " NextMonth: " + nextMonth
-//                        + " NextYear: " + nextYear);
-                } else {
-                    prevMonth = currentMonth - 1;
-                    nextMonth = currentMonth + 1;
-                    nextYear = yy;
-                    prevYear = yy;
-                    daysInPrevMonth = getNumberOfDaysOfMonth(prevMonth);
-//                Log.d(tag, "***---> PrevYear: " + prevYear + " PrevMonth:"
-//                        + prevMonth + " NextMonth: " + nextMonth
-//                        + " NextYear: " + nextYear);
-                }
-
-                // First day (name) of the month
-                int currentWeekDay = cal.get(java.util.Calendar.DAY_OF_WEEK) - 1;
-                trailingSpaces = currentWeekDay;
-
-//            Log.d(tag, "Week Day in " + currentMonthName + ":" + currentWeekDay + " is "
-//                    + getWeekDayAsString(currentWeekDay));
-//            Log.d(tag, "No. Trailing space to Add: " + trailingSpaces);
-//            Log.d(tag, "No. of Days in Previous Month: " + daysInPrevMonth);
-
-                if (cal.isLeapYear(cal.get(java.util.Calendar.YEAR)))
-                    if (mm == 2)
-                        ++daysInMonth;
-                    else if (mm == 3)
-                        ++daysInPrevMonth;
-
-
-
-                // Trailing Month days
-                for (int i = 0; i < trailingSpaces; i++) {
-//                Log.d(tag,
-//                        "PREV MONTH:= "
-//                                + prevMonth
-//                                + " => "
-//                                + getMonthAsString(prevMonth)
-//                                + " "
-//                                + String.valueOf((daysInPrevMonth
-//                                - trailingSpaces + DAY_OFFSET)
-//                                + i));
-                    list.add(String
-                            .valueOf((daysInPrevMonth - trailingSpaces + DAY_OFFSET)
-                                    + i)
-                            + "-GREY"
-                            + "-"
-                            + getMonthAsString(prevMonth)
-                            + "-"
-                            + prevYear);
-                }
-
-                if( currentWeekDay == 0 && daysInMonth == 28 ){
-//                    Log.d( tag, "Number of weeks in month: 4" );
-                    divideBy = 4;
-                }
-                else if( (currentWeekDay == 5 && daysInMonth > 30)
-                        || (currentWeekDay == 6 && daysInMonth > 29) ) {
-//                    Log.d( tag, "Number of weeks in month: 6" );
-                    divideBy = 6;
-                }
-                else{
-//                    Log.d( tag, "Number of weeks in month: 5" );
-                    divideBy = 5;
-                }
-//
-//                // Current Month Days
-                for (int i = 1; i <= daysInMonth; i++) {
-                Log.d(currentMonthName, String.valueOf(i) + " "
-                        + getMonthAsString(currentMonth) + " " + yy + " " + daysInMonth);
-
-                    if (i == getCurrentDayOfMonth()) {
-                        list.add(String.valueOf(i) + "-BLUE" + "-"
-                                + getMonthAsString(currentMonth) + "-" + yy);
-//                    }else if(meetingPopulations.get(currentMonth).get(i-1) == 0.0){//Default
-//                        list.add(String.valueOf(i) + "-WHITE" + "-"
-//                                + getMonthAsString(currentMonth) + "-" + yy);
-//                    }else if (meetingPopulations.get(currentMonth).get(i-1) <= 0.29) {//GAA 25 JUN 2015
-//                        //RED
-//                        list.add(String.valueOf(i) + "-RED" + "-"
-//                                + getMonthAsString(currentMonth) + "-" + yy);
-//                    }else if(meetingPopulations.get(currentMonth).get(i-1) <= 0.59){
-//                        //ORANGE
-//                        list.add(String.valueOf(i) + "-ORANGE" + "-"
-//                                + getMonthAsString(currentMonth) + "-" + yy);
-//                    }else if(meetingPopulations.get(currentMonth).get(i-1) <= 0.89){
-//                        //YELLOW
-//                        list.add(String.valueOf(i) + "-YELLOW" + "-"
-//                                + getMonthAsString(currentMonth) + "-" + yy);
-//                    }else if(meetingPopulations.get(currentMonth).get(i-1) <= 1.00){
-//                        list.add(String.valueOf(i) + "-GREEN" + "-"
-//                                + getMonthAsString(currentMonth) + "-" + yy);
-                        //GREEN
-                    }else{
-                        list.add(String.valueOf(i) + "-WHITE" + "-"
-                                + getMonthAsString(currentMonth) + "-" + yy);
-                    }
-
-                }
-
-                // Leading Month days
-                for (int i = 0; i < list.size() % 7; i++) {
-                    //Log.d(tag, "NEXT MONTH:= " + getMonthAsString(nextMonth));
-                    list.add(String.valueOf(i + 1) + "-WHITE" + "-"
-                            + getMonthAsString(nextMonth) + "-" + nextYear);
-                }
+                pullInfoData();
 
                 return null;
+            }
+
+            @Override
+            protected void onPostExecute(String s) {
+                super.onPostExecute(s);
+
+                displayMonth(pMonth, pYear);
+                pd.cancel();
             }
         }
     }
