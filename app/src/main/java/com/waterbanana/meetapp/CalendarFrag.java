@@ -13,6 +13,8 @@ import android.view.ViewGroup;
 public class CalendarFrag extends Fragment{
     private int CNT = 9;
 
+    private int groupIdToLoad = 0;
+
     public CalendarFrag(){}
 
     @Override
@@ -22,6 +24,10 @@ public class CalendarFrag extends Fragment{
         ViewPager viewPager = (ViewPager) view.findViewById( R.id.fragment_cal2_viewpager );
         viewPager.setAdapter( new CalendarMonthsAdapter( getChildFragmentManager() ) );
         viewPager.setCurrentItem( CNT/2 );
+
+        if( getArguments() != null ){
+            groupIdToLoad = getArguments().getInt("groupid");
+        }
 
         return view;
     }
@@ -40,10 +46,9 @@ public class CalendarFrag extends Fragment{
             Bundle monthBundle = new Bundle();
             int offset = position - (CNT / 2);
             monthBundle.putInt("offset", offset);
+            monthBundle.putInt("groupid", groupIdToLoad);
             Log.d( TAG, "Offset: " + offset );
-            Fragment calendar = Fragment.instantiate( getActivity(), Calendar.class.getName(), monthBundle );
-
-            return calendar;
+            return Fragment.instantiate( getActivity(), Calendar.class.getName(), monthBundle );
         }
 
         @Override

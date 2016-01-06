@@ -66,6 +66,7 @@ public class Availability extends AppCompatActivity
     private boolean saveOnline = false;
     private ScrollView scrollView;
     private ProgressDialog pd;
+    private int groupIdToLoad;
 
 
     @Override
@@ -75,6 +76,8 @@ public class Availability extends AppCompatActivity
 
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
+
+        groupIdToLoad = bundle.getInt("groupid", 0);
 
         date = bundle.getString("date", "1999-01-01");
         month = date.split("-")[1];
@@ -137,6 +140,8 @@ public class Availability extends AppCompatActivity
                 ));
                 gRibbon.setTimesView(verticalTimes);
                 gRibbon.setDate(date);
+                gRibbon.loadGroup(groupIdToLoad);
+                Log.d(TAG, "Loading group: " + groupIdToLoad);
 
                 new LoadSelfRibbons().execute();
 
@@ -241,8 +246,7 @@ public class Availability extends AppCompatActivity
 
     @Override
     public void getSelectedId(DialogFragment dialog, String selectedGroupId){
-        gRibbon.setGroupidToLoad(Integer.parseInt(selectedGroupId.substring(9, 13)));
-        gRibbon.refreshUserList();
+        gRibbon.loadGroup(Integer.parseInt(selectedGroupId.substring(9, 13)));
 
         dialog.dismiss();
     }
@@ -251,7 +255,7 @@ public class Availability extends AppCompatActivity
 //    public void setPositiveButton(DialogFragment dialog) {
 //        EditText etGroupId = (EditText) dialog.getDialog().findViewById(R.id.editTextCPFailed);
 //        String groupIdStr = etGroupId.getText().toString();
-//        gRibbon.setGroupidToLoad(Integer.parseInt(groupIdStr));
+//        gRibbon.loadGroup(Integer.parseInt(groupIdStr));
 //        gRibbon.invalidate();
 //
 //        dialog.dismiss();
@@ -634,8 +638,8 @@ public class Availability extends AppCompatActivity
             pd.setIndeterminate(true);
             pd.show();
 
-            DialogFragment dialog = new EnterGroupIdDialog();
-            dialog.show(getSupportFragmentManager(), "EnterGroupIdDialog");
+//            DialogFragment dialog = new EnterGroupIdDialog();
+//            dialog.show(getSupportFragmentManager(), "EnterGroupIdDialog");
         }
 
         @Override

@@ -1,5 +1,6 @@
 package com.waterbanana.meetapp;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -30,6 +31,8 @@ public class GroupTestAvailability extends RelativeLayout {
     private int startTime, endTime, width, lineWidth, seekBarStart, seekBarEnd;
     private float startY, endY;
     private int groupidToLoad = 0000;
+    private Context _context;
+    private ProgressDialog pd;
 
     ArrayList<Ribbon> ribbons;
     DbHandler db = new DbHandler();
@@ -78,6 +81,8 @@ public class GroupTestAvailability extends RelativeLayout {
 //    }
     public GroupTestAvailability(Context context, AttributeSet attrs){
         super(context, attrs);
+        _context = context;
+        pd = new ProgressDialog(_context);
         setupDrawing(context);
     }
 
@@ -89,8 +94,9 @@ public class GroupTestAvailability extends RelativeLayout {
         this.date = date;
     }
 
-    public void setGroupidToLoad(int groupid){
+    public void loadGroup(int groupid){
         groupidToLoad = groupid;
+        refreshUserList();
     }
 
     private void setupDrawing(Context context){
@@ -133,7 +139,7 @@ public class GroupTestAvailability extends RelativeLayout {
 
     }
 
-    public void refreshUserList(){
+    private void refreshUserList(){
         new LoadAllUsers().execute();
     }
 
@@ -267,6 +273,14 @@ public class GroupTestAvailability extends RelativeLayout {
     class LoadAllUsers extends AsyncTask<String, String, String>{
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            pd.setIndeterminate(true);
+            pd.show();
+        }
+
+        @Override
         protected String doInBackground(String... params) {
             ArrayList<Ribbon> ribbons;
             DbHandler db = new DbHandler();
@@ -281,6 +295,7 @@ public class GroupTestAvailability extends RelativeLayout {
         protected void onPostExecute(String s){
             super.onPostExecute(s);
             postInvalidate();//should call onDraw
+            pd.cancel();
         }
     }
 

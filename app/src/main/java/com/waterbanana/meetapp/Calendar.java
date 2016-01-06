@@ -22,10 +22,8 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
@@ -59,8 +57,9 @@ public class Calendar extends Fragment implements View.OnClickListener{
             R.string.NovVal, R.string.DecVal};
     private final String[] months = new String[12];
     private int screenHeight;
-    private ArrayList<ArrayList<Double>> meetingPopulations = new ArrayList<ArrayList<Double>> ();
+    private ArrayList<ArrayList<Double>> meetingPopulations = new ArrayList<> ();
     private int offset;
+    private int groupIdToLoad;
 
     public Calendar() {    }
 
@@ -70,6 +69,7 @@ public class Calendar extends Fragment implements View.OnClickListener{
         init();
         if( getArguments() != null ) {
             offset = getArguments().getInt("offset");
+            groupIdToLoad = getArguments().getInt("groupid");
         }
         else{
             offset = 0;
@@ -83,7 +83,7 @@ public class Calendar extends Fragment implements View.OnClickListener{
 
         int displayMm = month + offset;
         if( displayMm < 1 ){
-            month = 12 - displayMm;
+            month = 12 - Math.abs(displayMm);
             year--;
         }
         else if( displayMm > 12 ){
@@ -101,8 +101,9 @@ public class Calendar extends Fragment implements View.OnClickListener{
 //        prevMonth = (ImageView) this.findViewById(R.id.prevMonth);
 //        prevMonth.setOnClickListener(this);
 //
+        Log.d("Calendar", "Month: " + month + ";");
         currentMonth = (TextView) view.findViewById(R.id.currentMonth);
-        currentMonth.setText(months[month-1]);
+        currentMonth.setText(months[month - 1]);
 //        currentMonth.setText(DateFormat.format(dateTemplate,
 //                _calendar.getTime()));
 //
@@ -584,6 +585,7 @@ public class Calendar extends Fragment implements View.OnClickListener{
             Log.d(tag, "newDateFormat = " + newDateFormat);
             Intent intent = new Intent(getActivity(), Availability.class);
             intent.putExtra("date", newDateFormat);
+            intent.putExtra("groupid", groupIdToLoad);
             startActivity(intent);
 
         }
@@ -676,25 +678,25 @@ public class Calendar extends Fragment implements View.OnClickListener{
 
 
                 // Trailing Month days
-//                for (int i = 0; i < trailingSpaces; i++) {
-////                Log.d(tag,
-////                        "PREV MONTH:= "
-////                                + prevMonth
-////                                + " => "
-////                                + getMonthAsString(prevMonth)
-////                                + " "
-////                                + String.valueOf((daysInPrevMonth
-////                                - trailingSpaces + DAY_OFFSET)
-////                                + i));
-//                    list.add(String
-//                            .valueOf((daysInPrevMonth - trailingSpaces + DAY_OFFSET)
-//                                    + i)
-//                            + "-GREY"
-//                            + "-"
-//                            + getMonthAsString(prevMonth)
-//                            + "-"
-//                            + prevYear);
-//                }
+                for (int i = 0; i < trailingSpaces; i++) {
+//                Log.d(tag,
+//                        "PREV MONTH:= "
+//                                + prevMonth
+//                                + " => "
+//                                + getMonthAsString(prevMonth)
+//                                + " "
+//                                + String.valueOf((daysInPrevMonth
+//                                - trailingSpaces + DAY_OFFSET)
+//                                + i));
+                    list.add(String
+                            .valueOf((daysInPrevMonth - trailingSpaces + DAY_OFFSET)
+                                    + i)
+                            + "-GREY"
+                            + "-"
+                            + getMonthAsString(prevMonth)
+                            + "-"
+                            + prevYear);
+                }
 
                 if( currentWeekDay == 0 && daysInMonth == 28 ){
 //                    Log.d( tag, "Number of weeks in month: 4" );
@@ -715,9 +717,9 @@ public class Calendar extends Fragment implements View.OnClickListener{
                 Log.d(currentMonthName, String.valueOf(i) + " "
                         + getMonthAsString(currentMonth) + " " + yy + " " + daysInMonth);
 
-//                    if (i == getCurrentDayOfMonth()) {
-//                        list.add(String.valueOf(i) + "-BLUE" + "-"
-//                                + getMonthAsString(currentMonth) + "-" + yy);
+                    if (i == getCurrentDayOfMonth()) {
+                        list.add(String.valueOf(i) + "-BLUE" + "-"
+                                + getMonthAsString(currentMonth) + "-" + yy);
 //                    }else if(meetingPopulations.get(currentMonth).get(i-1) == 0.0){//Default
 //                        list.add(String.valueOf(i) + "-WHITE" + "-"
 //                                + getMonthAsString(currentMonth) + "-" + yy);
@@ -734,13 +736,13 @@ public class Calendar extends Fragment implements View.OnClickListener{
 //                        list.add(String.valueOf(i) + "-YELLOW" + "-"
 //                                + getMonthAsString(currentMonth) + "-" + yy);
 //                    }else if(meetingPopulations.get(currentMonth).get(i-1) <= 1.00){
-//                        //GREEN
 //                        list.add(String.valueOf(i) + "-GREEN" + "-"
 //                                + getMonthAsString(currentMonth) + "-" + yy);
-//                    }else{
+                        //GREEN
+                    }else{
                         list.add(String.valueOf(i) + "-WHITE" + "-"
                                 + getMonthAsString(currentMonth) + "-" + yy);
-//                    }
+                    }
 
                 }
 

@@ -388,6 +388,12 @@ public class LocalDb {
         
     }
 
+    public String getEncLocalId(){
+        String userid = getLocalId();
+
+        return encryptId(userid);
+    }
+
     /**
      *
      * @return Non encrypted local id
